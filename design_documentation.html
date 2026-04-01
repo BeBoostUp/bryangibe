@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Google Ads Dashboard - Design Documentation</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#333;line-height:1.6}
+h1{color:#1a73e8;border-bottom:3px solid #1a73e8;padding-bottom:10px}
+h2{color:#1a73e8;margin-top:30px;border-bottom:1px solid #ddd;padding-bottom:5px}
+h3{color:#333;margin-top:20px}
+table{width:100%;border-collapse:collapse;margin:15px 0}
+table th,table td{border:1px solid #ddd;padding:10px;text-align:left}
+table th{background:#1a73e8;color:#fff}
+table tr:nth-child(even){background:#f9f9f9}
+.header{text-align:center;margin-bottom:40px}
+.header p{color:#666}
+ul{margin:10px 0}
+li{margin:5px 0}
+.section{margin-bottom:25px}
+.badge{display:inline-block;background:#e8f0fe;color:#1a73e8;padding:2px 8px;border-radius:4px;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>Google Ads API - Design Documentation</h1>
+<p><strong>Company:</strong> BeBoostUp | <strong>Date:</strong> April 2026 | <strong>Version:</strong> 1.0</p>
+<p><strong>Application Name:</strong> Google Ads Performance Dashboard</p>
+<p><strong>MCC ID:</strong> 183-489-3596 | <strong>Contact:</strong> marketing@beboostup.com</p>
+</div>
+
+<div class="section">
+<h2>1. Application Overview</h2>
+<p>The Google Ads Performance Dashboard is an <strong>internal reporting tool</strong> built by BeBoostUp, a digital marketing agency, to monitor and analyze Google Ads campaign performance across all client accounts managed under our MCC (My Client Center) account.</p>
+<p>The tool provides a unified view of all campaigns in a single dashboard, replacing the need to manually check each account individually in the Google Ads interface or use third-party reporting tools.</p>
+</div>
+
+<div class="section">
+<h2>2. Purpose and Business Need</h2>
+<ul>
+<li><strong>Centralized Monitoring:</strong> View all client campaigns from the MCC in one place</li>
+<li><strong>Real-time Performance Tracking:</strong> Monitor key metrics (spend, clicks, impressions, conversions, CTR, CPC) in real-time</li>
+<li><strong>Faster Decision Making:</strong> Quickly identify underperforming campaigns and take action</li>
+<li><strong>Internal Efficiency:</strong> Reduce time spent switching between accounts in the Google Ads UI</li>
+<li><strong>Custom Date Ranges:</strong> Analyze performance across different time periods</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>3. API Usage Details</h2>
+
+<h3>3.1 API Methods Used</h3>
+<table>
+<tr><th>Method</th><th>Purpose</th><th>Frequency</th></tr>
+<tr><td>GoogleAdsService.SearchStream</td><td>Retrieve campaign performance metrics</td><td>On-demand (user action)</td></tr>
+<tr><td>CustomerService.ListAccessibleCustomers</td><td>List accounts under MCC</td><td>On login (once per session)</td></tr>
+</table>
+
+<h3>3.2 Data Retrieved (Read-Only)</h3>
+<table>
+<tr><th>Resource</th><th>Fields</th></tr>
+<tr><td>campaign</td><td>id, name, status, advertising_channel_type</td></tr>
+<tr><td>campaign_budget</td><td>amount_micros</td></tr>
+<tr><td>metrics</td><td>impressions, clicks, ctr, average_cpc, cost_micros, conversions, cost_per_conversion, conversions_from_interactions_rate, all_conversions, search_impression_share</td></tr>
+</table>
+
+<h3>3.3 API Access Pattern</h3>
+<ul>
+<li><strong>Access type:</strong> Read-only (no mutations, no campaign modifications)</li>
+<li><strong>Estimated daily requests:</strong> Less than 1,000 requests/day</li>
+<li><strong>Data usage:</strong> Reporting and visualization only</li>
+<li><strong>No automated bidding or campaign management</strong></li>
+</ul>
+</div>
+
+<div class="section">
+<h2>4. Application Architecture</h2>
+
+<h3>4.1 Technology Stack</h3>
+<table>
+<tr><th>Component</th><th>Technology</th></tr>
+<tr><td>Backend</td><td>Python / Flask</td></tr>
+<tr><td>Frontend</td><td>HTML / CSS / JavaScript (embedded)</td></tr>
+<tr><td>Hosting</td><td>Vercel (Serverless)</td></tr>
+<tr><td>Authentication</td><td>Password-protected access (SHA-256 hash)</td></tr>
+<tr><td>API Communication</td><td>Google Ads REST API v23</td></tr>
+</table>
+
+<h3>4.2 Data Flow</h3>
+<ol>
+<li>User logs into the dashboard with a password</li>
+<li>Dashboard loads the list of accounts from the MCC</li>
+<li>User selects an account and date range</li>
+<li>Backend sends GAQL query to Google Ads API (SearchStream)</li>
+<li>API returns campaign performance data</li>
+<li>Frontend displays data in KPI cards and sortable table</li>
+</ol>
+</div>
+
+<div class="section">
+<h2>5. User Interface</h2>
+
+<h3>5.1 Login Screen</h3>
+<p>Password-protected access. Only authorized BeBoostUp team members can log in.</p>
+
+<h3>5.2 Dashboard Screen</h3>
+<p>The main dashboard includes:</p>
+<ul>
+<li><strong>Account Selector:</strong> Dropdown to choose the Google Ads account to view</li>
+<li><strong>Date Range Controls:</strong> Date pickers and presets (Today, Yesterday, 7 days, 30 days, This Month, Last Month)</li>
+<li><strong>KPI Summary Cards:</strong> Total Spend, Impressions, Clicks, CTR, Avg CPC, Conversions, Cost/Conversion, Conversion Rate</li>
+<li><strong>Campaign Table:</strong> Sortable table showing all campaigns with status, type, and all performance metrics</li>
+<li><strong>Search Filter:</strong> Text search to filter campaigns by name</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>6. Security and Access Control</h2>
+<ul>
+<li><strong>Authentication:</strong> Password-based login with SHA-256 hashing</li>
+<li><strong>Access:</strong> Internal users only (BeBoostUp employees)</li>
+<li><strong>Data storage:</strong> No campaign data is stored; all data is fetched in real-time from the API</li>
+<li><strong>Credentials:</strong> OAuth2 tokens and API keys stored as environment variables (not in source code)</li>
+<li><strong>HTTPS:</strong> All communication over HTTPS (enforced by Vercel)</li>
+<li><strong>No data sharing:</strong> Data is not shared with third parties</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>7. OAuth2 Implementation</h2>
+<ul>
+<li><strong>OAuth2 flow:</strong> Authorization Code flow with offline access</li>
+<li><strong>Scopes requested:</strong> <span class="badge">https://www.googleapis.com/auth/adwords</span></li>
+<li><strong>Token storage:</strong> Refresh token stored as secure environment variable in Vercel</li>
+<li><strong>Token refresh:</strong> Access token refreshed automatically when expired</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>8. Compliance</h2>
+<ul>
+<li>The application complies with the <strong>Google Ads API Terms of Service</strong></li>
+<li>The application complies with the <strong>Google API Services User Data Policy</strong></li>
+<li>No Google Ads data is sold, shared, or transferred to third parties</li>
+<li>The application is used exclusively for internal business reporting</li>
+<li>All API usage is read-only; no automated campaign modifications are performed</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>9. Contact Information</h2>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Company</td><td>BeBoostUp</td></tr>
+<tr><td>Website</td><td>https://beboostup.com</td></tr>
+<tr><td>Contact Email</td><td>marketing@beboostup.com</td></tr>
+<tr><td>MCC Account ID</td><td>183-489-3596</td></tr>
+<tr><td>Application URL</td><td>https://dashboardgads.vercel.app</td></tr>
+</table>
+</div>
+
+</body>
+</html>
