@@ -50,7 +50,7 @@ def google_ads_search(customer_id, query):
         'login-customer-id': login_cid,
         'Content-Type': 'application/json'
     }
-    url = f'https://googleads.googleapis.com/v17/customers/{cid}/googleAds:searchStream'
+    url = f'https://googleads.googleapis.com/v19/customers/{cid}/googleAds:searchStream'
     r = req_lib.post(url, headers=headers, json={'query': query})
     if r.status_code != 200:
         return {'error': r.text, 'status': r.status_code}
