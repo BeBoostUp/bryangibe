@@ -71,6 +71,8 @@ def check_auth():
         return None
     if request.path == '/api/login':
         return None
+    if request.path.startswith('/oauth/'):
+        return None
     if request.path.startswith('/api/'):
         if not session.get('authenticated'):
             return jsonify({'error': 'Not authenticated'}), 401
@@ -88,6 +90,58 @@ def index_page():
 @app.route('/login')
 def login_page():
     return Response(LOGIN_HTML, content_type='text/html')
+
+# ============================================================
+# OAUTH2 FLOW (para generar Refresh Token)
+# ============================================================
+OAUTH_SCOPES = 'https://www.googleapis.com/auth/adwords'
+
+@app.route('/oauth/start')
+def oauth_start():
+    redirect_uri = request.host_url.rstrip('/') + '/oauth/callback'
+    auth_url = (
+        'https://accounts.google.com/o/oauth2/v2/auth'
+        f'?client_id={GOOGLE_ADS_CLIENT_ID}'
+        f'&redirect_uri={redirect_uri}'
+        f'&response_type=code'
+        f'&scope={OAUTH_SCOPES}'
+        f'&access_type=offline'
+        f'&prompt=consent'
+    )
+    return redirect(auth_url)
+
+@app.route('/oauth/callback')
+def oauth_callback():
+    code = request.args.get('code')
+    error = request.args.get('error')
+    if error:
+        return Response(f'<h1>Error: {error}</h1>', content_type='text/html')
+    if not code:
+        return Response('<h1>No code received</h1>', content_type='text/html')
+    redirect_uri = request.host_url.rstrip('/') + '/oauth/callback'
+    r = req_lib.post('https://oauth2.googleapis.com/token', data={
+        'code': code,
+        'client_id': GOOGLE_ADS_CLIENT_ID,
+        'client_secret': GOOGLE_ADS_CLIENT_SECRET,
+        'redirect_uri': redirect_uri,
+        'grant_type': 'authorization_code'
+    })
+    data = r.json()
+    refresh_token = data.get('refresh_token', '')
+    access_token = data.get('access_token', '')
+    error_desc = data.get('error_description', '')
+    if data.get('error'):
+        return Response(f'<html><body style="background:#0f1117;color:#fff;font-family:sans-serif;padding:40px"><h1 style="color:#ea4335">Error</h1><p>{data.get("error")}: {error_desc}</p></body></html>', content_type='text/html')
+    html = f'''<html><body style="background:#0f1117;color:#fff;font-family:sans-serif;padding:40px;max-width:800px;margin:0 auto">
+    <h1 style="color:#34a853">Refresh Token generado!</h1>
+    <p>Copia este Refresh Token y ponlo como variable de entorno <code>GOOGLE_ADS_REFRESH_TOKEN</code> en Vercel:</p>
+    <div style="background:#1a1d27;border:1px solid #2d3148;border-radius:8px;padding:16px;margin:16px 0;word-break:break-all">
+    <code style="color:#4285f4;font-size:14px">{refresh_token}</code>
+    </div>
+    <p style="color:#8b8fa3">Despues de anadirlo en Vercel, haz Redeploy y el dashboard funcionara.</p>
+    <p style="color:#8b8fa3;font-size:12px">Access Token (temporal, no lo necesitas guardar): {access_token[:20]}...</p>
+    </body></html>'''
+    return Response(html, content_type='text/html')
 
 # ============================================================
 # API ROUTES
