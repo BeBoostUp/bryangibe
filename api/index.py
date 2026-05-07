@@ -384,11 +384,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 <h1>Google Ads Dashboard</h1>
 <p class="subtitle">Introduce tu password para acceder</p>
 <div class="form-group"><label>Password</label>
-<input type="password" id="pwd" placeholder="Tu password" autofocus></div>
+<div style="position:relative"><input type="text" id="pwd" placeholder="Tu password" autocomplete="off" style="-webkit-text-security:disc">
+<button type="button" onclick="togglePwd()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#6b7280;cursor:pointer;font-size:13px" id="togglePwdBtn">Mostrar</button></div></div>
 <button class="btn" onclick="doLogin()">Acceder</button>
 <div class="error-msg" id="err"></div></div>
 <script>
 document.getElementById('pwd').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
+function togglePwd(){const i=document.getElementById('pwd'),b=document.getElementById('togglePwdBtn');if(i.style.webkitTextSecurity==='disc'){i.style.webkitTextSecurity='none';b.textContent='Ocultar'}else{i.style.webkitTextSecurity='disc';b.textContent='Mostrar'}}
 async function doLogin(){
   const pwd=document.getElementById('pwd').value,err=document.getElementById('err');
   err.style.display='none';
