@@ -140,11 +140,12 @@ li{margin:5px 0}
 <h2>6. Security and Access Control</h2>
 <ul>
 <li><strong>Authentication:</strong> Password-based login with SHA-256 hashing</li>
-<li><strong>Access:</strong> Internal use only (single user - consultant)</li>
+<li><strong>Access:</strong> Internal use (consultant) and external use (clients with read-only access via secure link)</li>
+<li><strong>Client isolation:</strong> Each client can only view their own account data</li>
 <li><strong>Data storage:</strong> No campaign data is stored; all data is fetched in real-time from the API</li>
 <li><strong>Credentials:</strong> OAuth2 tokens and API keys stored as environment variables (not in source code)</li>
 <li><strong>HTTPS:</strong> All communication over HTTPS (enforced by Vercel)</li>
-<li><strong>No data sharing:</strong> Data is not shared with third parties</li>
+<li><strong>No data sharing:</strong> Data is not shared with unauthorized third parties</li>
 </ul>
 </div>
 
@@ -164,7 +165,7 @@ li{margin:5px 0}
 <li>The application complies with the <strong>Google Ads API Terms of Service</strong></li>
 <li>The application complies with the <strong>Google API Services User Data Policy</strong></li>
 <li>No Google Ads data is sold, shared, or transferred to third parties</li>
-<li>The application is used exclusively for internal business operations</li>
+<li>The application is used for internal business operations and shared with clients for read-only performance reporting</li>
 </ul>
 </div>
 
