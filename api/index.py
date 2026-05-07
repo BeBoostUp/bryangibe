@@ -479,6 +479,38 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .toast.show{display:block;animation:sIn .25s ease}
 @keyframes sIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
+.score-section{padding:0 24px 16px}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.score-card{background:#12141e;border:1px solid #1e2235;border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.score-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.score-card.scale::before{background:linear-gradient(90deg,#34a853,#22c55e)}
+.score-card.maintain::before{background:linear-gradient(90deg,#fbbc04,#f59e0b)}
+.score-card.stop::before{background:linear-gradient(90deg,#ef4444,#dc2626)}
+.score-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.score-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px}
+.score-title .icon{font-size:18px}
+.score-card.scale .score-title{color:#34a853}
+.score-card.maintain .score-title{color:#fbbc04}
+.score-card.stop .score-title{color:#ef4444}
+.score-count{font-size:20px;font-weight:800}
+.score-card.scale .score-count{color:#34a853}
+.score-card.maintain .score-count{color:#fbbc04}
+.score-card.stop .score-count{color:#ef4444}
+.score-list{list-style:none;max-height:200px;overflow-y:auto}
+.score-list li{padding:6px 0;border-bottom:1px solid #1a1d2e;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.score-list li:last-child{border-bottom:none}
+.score-list .camp-name{color:#e1e4e8;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.score-list .camp-reason{color:#6b7280;font-size:10px;text-align:right;max-width:42%}
+.score-pill{display:inline-block;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:700;margin-left:4px}
+.pill-green{background:rgba(52,168,83,0.15);color:#34a853}
+.pill-yellow{background:rgba(251,188,4,0.15);color:#fbbc04}
+.pill-red{background:rgba(239,68,68,0.15);color:#ef4444}
+.score-summary{padding:10px 24px;display:flex;gap:8px;flex-wrap:wrap}
+.alert-banner{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;flex:1;min-width:250px}
+.alert-banner.critical{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#ef4444}
+.alert-banner.warning{background:rgba(251,188,4,0.1);border:1px solid rgba(251,188,4,0.25);color:#fbbc04}
+.alert-banner.success{background:rgba(52,168,83,0.1);border:1px solid rgba(52,168,83,0.25);color:#34a853}
+
 @media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}.charts-row{grid-template-columns:1fr}}
 @media(max-width:768px){.controls{flex-direction:column;align-items:stretch}.kpis{grid-template-columns:repeat(2,1fr)}.header{flex-direction:column;gap:8px}.charts-row{grid-template-columns:1fr}}
 </style></head><body>
@@ -527,6 +559,26 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 <div class="chart-card"><h3>Distribucion por Tipo</h3><canvas id="typeChart"></canvas></div>
 </div>
 
+<div id="alertBanners" class="score-summary"></div>
+
+<div class="score-section">
+<div class="section-title">Diagnostico de Campanas <span class="badge" id="diagCount">0</span></div>
+<div class="score-grid">
+<div class="score-card scale">
+<div class="score-header"><div class="score-title"><span class="icon">&#x1F680;</span> ESCALAR</div><div class="score-count" id="scaleCount">0</div></div>
+<ul class="score-list" id="scaleList"></ul>
+</div>
+<div class="score-card maintain">
+<div class="score-header"><div class="score-title"><span class="icon">&#x2696;</span> MANTENER</div><div class="score-count" id="maintainCount">0</div></div>
+<ul class="score-list" id="maintainList"></ul>
+</div>
+<div class="score-card stop">
+<div class="score-header"><div class="score-title"><span class="icon">&#x1F6D1;</span> REVISAR / PARAR</div><div class="score-count" id="stopCount">0</div></div>
+<ul class="score-list" id="stopList"></ul>
+</div>
+</div>
+</div>
+
 <div id="accountsSection" style="display:none">
 <div class="section-title">Desglose por Cuenta <span class="badge" id="accCount">0</span></div>
 <div class="table-wrap">
@@ -564,6 +616,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 <th data-col="conv_value" onclick="sortBy('conv_value')">Valor</th>
 <th data-col="roas" onclick="sortBy('roas')">ROAS</th>
 <th data-col="search_is" onclick="sortBy('search_is')">IS</th>
+<th data-col="score" onclick="sortBy('score')">Accion</th>
 </tr></thead><tbody id="campBody"></tbody></table>
 </div>
 <div class="toast" id="toast"></div>
@@ -647,7 +700,7 @@ async function loadData(){
     updateKPIs(cd.totals,cd.prev_totals);
     renderDailyChart();renderTypeChart();
     if(cid==='all'&&accountsSummary.length){renderAccountsTable();document.getElementById('accCount').textContent=accountsSummary.length}
-    renderCampaignTable();document.getElementById('campCount').textContent=campaigns.length;
+    runDiagnostics();renderCampaignTable();document.getElementById('campCount').textContent=campaigns.length;
   }catch(e){showToast('Error conexion')}
   document.getElementById('loading').classList.remove('show');
 }
@@ -696,7 +749,89 @@ function renderTypeChart(){
   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#6b7280',font:{size:10},padding:8}}}}});
 }
 
-function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=col==='name'||col==='status'||col==='type'?1:-1}renderCampaignTable()}
+function scoreCampaign(c,avgCtr,avgCpc,avgConvRate,avgCpa){
+  let score=50;const reasons=[];
+  if(c.status!=='ENABLED')return{score:0,action:'pause',reasons:['Pausada']};
+  if(c.spend===0&&c.impressions===0)return{score:0,action:'stop',reasons:['Sin actividad']};
+  if(c.spend>0&&c.conversions===0){score-=30;reasons.push('Sin conversiones')}
+  if(c.roas>=3){score+=25;reasons.push('ROAS '+c.roas.toFixed(1)+'x')}
+  else if(c.roas>=1.5){score+=10;reasons.push('ROAS aceptable')}
+  else if(c.roas>0&&c.roas<1){score-=20;reasons.push('ROAS <1')}
+  if(avgCtr>0){
+    if(c.ctr>avgCtr*1.3){score+=10;reasons.push('CTR alto')}
+    else if(c.ctr<avgCtr*0.5){score-=10;reasons.push('CTR bajo')}
+  }
+  if(avgCpc>0&&c.avg_cpc>avgCpc*2){score-=10;reasons.push('CPC muy alto')}
+  if(avgConvRate>0){
+    if(c.conv_rate>avgConvRate*1.5){score+=15;reasons.push('Alta tasa conv')}
+    else if(c.conv_rate<avgConvRate*0.3&&c.clicks>20){score-=15;reasons.push('Baja tasa conv')}
+  }
+  if(c.conversions>0&&avgCpa>0){
+    if(c.cost_per_conv<avgCpa*0.7){score+=15;reasons.push('CPA eficiente')}
+    else if(c.cost_per_conv>avgCpa*2){score-=15;reasons.push('CPA muy alto')}
+  }
+  if(c.search_is!=null&&c.search_is<0.3&&c.conversions>0){score+=5;reasons.push('IS bajo: margen escalar')}
+  if(c.spend>0&&c.budget>0&&c.spend/c.budget>0.9&&c.conversions>0){score+=5;reasons.push('Ppto agotado: escalar')}
+  if(c.clicks>50&&c.conversions===0){score-=20;reasons.push(c.clicks+' clics sin conv')}
+  let action;
+  if(score>=65)action='scale';
+  else if(score>=35)action='maintain';
+  else action='stop';
+  return{score,action,reasons};
+}
+
+function runDiagnostics(){
+  const active=campaigns.filter(c=>c.status==='ENABLED'&&c.spend>0);
+  if(active.length===0){
+    document.getElementById('diagCount').textContent='0';
+    ['scaleList','maintainList','stopList'].forEach(id=>document.getElementById(id).innerHTML='');
+    ['scaleCount','maintainCount','stopCount'].forEach(id=>document.getElementById(id).textContent='0');
+    document.getElementById('alertBanners').innerHTML='';
+    return;
+  }
+  const totalSpend=active.reduce((s,c)=>s+c.spend,0);
+  const totalClicks=active.reduce((s,c)=>s+c.clicks,0);
+  const totalImpr=active.reduce((s,c)=>s+c.impressions,0);
+  const totalConv=active.reduce((s,c)=>s+c.conversions,0);
+  const avgCtr=totalImpr>0?totalClicks/totalImpr:0;
+  const avgCpc=totalClicks>0?totalSpend/totalClicks:0;
+  const avgConvRate=totalClicks>0?totalConv/totalClicks:0;
+  const avgCpa=totalConv>0?totalSpend/totalConv:0;
+  const scale=[],maintain=[],stop=[];
+  campaigns.forEach(c=>{
+    const d=scoreCampaign(c,avgCtr,avgCpc,avgConvRate,avgCpa);
+    c.score=d.score;c.action=d.action;c.reasons=d.reasons;
+    if(c.status!=='ENABLED'){if(c.spend>0)stop.push(c);return}
+    if(d.action==='scale')scale.push(c);
+    else if(d.action==='maintain')maintain.push(c);
+    else stop.push(c);
+  });
+  scale.sort((a,b)=>b.score-a.score);stop.sort((a,b)=>a.score-b.score);
+  document.getElementById('scaleCount').textContent=scale.length;
+  document.getElementById('maintainCount').textContent=maintain.length;
+  document.getElementById('stopCount').textContent=stop.length;
+  document.getElementById('diagCount').textContent=active.length;
+  const renderList=(items,elId,max)=>{
+    document.getElementById(elId).innerHTML=items.slice(0,max||10).map(c=>`<li>
+      <span class="camp-name" title="${esc(c.name)}">${esc(c.name)}</span>
+      <span class="camp-reason">${c.reasons.slice(0,2).join(' | ')}</span>
+    </li>`).join('');
+  };
+  renderList(scale,'scaleList',10);renderList(maintain,'maintainList',10);renderList(stop,'stopList',10);
+  let banners='';
+  const noConv=active.filter(c=>c.conversions===0&&c.spend>50);
+  if(noConv.length>0){
+    const wastedSpend=noConv.reduce((s,c)=>s+c.spend,0);
+    banners+=`<div class="alert-banner critical">&#x26A0; ${noConv.length} campanas gastando ${FC(wastedSpend)} sin conversiones</div>`;
+  }
+  const highCpa=active.filter(c=>c.cost_per_conv>avgCpa*2&&c.conversions>0);
+  if(highCpa.length>0)banners+=`<div class="alert-banner warning">&#x26A0; ${highCpa.length} campanas con CPA >2x la media (${FC(avgCpa)})</div>`;
+  const topPerf=active.filter(c=>c.roas>=3&&c.search_is!=null&&c.search_is<0.5);
+  if(topPerf.length>0)banners+=`<div class="alert-banner success">&#x1F680; ${topPerf.length} campanas con ROAS >3x y margen de IS para escalar</div>`;
+  document.getElementById('alertBanners').innerHTML=banners;
+}
+
+function sortBy(col){if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=col==='name'||col==='status'||col==='type'||col==='action'?1:-1}renderCampaignTable()}
 function sortAccBy(col){if(accSortCol===col)accSortDir*=-1;else{accSortCol=col;accSortDir=col==='name'?1:-1}renderAccountsTable()}
 
 function renderCampaignTable(){
@@ -716,6 +851,7 @@ function renderCampaignTable(){
     <td class="num">${FP(c.conv_rate)}</td><td class="num">${FC(c.conv_value||0)}</td>
     <td class="num">${FX(c.roas||0,2)}x</td>
     <td class="num">${c.search_is!=null?FP(c.search_is):'-'}</td>
+    <td>${c.action?`<span class="score-pill ${c.action==='scale'?'pill-green':c.action==='maintain'?'pill-yellow':'pill-red'}">${c.action==='scale'?'ESCALAR':c.action==='maintain'?'MANTENER':'REVISAR'}</span>`:'-'}</td>
   </tr>`).join('');
 }
 
