@@ -240,6 +240,97 @@ def api_logout():
     session.clear()
     return jsonify({'ok': True})
 
+@app.route('/api/debug')
+def api_debug():
+    def mask(v, keep_start=4, keep_end=4):
+        if not v:
+            return {'set': False, 'length': 0}
+        s = str(v)
+        if len(s) <= keep_start + keep_end:
+            return {'set': True, 'length': len(s), 'preview': '***'}
+        return {'set': True, 'length': len(s), 'preview': s[:keep_start] + '...' + s[-keep_end:]}
+
+    out = {
+        'env_vars': {
+            'GOOGLE_ADS_DEVELOPER_TOKEN': mask(GOOGLE_ADS_DEVELOPER_TOKEN),
+            'GOOGLE_ADS_CLIENT_ID': mask(GOOGLE_ADS_CLIENT_ID, 8, 25),
+            'GOOGLE_ADS_CLIENT_SECRET': mask(GOOGLE_ADS_CLIENT_SECRET, 4, 4),
+            'GOOGLE_ADS_REFRESH_TOKEN': mask(GOOGLE_ADS_REFRESH_TOKEN, 6, 4),
+            'GOOGLE_ADS_LOGIN_CUSTOMER_ID': {
+                'set': bool(GOOGLE_ADS_LOGIN_CUSTOMER_ID),
+                'raw': GOOGLE_ADS_LOGIN_CUSTOMER_ID,
+                'normalized': GOOGLE_ADS_LOGIN_CUSTOMER_ID.replace('-', '') if GOOGLE_ADS_LOGIN_CUSTOMER_ID else ''
+            },
+            'PASSWORD_HASH': mask(PASSWORD_HASH, 6, 4),
+        },
+        'steps': []
+    }
+
+    try:
+        r = req_lib.post('https://oauth2.googleapis.com/token', data={
+            'client_id': GOOGLE_ADS_CLIENT_ID,
+            'client_secret': GOOGLE_ADS_CLIENT_SECRET,
+            'refresh_token': GOOGLE_ADS_REFRESH_TOKEN,
+            'grant_type': 'refresh_token'
+        }, timeout=15)
+        token_data = r.json() if r.headers.get('content-type', '').startswith('application/json') else {'raw': r.text}
+        out['steps'].append({
+            'step': '1_refresh_access_token',
+            'status_code': r.status_code,
+            'ok': r.status_code == 200,
+            'response': {k: v for k, v in token_data.items() if k != 'access_token'},
+            'access_token_received': bool(token_data.get('access_token'))
+        })
+        if r.status_code != 200:
+            return jsonify(out)
+        access_token = token_data.get('access_token')
+    except Exception as e:
+        out['steps'].append({'step': '1_refresh_access_token', 'exception': str(e)})
+        return jsonify(out)
+
+    try:
+        list_url = 'https://googleads.googleapis.com/v23/customers:listAccessibleCustomers'
+        r2 = req_lib.get(list_url, headers={
+            'Authorization': f'Bearer {access_token}',
+            'developer-token': GOOGLE_ADS_DEVELOPER_TOKEN,
+        }, timeout=15)
+        try:
+            body2 = r2.json()
+        except Exception:
+            body2 = {'raw': r2.text}
+        out['steps'].append({
+            'step': '2_list_accessible_customers',
+            'status_code': r2.status_code,
+            'ok': r2.status_code == 200,
+            'response': body2
+        })
+    except Exception as e:
+        out['steps'].append({'step': '2_list_accessible_customers', 'exception': str(e)})
+
+    try:
+        login_cid = GOOGLE_ADS_LOGIN_CUSTOMER_ID.replace('-', '')
+        search_url = f'https://googleads.googleapis.com/v23/customers/{login_cid}/googleAds:searchStream'
+        r3 = req_lib.post(search_url, headers={
+            'Authorization': f'Bearer {access_token}',
+            'developer-token': GOOGLE_ADS_DEVELOPER_TOKEN,
+            'login-customer-id': login_cid,
+            'Content-Type': 'application/json'
+        }, json={'query': 'SELECT customer_client.id, customer_client.descriptive_name FROM customer_client WHERE customer_client.manager = FALSE LIMIT 5'}, timeout=20)
+        try:
+            body3 = r3.json()
+        except Exception:
+            body3 = {'raw': r3.text}
+        out['steps'].append({
+            'step': '3_search_mcc_clients',
+            'status_code': r3.status_code,
+            'ok': r3.status_code == 200,
+            'response': body3
+        })
+    except Exception as e:
+        out['steps'].append({'step': '3_search_mcc_clients', 'exception': str(e)})
+
+    return jsonify(out)
+
 @app.route('/api/accounts')
 def api_accounts():
     try:
