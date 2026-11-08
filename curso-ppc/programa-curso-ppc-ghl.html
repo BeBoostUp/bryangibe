@@ -1,0 +1,704 @@
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
+
+/* ============================================================
+   Curso PPC - Bryan Gibe
+   Todo va dentro de .bgc para no pelearse con los estilos de GHL.
+   Sin modo oscuro a proposito: la pagina de GHL de alrededor es clara.
+   ============================================================ */
+
+.bgc {
+  --bg: #F5F1E8;
+  --surface: #FFFDF9;
+  --ink: #1A1815;
+  --muted: #585650;
+  --line: #E0D9CB;
+  --accent: #FF6A1A;
+  --black: #101010;
+  --cream: #F5F1E8;
+  --good: #0B6E47;
+  --good-tint: #E6F1E6;
+  --bad: #B3261E;
+  --bad-tint: #FAE8E1;
+  --mid: #8A5A00;
+  --mid-tint: #F7EBD8;
+  --display: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --cond: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  /* La fila de GHL tiene un contenedor con ancho maximo, asi que el bloque
+     se sale de el a lo ancho de la ventana. El script del final lo afina
+     con clientWidth, que no cuenta la barra de scroll, para que no aparezca
+     scroll horizontal en los navegadores que la pintan por fuera. */
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 0 0 calc(50% - 50vw);
+  padding: 0 0 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  text-align: left;
+
+  /* Ancho de la columna de lectura. El fondo y las bandas de color van a
+     sangre; solo el texto se queda en esta medida para que se pueda leer. */
+  --col: 780px;
+  --aire: 22px;
+}
+
+/* GHL mete el bloque dentro de su propia seccion: esto lo saca a ancho
+   completo aunque la plantilla traiga padding o un contenedor estrecho. */
+.bgc { box-sizing: border-box; }
+.bgc > * {
+  width: min(100% - (var(--aire) * 2), var(--col));
+  margin-inline: auto;
+}
+
+
+/* Reset defensivo: GHL mete sus propios margenes, pesos y colores. */
+.bgc *, .bgc *::before, .bgc *::after { box-sizing: border-box; }
+.bgc h1, .bgc h2, .bgc h3, .bgc p, .bgc ul, .bgc ol, .bgc li, .bgc figure {
+  margin: 0; padding: 0; color: inherit; text-align: inherit;
+}
+.bgc ul, .bgc ol { list-style: none; }
+.bgc a { color: var(--accent); text-decoration: none; font-weight: 700; }
+.bgc a:hover { text-decoration: underline; }
+.bgc button {
+  font: inherit; color: inherit; cursor: pointer; margin: 0;
+  text-transform: none; letter-spacing: normal; box-shadow: none;
+  -webkit-appearance: none; appearance: none;
+}
+.bgc button:disabled { cursor: not-allowed; opacity: .5; }
+.bgc :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.bgc .block > *, .bgc .plain > * { min-width: 0; }
+
+.bgc h1, .bgc .score { font-family: var(--cond); text-transform: uppercase; text-wrap: balance; }
+.bgc h2, .bgc h3 { font-family: var(--display); text-wrap: balance; }
+
+/* ---- Bloque naranja: portada y resultado ---- */
+.bgc .block {
+  background: var(--accent); color: var(--black);
+  padding: 38px 26px 34px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;
+}
+.bgc .block :focus-visible { outline-color: var(--black); }
+.bgc .block a { color: var(--black); }
+.bgc .wordmark { font-family: var(--display); font-size: 19px; font-weight: 400; letter-spacing: -.015em; }
+.bgc .wordmark b { font-weight: 800; }
+.bgc .eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 13px; letter-spacing: .11em; text-transform: uppercase;
+}
+.bgc .eyebrow::before { content: ""; flex: none; width: 26px; height: 2px; background: currentColor; }
+.bgc h1 { font-size: clamp(50px, 14vw, 96px); line-height: .88; font-weight: 800; letter-spacing: -.005em; }
+.bgc .lede { max-width: 58ch; }
+
+/* ---- Secciones sobre crema ---- */
+.bgc .plain { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.bgc .muted { color: var(--muted); font-size: 15px; }
+.bgc h2 { font-size: clamp(26px, 5.8vw, 34px); line-height: 1.14; font-weight: 700; letter-spacing: -.012em; }
+.bgc h2:focus { outline: none; }
+.bgc h3 { font-size: 21px; font-weight: 700; }
+.bgc .ctx { color: var(--muted); }
+
+/* ---- Botones ---- */
+.bgc .cta {
+  background: var(--accent); color: var(--black); border: 0; border-radius: 4px;
+  padding: 15px 26px; font-weight: 800; letter-spacing: .01em; justify-self: start;
+  display: inline-block; text-decoration: none;
+}
+.bgc .cta:hover:not(:disabled) { filter: brightness(1.08); text-decoration: none; }
+.bgc .block .cta { background: var(--black); color: var(--cream); }
+.bgc .block .cta:hover:not(:disabled) { filter: none; opacity: .86; }
+.bgc .ghost {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 13px 24px; font-weight: 700; color: var(--ink);
+  display: inline-block; text-decoration: none;
+}
+.bgc .ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---- Indice de dias (portada) ---- */
+.bgc .dias { border-top: 1px solid var(--line); }
+.bgc .dias li { border-bottom: 1px solid var(--line); padding: 18px 0; display: grid; gap: 10px; }
+.bgc .dia-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: baseline; }
+.bgc .dia-num { font-family: var(--cond); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); }
+.bgc .dia-tit { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.2; }
+.bgc .dia-sub { color: var(--muted); font-size: 15px; margin-top: 4px; }
+.bgc .dia-links { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 66px; }
+.bgc .pill {
+  border: 1.5px solid var(--line); border-radius: 4px; padding: 8px 16px;
+  font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; display: inline-block;
+}
+.bgc .pill:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .pill.on { background: var(--accent); border-color: var(--accent); color: var(--black); }
+.bgc .pill.on:hover { filter: brightness(1.08); color: var(--black); }
+.bgc .tag {
+  font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border: 1.5px solid var(--line); border-radius: 3px; padding: 5px 10px;
+  display: inline-block;
+}
+.bgc li.pendiente { opacity: .55; }
+
+/* ---- Leccion ---- */
+.bgc .leccion { display: grid; gap: 18px; }
+.bgc .leccion p { max-width: 66ch; }
+.bgc .bullets { display: grid; gap: 9px; }
+.bgc .bullets li { position: relative; padding-left: 26px; }
+.bgc .bullets li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; background: var(--accent); }
+.bgc .idea {
+  background: var(--surface); border: 1.5px solid var(--line); border-left: 5px solid var(--accent);
+  border-radius: 3px; padding: 16px 18px; display: grid; gap: 7px;
+}
+.bgc .idea b { font-family: var(--display); font-size: 17px; font-weight: 700; }
+.bgc .min { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* ---- Barra de progreso del test ---- */
+.bgc .bar { display: grid; gap: 9px; }
+.bgc .bar-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+.bgc .bar-row b { color: var(--ink); }
+.bgc .ticks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
+.bgc .ticks i { height: 8px; background: var(--line); }
+.bgc .ticks i.now { background: var(--accent); }
+.bgc .ticks i.good { background: var(--good); }
+.bgc .ticks i.mid { background: var(--mid); }
+.bgc .ticks i.bad { background: var(--bad); }
+
+/* ---- Preguntas ---- */
+.bgc .stack { display: grid; gap: 10px; }
+.bgc .opt {
+  display: block; width: 100%; text-align: left; background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: 3px; padding: 13px 15px;
+}
+.bgc .opt:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .opt:disabled, .bgc .row.locked { opacity: 1; cursor: default; }
+.bgc .opt.sel { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.bgc .ok { background: var(--good-tint); border-color: var(--good) !important; }
+.bgc .no { background: var(--bad-tint); border-color: var(--bad) !important; }
+.bgc .mark { font-weight: 700; margin-right: 6px; }
+.bgc .ok .mark { color: var(--good); }
+.bgc .no .mark { color: var(--bad); }
+.bgc .why { display: block; font-size: 15px; color: var(--muted); margin-top: 5px; }
+.bgc .row {
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 12px 14px; display: grid; gap: 9px;
+}
+.bgc .segs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.bgc .seg {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 8px 4px; font-size: 15px; font-weight: 600;
+}
+.bgc .seg:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .seg.on { background: var(--accent); color: var(--black); border-color: var(--accent); opacity: 1; }
+.bgc .ord { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; }
+.bgc .ord b { font-family: var(--cond); font-size: 24px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bgc .arrows { display: flex; gap: 6px; }
+.bgc .arrow {
+  width: 42px; height: 42px; background: transparent;
+  border: 1.5px solid var(--line); border-radius: 3px; font-weight: 700;
+}
+.bgc .arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.bgc .numline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bgc .numline input {
+  width: 130px; padding: 12px; font: 700 21px var(--body); font-variant-numeric: tabular-nums;
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+.bgc .numline input:focus { border-color: var(--accent); }
+.bgc .hint { color: var(--bad); font-size: 15px; }
+.bgc .fb { padding: 16px; border-left: 5px solid; display: grid; gap: 8px; }
+.bgc .fb:focus { outline: none; }
+.bgc .fb.good { background: var(--good-tint); border-color: var(--good); }
+.bgc .fb.mid { background: var(--mid-tint); border-color: var(--mid); }
+.bgc .fb.bad { background: var(--bad-tint); border-color: var(--bad); }
+.bgc .fb strong { font-size: 18px; }
+.bgc .when { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- Resultado ---- */
+.bgc .score { font-size: clamp(88px, 27vw, 176px); line-height: .82; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.bgc .score small { font-size: .42em; }
+.bgc .t-row { display: grid; gap: 5px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.bgc .t-head { display: flex; justify-content: space-between; gap: 12px; }
+.bgc .t-head b:last-child { font-variant-numeric: tabular-nums; }
+.bgc .meter { height: 8px; background: var(--line); }
+.bgc .meter i { display: block; height: 100%; }
+.bgc .rev { display: grid; gap: 10px; }
+.bgc .rev li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.bgc .topics { border-top: 1px solid var(--line); }
+.bgc .topics li { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.bgc .topics span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bgc textarea {
+  width: 100%; min-height: 150px; padding: 10px; font: 14px/1.4 var(--body);
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+
+/* ---- Pie ---- */
+.bgc .pie { border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; font-size: 14px; color: var(--muted); }
+
+.bgc .enter { animation: bgc-rise .22s ease-out; }
+@keyframes bgc-rise { from { transform: translateY(8px); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .bgc .enter { animation: none; } }
+
+@media (max-width: 560px) {
+  .bgc { --aire: 16px; padding: 0 0 44px; }
+  .bgc .block { padding-top: 28px; padding-bottom: 26px; }
+  .bgc .dia-links { padding-left: 0; }
+}
+
+/* ---- Contenedor del test dentro de una pagina con leccion ---- */
+.bgc .test { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.bgc .salto { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 6px; }
+
+/* ============================================================
+   Capa de academia: portada con cuatro areas, carpetas y vistas
+   ============================================================ */
+
+.bgc .cab { display: grid; gap: 10px; }
+.bgc .volver {
+  font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; justify-self: start;
+}
+.bgc .volver:hover { color: var(--accent); text-decoration: none; }
+
+/* ---- Carpetas (una por dia) ---- */
+.bgc .carpetas { display: grid; gap: 10px; }
+.bgc .carpeta {
+  display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 15px 16px; text-decoration: none; color: var(--ink); text-align: left; width: 100%;
+}
+.bgc .carpeta:hover:not(.off) { border-color: var(--accent); text-decoration: none; }
+.bgc .carpeta.off { opacity: .5; cursor: not-allowed; }
+.bgc .carpeta-ico {
+  width: 46px; height: 36px; border: 2px solid var(--accent); border-radius: 3px;
+  position: relative; display: grid; place-items: center;
+  font-family: var(--cond); font-size: 17px; font-weight: 800; color: var(--accent); line-height: 1;
+}
+.bgc .carpeta-ico::before {
+  content: ""; position: absolute; top: -6px; left: -2px; width: 20px; height: 6px;
+  background: var(--accent); border-radius: 2px 2px 0 0;
+}
+.bgc .carpeta.off .carpeta-ico { border-color: var(--muted); color: var(--muted); }
+.bgc .carpeta.off .carpeta-ico::before { background: var(--muted); }
+.bgc .carpeta-tit { font-family: var(--display); font-size: 17px; font-weight: 700; line-height: 1.25; }
+.bgc .carpeta-sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.bgc .carpeta-fin { font-size: 20px; color: var(--accent); font-weight: 700; }
+.bgc .carpeta.off .carpeta-fin { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---- Broma / ley del PPC ---- */
+.bgc .ley {
+  background: var(--black); color: var(--cream); border-radius: 4px;
+  padding: 20px 22px; display: grid; gap: 7px;
+}
+.bgc .ley-num { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.bgc .ley-txt { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.35; }
+.bgc .ley-pie { font-size: 14px; color: #B7B5B0; }
+
+/* ---- Estado vacio ---- */
+.bgc .vacio {
+  border: 1.5px dashed var(--line); border-radius: 4px; padding: 26px 22px;
+  display: grid; gap: 6px; text-align: center; justify-items: center;
+}
+.bgc .vacio b { font-family: var(--display); font-size: 18px; font-weight: 700; }
+.bgc .vacio span { color: var(--muted); font-size: 15px; max-width: 46ch; }
+
+/* ---- Tablas de teoria ---- */
+.bgc .tabla { width: 100%; border-collapse: collapse; font-size: 15px; display: table; }
+.bgc .tabla th, .bgc .tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.bgc .tabla th { font-family: var(--display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom-width: 1.5px; }
+.bgc .tabla tr:last-child td { border-bottom: 0; }
+.bgc .tabla td b { color: var(--ink); }
+.bgc .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ---- Teoria: bloque ampliado ---- */
+.bgc .teoria { border-left: 3px solid var(--line); padding-left: 18px; display: grid; gap: 14px; }
+.bgc .teoria h3 { font-size: 19px; }
+.bgc .formula {
+  background: var(--black); color: var(--cream); border-radius: 3px; padding: 14px 16px;
+  font-family: var(--cond); font-size: 22px; font-weight: 700; letter-spacing: .01em;
+}
+.bgc .formula em { color: var(--accent); font-style: normal; }
+.bgc .chiste { font-size: 15px; color: var(--muted); font-style: italic; }
+
+.bgc .oculto { display: none !important; }
+
+@media (max-width: 560px) {
+  .bgc .carpeta { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 11px; }
+}
+
+/* ---- Modulos apilados en una sola pagina ---- */
+.bgc .modulo { display: grid; gap: 14px; scroll-margin-top: 20px; padding-top: 12px; }
+.bgc .modulo > .eyebrow { color: var(--accent); }
+.bgc .modulo-h { display: grid; gap: 6px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.bgc .modulo-h h2 { margin: 0; }
+.bgc .navmod { display: flex; flex-wrap: wrap; gap: 8px; }
+.bgc .navmod a {
+  border: 2px solid var(--black); border-radius: 4px; padding: 9px 15px;
+  font-size: 14px; font-weight: 800; color: var(--black); text-decoration: none;
+}
+.bgc .navmod a:hover { background: var(--black); color: var(--accent); text-decoration: none; }
+
+/* ---- Saludo personalizado ---- */
+.bgc .dani {
+  background: var(--black); color: var(--cream);
+  padding: 26px 22px; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; align-items: center;
+}
+.bgc .dani-foto {
+  width: 132px; height: 132px; border-radius: 50%;
+  background: var(--accent); overflow: hidden; display: grid; place-items: center;
+}
+.bgc .dani-foto::before {
+  content: "D"; grid-area: 1 / 1;
+  font-family: var(--cond); font-size: 62px; font-weight: 800; color: var(--black);
+}
+.bgc .dani-foto img { grid-area: 1 / 1; }
+.bgc .dani-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.bgc .dani-txt { display: grid; gap: 8px; }
+.bgc .dani-tit { font-family: var(--cond); font-size: 34px; font-weight: 800; line-height: .95; text-transform: uppercase; }
+.bgc .dani-tit em { color: var(--accent); font-style: normal; }
+.bgc .dani-txt p { font-size: 16px; line-height: 1.5; }
+.bgc .dani-pie { color: #B7B5B0; font-size: 14px; font-style: italic; }
+@media (max-width: 560px) {
+  .bgc .dani { grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 14px; padding: 20px 18px; }
+}
+
+/* ---- Acordeon de los resumenes ---- */
+.bgc .acor-lista { display: grid; gap: 8px; }
+.bgc .acor {
+  border: 1.5px solid var(--line); border-radius: 4px;
+  background: var(--surface); overflow: hidden;
+}
+.bgc .acor > summary {
+  list-style: none; cursor: pointer; padding: 15px 18px;
+  font-family: var(--display); font-size: 18px; font-weight: 700; line-height: 1.3;
+  display: grid; grid-template-columns: minmax(0, 1fr) 22px; gap: 12px; align-items: center;
+}
+.bgc .acor > summary::-webkit-details-marker { display: none; }
+.bgc .acor > summary::marker { content: ""; }
+.bgc .acor > summary::after {
+  content: "+"; font-family: var(--cond); font-size: 28px; font-weight: 700;
+  color: var(--accent); line-height: 1; text-align: center;
+}
+.bgc .acor[open] > summary::after { content: "\2013"; }
+.bgc .acor > summary:hover { color: var(--accent); }
+.bgc .acor[open] > summary { border-bottom: 1.5px solid var(--line); }
+.bgc .acor-cuerpo { padding: 18px; display: grid; gap: 14px; }
+.bgc .acor-cuerpo > *:first-child { margin-top: 0; }
+.bgc .acor-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.bgc .acor-barra .muted { margin: 0; }
+
+/* ---- Marca: LibertAds, de Bryan Gibe ---- */
+.bgc .wordmark-sub { font-size: 13px; font-weight: 600; opacity: .72; letter-spacing: .02em; margin-left: 10px; white-space: nowrap; }
+
+/* ---- Aviso de la cuenta con la que hay que entrar ---- */
+.bgc .aviso {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start;
+  background: var(--surface); border: 1.5px solid var(--accent); border-radius: 4px;
+  padding: 13px 15px; font-size: 15px; line-height: 1.5;
+}
+.bgc .aviso::before {
+  content: "!"; width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--accent); color: var(--black); border-radius: 50%;
+  font-family: var(--cond); font-size: 21px; font-weight: 800; line-height: 1;
+}
+.bgc .aviso b { font-weight: 800; word-break: break-all; }
+.bgc .aviso span { display: block; color: var(--muted); margin-top: 3px; }
+
+/* ============================================================
+   Bandas a sangre. Va al final a proposito: con la misma especificidad
+   gana la ultima regla, y antes la pisaba el padding de .block y .dani.
+   El ancho es el total, y el padding lateral calculado deja el contenido
+   alineado con la misma columna de lectura que el resto.
+   ============================================================ */
+.bgc > .block,
+.bgc > .dani {
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: max(var(--aire), calc((100% - var(--col)) / 2));
+}
+
+/* Dos bandas seguidas van pegadas, sin franja de fondo entre medias, como
+   en bryangibe.com. El hueco lo pone el gap del grid, asi que se anula. */
+.bgc > .block + .dani,
+.bgc > .dani + .block { margin-top: -20px; }
+
+/* ============================================================
+   Programa del curso: piezas propias de esta pagina
+   ============================================================ */
+.bgc .principios, .bgc .mcp { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+.bgc .idea span { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.bgc .acor .dias { border-top: 0; }
+.bgc .acor .dias li:last-child { border-bottom: 0; padding-bottom: 4px; }
+.bgc .acor .dias li:first-child { padding-top: 4px; }
+.bgc .dia-tit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 20px; }
+.bgc .dia-ok { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 8px; padding-left: 14px; border-left: 3px solid var(--accent); }
+.bgc .tag-ok { color: var(--good); border-color: var(--good); background: var(--good-tint); }
+.bgc .tag-on { color: var(--black); border-color: var(--accent); background: var(--accent); }
+.bgc .bullets b { font-weight: 800; }
+.bgc ol.topics li span:first-child { color: var(--ink); }
+.bgc ol.topics li b { color: var(--accent); font-family: var(--cond); font-size: 19px; margin-right: 4px; }
+.bgc .formula { font-size: 19px; }
+.bgc .modulo h3 { margin-top: 6px; }
+@media (max-width: 560px) {
+  .bgc .dia-head { grid-template-columns: 40px minmax(0, 1fr); gap: 10px; }
+  .bgc .dia-num { font-size: 32px; }
+  .bgc .dia-tit { font-size: 18px; }
+}
+</style>
+
+<div class="bgc">
+
+  <!-- ====================== PORTADA ====================== -->
+  <section class="block">
+    <p class="wordmark">Libert<b>Ads</b> <span class="wordmark-sub">por Bryan Gibe</span></p>
+    <p class="eyebrow">Academia &#183; Programa del curso</p>
+    <h1>El programa</h1>
+    <p class="lede">Veinte clases, un proyecto real y una regla: t&#250; tocas, yo pregunto. Aqu&#237; tienes qu&#233; vamos a hacer, en qu&#233; orden y c&#243;mo sabr&#225;s que lo dominas.</p>
+    <nav class="navmod">
+      <a href="#como">C&#243;mo trabajamos</a>
+      <a href="#temario">Temario</a>
+      <a href="#claude">Claude y MCP</a>
+      <a href="#semanal">Revisi&#243;n semanal</a>
+      <a href="#final">Proyecto final</a>
+    </nav>
+  </section>
+
+  <!-- ====================== SALUDO A DANI ====================== -->
+  <section class="dani">
+    <span class="dani-foto"><img src="data:image/jpeg;base64,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" alt="Dani Ruiz" onerror="this.remove()"></span>
+    <div class="dani-txt">
+      <p class="dani-tit">Hola, <em>Dani</em></p>
+      <p>Campa&#241;as ya sabes montar. Lo que viene ahora es saber por qu&#233; funcionan, cu&#225;ndo no hay que tocarlas y c&#243;mo medirlas para que no te mientan. Todo sobre un proyecto real, con dinero real y poco.</p>
+      <p class="dani-pie">Pasamos de clase cuando lo domines, no cuando lo diga el calendario.</p>
+    </div>
+  </section>
+
+  <!-- ====================== C&#211;MO TRABAJAMOS ====================== -->
+  <section class="modulo" id="como">
+    <p class="eyebrow">Antes de empezar</p>
+    <div class="modulo-h">
+      <h2>C&#243;mo vamos a trabajar</h2>
+    </div>
+    <p class="ctx">Seis reglas que valen para las veinte clases.</p>
+    <div class="principios">
+      <div class="idea"><b>Proyecto real desde el d&#237;a 1</b><span>Todo se aplica al mismo negocio, con presupuesto peque&#241;o: entre 5 y 20 &#8364; al d&#237;a por plataforma.</span></div>
+      <div class="idea"><b>T&#250; tocas, yo pregunto</b><span>El rat&#243;n es tuyo. Mi trabajo es preguntarte &#171;&#191;por qu&#233;?&#187; hasta que la respuesta tenga un dato detr&#225;s.</span></div>
+      <div class="idea"><b>Criterio antes que botones</b><span>D&#243;nde est&#225; cada men&#250; lo sabes. Lo que vamos a entrenar es decidir.</span></div>
+      <div class="idea"><b>Medici&#243;n antes que campa&#241;as</b><span>No se lanza nada que no se pueda medir. Si la medici&#243;n falla, el algoritmo aprende mal y no avisa.</span></div>
+      <div class="idea"><b>Claude con correa</b><span>Desde la clase 8 trabajas con Claude: &#233;l lee, prepara y propone. T&#250; apruebas y decides.</span></div>
+      <div class="idea"><b>Log de decisiones</b><span>Cada cambio, con su motivo y su resultado a 7 d&#237;as. Al final ser&#225; tu manual y tu caso de estudio.</span></div>
+    </div>
+    <div class="aviso"><div>Para la clase 2 necesitas los <b>accesos del proyecto</b>: web, Google Ads, Meta Business, GA4 y Google Tag Manager.<span>Y abre ya tu log de decisiones: una hoja con fecha, plataforma, cambio, motivo y resultado a 7 d&#237;as.</span></div></div>
+  </section>
+
+  <aside class="ley">
+    <p class="ley-num">Ley no escrita del PPC n&#186; 3</p>
+    <p class="ley-txt">La conversi&#243;n que no se mide no existe. La que se mide mal existe todav&#237;a menos, pero el algoritmo se la cree.</p>
+    <p class="ley-pie">Por eso el bloque de medici&#243;n va antes que cualquier campa&#241;a.</p>
+  </aside>
+
+  <!-- ====================== TEMARIO ====================== -->
+  <section class="modulo" id="temario">
+    <p class="eyebrow">El temario</p>
+    <div class="modulo-h">
+      <h2>Veinte clases en siete bloques</h2>
+    </div>
+    <p class="ctx">Google se lanza en la clase 12 y Meta en la 16. Cada clase termina con una tarea para tu proyecto. Abre el bloque que quieras.</p>
+
+    <div class="acor-lista">
+
+      <details class="acor" open>
+        <summary>Bloque 0 &#183; Arranque</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li class="hecha"><div class="dia-head"><span class="dia-num">01</span><div><p class="dia-tit">Intro al PPC <span class="tag tag-ok">Hecha</span></p><p class="dia-sub">Tipos de publicidad y c&#243;mo elegir entre Google Ads y Meta Ads.</p><p class="dia-ok">La das por superada cuando eliges plataforma seg&#250;n intenci&#243;n y demanda.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">02</span><div><p class="dia-tit">Diagn&#243;stico</p><p class="dia-sub">Auditas una cuenta en voz alta, sin que nadie te corrija, para ver qu&#233; dominas y qu&#233; no. Elegimos el proyecto real.</p><p class="dia-ok">La das por superada cuando tenemos tu mapa de fortalezas y huecos.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 1 &#183; Negocio y estrategia</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">03</span><div><p class="dia-tit">Brief y econom&#237;a de la cuenta</p><p class="dia-sub">Ticket medio, margen, LTV, tasa de cierre, CPA m&#225;ximo, ROAS de equilibrio y presupuesto m&#237;nimo para tener datos.</p><p class="dia-ok">La das por superada cuando calculas los n&#250;meros del proyecto sin mirar.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">04</span><div><p class="dia-tit">Competencia y plan de medios</p><p class="dia-sub">Biblioteca de anuncios de Meta, Centro de transparencia de Google y Semrush. Reparto del presupuesto y objetivos a 30, 60 y 90 d&#237;as.</p><p class="dia-ok">La das por superada cuando defiendes tu plan ante un cliente esc&#233;ptico.</p></div></div></li>
+          </ol>
+          <div class="formula">CPA m&#225;x = <em>ticket medio &#215; margen</em> &#183; ROAS equilibrio = <em>1 &#247; margen</em></div>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 2 &#183; Medici&#243;n</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">05</span><div><p class="dia-tit">GA4 y Google Tag Manager</p><p class="dia-sub">Mapa de medici&#243;n, etiquetas, activadores, dataLayer y eventos clave.</p><p class="dia-ok">La das por superada cuando lo montas t&#250; solo y lo verificas con Tag Assistant.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">06</span><div><p class="dia-tit">Conversiones en Google Ads y Meta</p><p class="dia-sub">Conversiones primarias y secundarias, conversiones mejoradas, p&#237;xel, API de Conversiones y deduplicaci&#243;n.</p><p class="dia-ok">La das por superada cuando una conversi&#243;n de prueba aparece en las dos plataformas.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">07</span><div><p class="dia-tit">Consent Mode, CRM y verificaci&#243;n</p><p class="dia-sub">Consent Mode v2, conversiones modeladas, importaci&#243;n desde el CRM y nociones de server-side.</p><p class="dia-ok">La das por superada cuando explicas qu&#233; parte de tu medici&#243;n es fiable y cu&#225;l aproximada.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 3 &#183; Claude y MCP</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">08</span><div><p class="dia-tit">Claude como tocateclas</p><p class="dia-sub">Qu&#233; es un MCP, qu&#233; se delega y qu&#233; no, y tus reglas de trabajo escritas en un proyecto de Claude.</p><p class="dia-ok">La das por superada cuando pillas a Claude invent&#225;ndose un dato.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">09</span><div><p class="dia-tit">MCP de Google: crear y conectar</p><p class="dia-sub">Proyecto en Google Cloud, developer token, credenciales y MCP oficiales de Google Ads y GA4.</p><p class="dia-ok">La das por superada cuando consultas Google Ads y GA4 desde Claude.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">10</span><div><p class="dia-tit">MCP de Meta: conectar y usar</p><p class="dia-sub">Conector oficial de Meta Ads, permisos de lectura y escritura y aprobaci&#243;n de cada cambio.</p><p class="dia-ok">La das por superada cuando Claude prepara un cambio en pausa y t&#250; lo apruebas.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 4 &#183; Google Ads Search y landing</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">11</span><div><p class="dia-tit">Estructura y keywords</p><p class="dia-sub">Intenci&#243;n de b&#250;squeda, concordancias, negativas y estructura de cuenta.</p><p class="dia-ok">La das por superada cuando cada grupo de anuncios tiene un motivo.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">12</span><div><p class="dia-tit">Anuncios, pujas y lanzamiento <span class="tag tag-on">Lanzamiento</span></p><p class="dia-sub">Anuncios RSA, recursos, Quality Score, estrategias de puja y checklist de lanzamiento.</p><p class="dia-ok">La das por superada cuando tu campa&#241;a de Search est&#225; activa y bien revisada.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">13</span><div><p class="dia-tit">Landing y CRO</p><p class="dia-sub">Coherencia entre anuncio y landing, fricci&#243;n, velocidad en m&#243;vil, Microsoft Clarity y tests A/B.</p><p class="dia-ok">La das por superada cuando distingues un problema de anuncio de uno de landing.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 5 &#183; Meta Ads</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">14</span><div><p class="dia-tit">Estructura, audiencias y Advantage+</p><p class="dia-sub">Portfolio comercial, consolidaci&#243;n, segmentaci&#243;n amplia, p&#250;blicos personalizados y exclusiones.</p><p class="dia-ok">La das por superada cuando tu estructura cabe en tu presupuesto.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">15</span><div><p class="dia-tit">Creatividad y &#225;ngulos</p><p class="dia-sub">&#193;ngulos, hooks de 3 segundos, formatos y UGC. En Meta, la creatividad es la segmentaci&#243;n.</p><p class="dia-ok">La das por superada cuando tienes cinco creatividades con &#225;ngulos distintos.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">16</span><div><p class="dia-tit">Testing y lanzamiento <span class="tag tag-on">Lanzamiento</span></p><p class="dia-sub">Fase de aprendizaje, cu&#225;ndo juzgar un anuncio, hook rate, frecuencia, fatiga y ciclo de testing.</p><p class="dia-ok">La das por superada cuando tu campa&#241;a est&#225; activa con reglas de testing escritas.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 6 &#183; Nivel pro y cierre</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">17</span><div><p class="dia-tit">PMax, Demand Gen, YouTube y Shopping</p><p class="dia-sub">Para qu&#233; sirve cada tipo, qu&#233; necesita y c&#243;mo evitar que te enga&#241;e.</p><p class="dia-ok">La das por superada cuando justificas qu&#233; campa&#241;a usar y cu&#225;l no.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">18</span><div><p class="dia-tit">Optimizaci&#243;n y diagn&#243;stico</p><p class="dia-sub">El orden para diagnosticar una ca&#237;da: medici&#243;n, subasta, cambios en la cuenta, creatividad o landing, y estacionalidad.</p><p class="dia-ok">La das por superada cuando diagnosticas una ca&#237;da con datos y en orden.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">19</span><div><p class="dia-tit">Escalado, automatizaci&#243;n y reporting</p><p class="dia-sub">Escalado vertical y horizontal, reglas, scripts y un informe en Looker Studio que entienda un cliente.</p><p class="dia-ok">La das por superada cuando tienes informe y plan de escalado.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">20</span><div><p class="dia-tit">Proyecto final</p><p class="dia-sub">Presentas el caso completo como lo har&#237;as en una reuni&#243;n con un cliente.</p><p class="dia-ok">La das por superada cuando sobrevives a las preguntas del cliente dif&#237;cil.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ====================== CLAUDE Y MCP ====================== -->
+  <section class="modulo" id="claude">
+    <p class="eyebrow">Claude y MCP</p>
+    <div class="modulo-h">
+      <h2>Claude trabaja para ti, no por ti</h2>
+    </div>
+    <p class="ctx">Con los MCP, Claude puede leer tus cuentas de Google Ads, GA4 y Meta y, si le dejas, hacer cambios. Te va a ahorrar horas de trabajo mec&#225;nico. Las decisiones siguen siendo tuyas.</p>
+
+    <h3>Las reglas de oro</h3>
+    <ul class="bullets">
+      <li><b>Claude propone, t&#250; decides.</b> Antes de cualquier cambio, un plan en tabla: qu&#233; cambia, de qu&#233; a qu&#233; y por qu&#233;.</li>
+      <li><b>Solo lectura por defecto.</b> El permiso de escritura se da cuando hace falta y se quita despu&#233;s.</li>
+      <li><b>Nunca &#171;Permitir siempre&#187;</b> en herramientas que crean, pausan o cambian presupuesto.</li>
+      <li><b>Todo lo nuevo, en pausa.</b> Lo activas t&#250; despu&#233;s de revisarlo en la plataforma.</li>
+      <li><b>Cada n&#250;mero, con fecha y fuente.</b> Y lo compruebas en la interfaz.</li>
+    </ul>
+
+    <div class="scroll-x">
+      <table class="tabla">
+        <thead><tr><th>Bien para Claude</th><th>Nunca solo</th></tr></thead>
+        <tbody>
+          <tr><td>Sacar informes y cruzar datos</td><td>Cambiar presupuestos</td></tr>
+          <tr><td>Proponer negativas a partir de t&#233;rminos de b&#250;squeda</td><td>Activar o pausar campa&#241;as</td></tr>
+          <tr><td>Redactar variantes de anuncios y hooks</td><td>Cambiar la estrategia de puja</td></tr>
+          <tr><td>Auditar una cuenta con una checklist</td><td>Borrar nada</td></tr>
+          <tr><td>Preparar una estructura para revisarla</td><td>Decidir qu&#233; funciona y qu&#233; no</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mcp">
+      <div class="idea"><b>MCP de Google Ads y GA4</b><span>Oficiales de Google y de solo lectura. Se instalan en local con un proyecto de Google Cloud, un developer token y credenciales OAuth.</span></div>
+      <div class="idea"><b>MCP de Meta Ads</b><span>Conector oficial de Meta. Este s&#237; puede crear y editar campa&#241;as, as&#237; que se empieza solo con permisos de lectura.</span></div>
+    </div>
+
+    <div class="aviso"><div>Antes de la clase 9, pide el <b>developer token</b> en el Centro de API de una cuenta de administrador (MCC).<span>Empieza en modo prueba y para cuentas reales hay que pedir acceso Basic, que Google revisa y puede tardar d&#237;as.</span></div></div>
+  </section>
+
+  <aside class="ley">
+    <p class="ley-num">Ley no escrita del PPC n&#186; 4</p>
+    <p class="ley-txt">La IA trabaja rapid&#237;simo. Sobre todo cuando se equivoca.</p>
+    <p class="ley-pie">Corolario: el bot&#243;n de &#171;Permitir siempre&#187; es el atajo m&#225;s caro de la cuenta.</p>
+  </aside>
+
+  <!-- ====================== REVISI&#211;N SEMANAL ====================== -->
+  <section class="modulo" id="semanal">
+    <p class="eyebrow">Desde la clase 12</p>
+    <div class="modulo-h">
+      <h2>La revisi&#243;n semanal</h2>
+    </div>
+    <p class="ctx">Treinta minutos a la semana, en paralelo a las clases. La diriges t&#250;; yo solo pregunto. Es donde se entrena el criterio.</p>
+    <ol class="topics">
+      <li><span><b>1.</b> Medici&#243;n: &#191;entran conversiones en las dos plataformas?</span><span>3 min</span></li>
+      <li><span><b>2.</b> N&#250;meros frente al objetivo de la clase 3</span><span>7 min</span></li>
+      <li><span><b>3.</b> Google: t&#233;rminos de b&#250;squeda, negativas y anuncios</span><span>7 min</span></li>
+      <li><span><b>4.</b> Meta: creatividades, frecuencia y fatiga</span><span>7 min</span></li>
+      <li><span><b>5.</b> Decisiones: tres cambios como m&#225;ximo, al log</span><span>6 min</span></li>
+    </ol>
+    <p class="muted">Claude puede prepararte los puntos 1 a 4 antes de la reuni&#243;n. El punto 5 es tuyo.</p>
+  </section>
+
+  <!-- ====================== PROYECTO FINAL ====================== -->
+  <section class="modulo" id="final">
+    <p class="eyebrow">Clase 20</p>
+    <div class="modulo-h">
+      <h2>El proyecto final</h2>
+    </div>
+    <p class="ctx">Presentas el caso completo como si fuera una reuni&#243;n con un cliente: objetivos, n&#250;meros, medici&#243;n, estructura, creatividades, resultados, aprendizajes y pr&#243;ximos pasos. Despu&#233;s vienen las preguntas inc&#243;modas.</p>
+    <div class="scroll-x">
+      <table class="tabla">
+        <thead><tr><th>Qu&#233; se eval&#250;a</th><th>Qu&#233; tiene que verse</th></tr></thead>
+        <tbody>
+          <tr><td><b>Negocio</b></td><td>Conoces tus n&#250;meros y decides con ellos</td></tr>
+          <tr><td><b>Medici&#243;n</b></td><td>Sabes qu&#233; es fiable y qu&#233; es aproximado</td></tr>
+          <tr><td><b>Estructura</b></td><td>Cada decisi&#243;n tiene un motivo</td></tr>
+          <tr><td><b>Creatividad</b></td><td>Pruebas &#225;ngulos, no colores de bot&#243;n</td></tr>
+          <tr><td><b>Criterio</b></td><td>Sabes cu&#225;ndo no tocar</td></tr>
+          <tr><td><b>Uso de Claude</b></td><td>Delegas lo mec&#225;nico y lo revisas todo</td></tr>
+          <tr><td><b>Comunicaci&#243;n</b></td><td>Cuentas resultados de negocio, no m&#233;tricas de plataforma</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="idea"><b>Lo que te llevas</b><span>Tu log de decisiones convertido en un caso de estudio real para tu portfolio.</span></div>
+  </section>
+
+  <section class="plain">
+    <div class="pie">
+      <span>Libert<b>Ads</b> &#183; de Bryan Gibe</span>
+      <span><a href="https://bryangibe.com">bryangibe.com</a></span>
+    </div>
+  </section>
+
+</div>
+<script>
+/* Ajuste fino del ancho dentro de GHL (mismo que en la academia). */
+(function () {
+  var el = document.querySelector(".bgc");
+  if (!el) return;
+  function ajusta() {
+    el.style.marginLeft = "0px";
+    el.style.width = "auto";
+    var izq = el.getBoundingClientRect().left;
+    el.style.marginLeft = -izq + "px";
+    el.style.width = document.documentElement.clientWidth + "px";
+  }
+  ajusta();
+  window.addEventListener("resize", ajusta);
+  window.addEventListener("orientationchange", ajusta);
+  window.addEventListener("load", ajusta);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajusta); }
+})();
+</script>
