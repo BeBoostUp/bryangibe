@@ -35,13 +35,18 @@ DEFAULT_ALLOWED = {
 ALLOWED = dict(DEFAULT_ALLOWED)
 
 
+# Paquete CERRADO: si existe el archivo LOCKED junto a server.py, solo valen bryan@ y
+# academy@ y se ignoran GOOGLE_MCP_OPEN / GOOGLE_MCP_ACCOUNTS aunque estén en el .env.
+LOCKED = os.path.exists(os.path.join(ROOT, "LOCKED"))
+
+
 def open_mode():
-    return os.environ.get("GOOGLE_MCP_OPEN", "").strip() == "1"
+    return not LOCKED and os.environ.get("GOOGLE_MCP_OPEN", "").strip() == "1"
 
 
 def _load_allowed():
     raw = os.environ.get("GOOGLE_MCP_ACCOUNTS", "").strip()
-    if not raw:
+    if LOCKED or not raw:
         return
     ALLOWED.clear()
     for part in raw.replace(";", ",").split(","):
@@ -167,10 +172,10 @@ def bootstrap(verify=True):
                     os.environ[p + label.upper()] = ""
                 os.environ["GOOGLE_ADS_LOGIN_CUSTOMER_ID_" + label.upper()] = ""
         elif legacy:
-            st["source"] = "tokens antiguos por servicio (" + ", ".join(
-                n for n, p in MODULE_PREFIXES.items() if p in legacy) + ")"
-            st["note"] = ("Funciona solo en esos servicios. Para tenerlo TODO (YouTube, Business "
-                          f"Profile, Sheets, Cloud...) ejecuta: python3 get_refresh_token.py {label}")
+            st["source"] = "conectada en: " + ", ".join(
+                n for n, p in MODULE_PREFIXES.items() if p in legacy)
+            st["note"] = ("OK para esos servicios. Opcional, para añadir YouTube, Business Profile, "
+                          f"Sheets, Cloud...: python get_refresh_token.py {label}")
         else:
             st["note"] = f"Sin conectar. Ejecuta: python3 get_refresh_token.py {label}"
         STATUS[label] = st

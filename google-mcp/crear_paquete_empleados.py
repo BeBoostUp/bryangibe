@@ -33,7 +33,7 @@ except Exception:
     pass
 
 CODE = ["core", "gads", "ga4", "gtm", "mc", "gsc", "ws", "server.py", "get_refresh_token.py",
-        "install.sh", "install.ps1", "install.bat", "requirements.txt", ".env.example", ".gitignore",
+        "install.sh", "install.ps1", "install.bat", "conectar-bryan.bat", "conectar-academy.bat", "requirements.txt", ".env.example", ".gitignore",
         "LEEME.md"]
 # Lo único que se copia de tu .env (configuración, no tokens)
 KEEP = ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_ADS_API_VERSION", "GOOGLE_ADS_DEVELOPER_TOKEN",
@@ -85,6 +85,9 @@ def main():
         elif os.path.exists(src):
             shutil.copy2(src, os.path.join(pkg, item))
 
+    # paquete CERRADO: solo bryan@ y academy@, sin preguntas al instalar
+    with open(os.path.join(pkg, "LOCKED"), "w", encoding="utf-8") as f:
+        f.write("Paquete cerrado: solo bryan@bryangibe.com y academy@bryangibe.com.\n")
     env_path = os.path.join(pkg, ".env")
     lines = ["# MCP de Google — paquete para empleados (" + datetime.date.today().isoformat() + ")",
              "# Contiene tokens de bryan@bryangibe.com y academy@bryangibe.com: no lo compartas fuera.",
@@ -111,8 +114,9 @@ def main():
     dest_dir = os.path.join(os.path.expanduser("~"), "Desktop")
     if not os.path.isdir(dest_dir):
         dest_dir = os.path.expanduser("~")
-    name = os.path.join(dest_dir, "mcp-google-empleados-" + datetime.date.today().isoformat())
-    zip_path = shutil.make_archive(name, "zip", tmp, "google-mcp")
+    name = os.path.join(dest_dir, "mcp-bryan-gibe-" + datetime.date.today().isoformat())
+    os.rename(pkg, os.path.join(tmp, "mcp-bryan-gibe"))
+    zip_path = shutil.make_archive(name, "zip", tmp, "mcp-bryan-gibe")
     shutil.rmtree(tmp, ignore_errors=True)
     print("\n" + "=" * 64)
     print("[OK] Paquete creado:", zip_path)

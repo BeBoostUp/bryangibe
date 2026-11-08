@@ -2,7 +2,9 @@
 # Uso: doble clic en install.bat  (o en PowerShell:  powershell -ExecutionPolicy Bypass -File install.ps1)
 $ErrorActionPreference = "Continue"
 $HERE = Split-Path -Parent $MyInvocation.MyCommand.Path
-$DEST = Join-Path $env:USERPROFILE "google-mcp"
+$LOCKED = Test-Path (Join-Path $HERE "LOCKED")
+# El paquete cerrado (solo bryan@ y academy@) va a su propia carpeta: no hereda nada viejo
+if ($LOCKED) { $DEST = Join-Path $env:USERPROFILE "mcp-bryan-gibe" } else { $DEST = Join-Path $env:USERPROFILE "google-mcp" }
 
 Write-Host "== 1/5 Python"
 $PY = $null
@@ -14,8 +16,15 @@ foreach ($cand in @("py -3", "python", "python3")) {
     } catch { }
 }
 if (-not $PY) {
-    Write-Host "[X] No hay Python 3. Instalalo desde https://www.python.org/downloads/windows/"
-    Write-Host "    (marca 'Add python.exe to PATH' durante la instalacion) y vuelve a ejecutar."
+    # Sin Python: se instala solo con winget (sin preguntas)
+    Write-Host "    No hay Python: instalandolo automaticamente (puede tardar 1-2 min)..."
+    try { winget install -e --id Python.Python.3.12 --scope user --silent --accept-package-agreements --accept-source-agreements | Out-Null } catch { }
+    $found = Get-ChildItem -Path (Join-Path $env:LOCALAPPDATA "Programs\Python"), "C:\Program Files\Python3*" -Filter python.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($found) { $PY = $found.FullName }
+}
+if (-not $PY) {
+    Write-Host "[X] No se pudo instalar Python automaticamente. Instalalo desde https://www.python.org/downloads/windows/"
+    Write-Host "    (marca 'Add python.exe to PATH') y vuelve a hacer doble clic en install.bat."
     Read-Host "Pulsa Enter para salir"; exit 1
 }
 Write-Host "    usando $PY ($(& $PY --version 2>&1))"
@@ -32,7 +41,7 @@ if ((Resolve-Path $HERE).Path -ne $DEST) {
     if (Test-Path $DEST) {
         $BAK = "$DEST.bak-$(Get-Date -Format yyyyMMddHHmmss)"
         Copy-Item $DEST $BAK -Recurse
-        if (Test-Path (Join-Path $BAK ".env")) { $OLDENV = Join-Path $BAK ".env" }
+        if ((Test-Path (Join-Path $BAK ".env")) -and -not $LOCKED) { $OLDENV = Join-Path $BAK ".env" }
         Remove-Item $DEST -Recurse -Force
         Write-Host "    ya existia -> copia de seguridad en $BAK"
     }
@@ -69,19 +78,49 @@ if os.path.exists(cfg):
     with open(cfg, encoding="utf-8") as f:
         data = json.load(f)
 servers = data.setdefault("mcpServers", {})
-import re as _re
+OLD = ("googleads", "searchconsole", "tagmanager", "ga4", "merchantcenter", "gmail", "workspace", "google")
+locked = os.path.exists(os.path.join(dest, "LOCKED"))
 _envtxt = open(os.path.join(dest, ".env"), encoding="utf-8").read() if os.path.exists(os.path.join(dest, ".env")) else ""
-if _re.search(r"^GOOGLE_MCP_OPEN=1", _envtxt, flags=_re.M):
-    print("    modo 'todas las cuentas': los MCP antiguos se CONSERVAN (no se quita ningun acceso)")
+entry = {"type": "stdio", "command": py, "args": [os.path.join(dest, "server.py")],
+         "env": {"PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}}
+if not locked and re.search(r"^GOOGLE_MCP_OPEN=1", _envtxt, flags=re.M):
+    print("    modo 'todas las cuentas': los MCP antiguos se CONSERVAN")
 else:
-    for old in ("googleads", "searchconsole", "tagmanager", "ga4", "merchantcenter", "gmail", "workspace"):
+    # quita TODOS los MCP de Google anteriores (globales y por proyecto)
+    for old in OLD:
         if servers.pop(old, None) is not None:
             print("    quitado antiguo:", old)
-servers["google"] = {"type": "stdio", "command": py, "args": [os.path.join(dest, "server.py")],
-                     "env": {"PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}}
+    for pth, proj in (data.get("projects") or {}).items():
+        for old in OLD:
+            if isinstance(proj, dict) and (proj.get("mcpServers") or {}).pop(old, None) is not None:
+                print("    quitado antiguo:", old, "(proyecto", pth + ")")
+servers["google"] = entry
 with open(cfg, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2, ensure_ascii=False)
 print("    registrado: google ->", cfg)
+# App de escritorio de Claude (normal y version Microsoft Store)
+import glob
+appdata = os.environ.get("APPDATA", ""); local = os.environ.get("LOCALAPPDATA", "")
+cands = [os.path.join(appdata, "Claude", "claude_desktop_config.json")]
+cands += glob.glob(os.path.join(local, "Packages", "Claude_*", "LocalCache", "Roaming", "Claude", "claude_desktop_config.json"))
+for dc in cands:
+    if not os.path.isdir(os.path.dirname(dc)):
+        continue
+    d = {}
+    if os.path.exists(dc):
+        shutil.copy(dc, dc + ".bak-" + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+        try:
+            d = json.load(open(dc, encoding="utf-8"))
+        except Exception:
+            d = {}
+    ms = d.setdefault("mcpServers", {})
+    if locked or not re.search(r"^GOOGLE_MCP_OPEN=1", _envtxt, flags=re.M):
+        for old in OLD:
+            if ms.pop(old, None) is not None:
+                print("    quitado antiguo (app escritorio):", old)
+    ms["google"] = {"command": py, "args": entry["args"], "env": entry["env"]}
+    json.dump(d, open(dc, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+    print("    registrado: google ->", dc)
 '@ | Set-Content -Path $tmp -Encoding UTF8
 
 Write-Host "== 4/5 Registrando el MCP 'google' en $env:USERPROFILE\.claude.json (y quitando los 6 antiguos)"
@@ -91,13 +130,19 @@ Remove-Item $tmp
 # .env solo legible por tu usuario
 try { icacls $ENVF /inheritance:r /grant:r "$($env:USERNAME):(M)" | Out-Null } catch { }
 
-Write-Host "== 5/5 Conectar cuentas (un login por cuenta = TODOS los servicios de Google)"
+Write-Host "== 5/5 Cuentas"
 Set-Location $DEST
+if ($LOCKED) {
+    # Paquete cerrado: ya viene conectado, no se pide ningun login
+    & $PY -c "import sys; sys.path.insert(0, '.'); from core import accounts; st = accounts.bootstrap(verify=False); [print('    ' + l + ' (' + accounts.ALLOWED[l] + '): ' + (v.get('source') or 'sin token en este paquete')) for l, v in st.items()]"
+    $labels = @()
+} else {
 $labels = (& $PY -c "import sys; sys.path.insert(0, '.'); from core import accounts; accounts.bootstrap(verify=False); print(' '.join(accounts.ALLOWED))").Split(" ")
+}
 foreach ($acc in $labels) {
     $key = "GOOGLE_REFRESH_TOKEN_" + $acc.ToUpper()
     if (Select-String -Path $ENVF -Pattern "^$key=." -Quiet) {
-        Write-Host "    $acc ya conectada (para renovarla: cd $DEST ; python get_refresh_token.py $acc)"
+        Write-Host "    $acc conectada (para renovarla: doble clic en conectar-$acc.bat)"
     } else {
         $ans = Read-Host "    Conectar ahora '$acc'? Se abrira el navegador [S/n]"
         if ($ans -eq "" -or $ans -match "^[sSyY]") {
@@ -115,4 +160,4 @@ $n = ([regex]::Matches($out, '"inputSchema"')).Count
 Write-Host "    google -> $n herramientas"
 Write-Host ""
 Write-Host "LISTO. Reinicia Claude. En Claude pide: 'usa google_whoami' para ver las cuentas conectadas."
-Read-Host "Pulsa Enter para cerrar"
+if ($LOCKED) { Write-Host "Esta ventana se cierra sola en 15 segundos."; Start-Sleep 15 } else { Read-Host "Pulsa Enter para cerrar" }
