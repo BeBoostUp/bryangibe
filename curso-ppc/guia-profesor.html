@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Guía del profesor · Curso PPC</title>
+<style>html,body{margin:0;padding:0;background:#F5F1E8;overflow-x:hidden}</style>
+</head>
+<body>
+<meta name="robots" content="noindex, nofollow">
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
+
+/* ============================================================
+   Curso PPC - Bryan Gibe
+   Todo va dentro de .bgc para no pelearse con los estilos de GHL.
+   Sin modo oscuro a proposito: la pagina de GHL de alrededor es clara.
+   ============================================================ */
+
+.bgc {
+  --bg: #F5F1E8;
+  --surface: #FFFDF9;
+  --ink: #1A1815;
+  --muted: #585650;
+  --line: #E0D9CB;
+  --accent: #FF6A1A;
+  --black: #101010;
+  --cream: #F5F1E8;
+  --good: #0B6E47;
+  --good-tint: #E6F1E6;
+  --bad: #B3261E;
+  --bad-tint: #FAE8E1;
+  --mid: #8A5A00;
+  --mid-tint: #F7EBD8;
+  --display: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --cond: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  /* La fila de GHL tiene un contenedor con ancho maximo, asi que el bloque
+     se sale de el a lo ancho de la ventana. El script del final lo afina
+     con clientWidth, que no cuenta la barra de scroll, para que no aparezca
+     scroll horizontal en los navegadores que la pintan por fuera. */
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 0 0 calc(50% - 50vw);
+  padding: 0 0 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  text-align: left;
+
+  /* Ancho de la columna de lectura. El fondo y las bandas de color van a
+     sangre; solo el texto se queda en esta medida para que se pueda leer. */
+  --col: 780px;
+  --aire: 22px;
+}
+
+/* GHL mete el bloque dentro de su propia seccion: esto lo saca a ancho
+   completo aunque la plantilla traiga padding o un contenedor estrecho. */
+.bgc { box-sizing: border-box; }
+.bgc > * {
+  width: min(100% - (var(--aire) * 2), var(--col));
+  margin-inline: auto;
+}
+
+
+/* Reset defensivo: GHL mete sus propios margenes, pesos y colores. */
+.bgc *, .bgc *::before, .bgc *::after { box-sizing: border-box; }
+.bgc h1, .bgc h2, .bgc h3, .bgc p, .bgc ul, .bgc ol, .bgc li, .bgc figure {
+  margin: 0; padding: 0; color: inherit; text-align: inherit;
+}
+.bgc ul, .bgc ol { list-style: none; }
+.bgc a { color: var(--accent); text-decoration: none; font-weight: 700; }
+.bgc a:hover { text-decoration: underline; }
+.bgc button {
+  font: inherit; color: inherit; cursor: pointer; margin: 0;
+  text-transform: none; letter-spacing: normal; box-shadow: none;
+  -webkit-appearance: none; appearance: none;
+}
+.bgc button:disabled { cursor: not-allowed; opacity: .5; }
+.bgc :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.bgc .block > *, .bgc .plain > * { min-width: 0; }
+
+.bgc h1, .bgc .score { font-family: var(--cond); text-transform: uppercase; text-wrap: balance; }
+.bgc h2, .bgc h3 { font-family: var(--display); text-wrap: balance; }
+
+/* ---- Bloque naranja: portada y resultado ---- */
+.bgc .block {
+  background: var(--accent); color: var(--black);
+  padding: 38px 26px 34px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;
+}
+.bgc .block :focus-visible { outline-color: var(--black); }
+.bgc .block a { color: var(--black); }
+.bgc .wordmark { font-family: var(--display); font-size: 19px; font-weight: 400; letter-spacing: -.015em; }
+.bgc .wordmark b { font-weight: 800; }
+.bgc .eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 13px; letter-spacing: .11em; text-transform: uppercase;
+}
+.bgc .eyebrow::before { content: ""; flex: none; width: 26px; height: 2px; background: currentColor; }
+.bgc h1 { font-size: clamp(50px, 14vw, 96px); line-height: .88; font-weight: 800; letter-spacing: -.005em; }
+.bgc .lede { max-width: 58ch; }
+
+/* ---- Secciones sobre crema ---- */
+.bgc .plain { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.bgc .muted { color: var(--muted); font-size: 15px; }
+.bgc h2 { font-size: clamp(26px, 5.8vw, 34px); line-height: 1.14; font-weight: 700; letter-spacing: -.012em; }
+.bgc h2:focus { outline: none; }
+.bgc h3 { font-size: 21px; font-weight: 700; }
+.bgc .ctx { color: var(--muted); }
+
+/* ---- Botones ---- */
+.bgc .cta {
+  background: var(--accent); color: var(--black); border: 0; border-radius: 4px;
+  padding: 15px 26px; font-weight: 800; letter-spacing: .01em; justify-self: start;
+  display: inline-block; text-decoration: none;
+}
+.bgc .cta:hover:not(:disabled) { filter: brightness(1.08); text-decoration: none; }
+.bgc .block .cta { background: var(--black); color: var(--cream); }
+.bgc .block .cta:hover:not(:disabled) { filter: none; opacity: .86; }
+.bgc .ghost {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 13px 24px; font-weight: 700; color: var(--ink);
+  display: inline-block; text-decoration: none;
+}
+.bgc .ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---- Indice de dias (portada) ---- */
+.bgc .dias { border-top: 1px solid var(--line); }
+.bgc .dias li { border-bottom: 1px solid var(--line); padding: 18px 0; display: grid; gap: 10px; }
+.bgc .dia-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: baseline; }
+.bgc .dia-num { font-family: var(--cond); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); }
+.bgc .dia-tit { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.2; }
+.bgc .dia-sub { color: var(--muted); font-size: 15px; margin-top: 4px; }
+.bgc .dia-links { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 66px; }
+.bgc .pill {
+  border: 1.5px solid var(--line); border-radius: 4px; padding: 8px 16px;
+  font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; display: inline-block;
+}
+.bgc .pill:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .pill.on { background: var(--accent); border-color: var(--accent); color: var(--black); }
+.bgc .pill.on:hover { filter: brightness(1.08); color: var(--black); }
+.bgc .tag {
+  font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border: 1.5px solid var(--line); border-radius: 3px; padding: 5px 10px;
+  display: inline-block;
+}
+.bgc li.pendiente { opacity: .55; }
+
+/* ---- Leccion ---- */
+.bgc .leccion { display: grid; gap: 18px; }
+.bgc .leccion p { max-width: 66ch; }
+.bgc .bullets { display: grid; gap: 9px; }
+.bgc .bullets li { position: relative; padding-left: 26px; }
+.bgc .bullets li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; background: var(--accent); }
+.bgc .idea {
+  background: var(--surface); border: 1.5px solid var(--line); border-left: 5px solid var(--accent);
+  border-radius: 3px; padding: 16px 18px; display: grid; gap: 7px;
+}
+.bgc .idea b { font-family: var(--display); font-size: 17px; font-weight: 700; }
+.bgc .min { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* ---- Barra de progreso del test ---- */
+.bgc .bar { display: grid; gap: 9px; }
+.bgc .bar-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+.bgc .bar-row b { color: var(--ink); }
+.bgc .ticks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
+.bgc .ticks i { height: 8px; background: var(--line); }
+.bgc .ticks i.now { background: var(--accent); }
+.bgc .ticks i.good { background: var(--good); }
+.bgc .ticks i.mid { background: var(--mid); }
+.bgc .ticks i.bad { background: var(--bad); }
+
+/* ---- Preguntas ---- */
+.bgc .stack { display: grid; gap: 10px; }
+.bgc .opt {
+  display: block; width: 100%; text-align: left; background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: 3px; padding: 13px 15px;
+}
+.bgc .opt:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .opt:disabled, .bgc .row.locked { opacity: 1; cursor: default; }
+.bgc .opt.sel { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.bgc .ok { background: var(--good-tint); border-color: var(--good) !important; }
+.bgc .no { background: var(--bad-tint); border-color: var(--bad) !important; }
+.bgc .mark { font-weight: 700; margin-right: 6px; }
+.bgc .ok .mark { color: var(--good); }
+.bgc .no .mark { color: var(--bad); }
+.bgc .why { display: block; font-size: 15px; color: var(--muted); margin-top: 5px; }
+.bgc .row {
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 12px 14px; display: grid; gap: 9px;
+}
+.bgc .segs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.bgc .seg {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 8px 4px; font-size: 15px; font-weight: 600;
+}
+.bgc .seg:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .seg.on { background: var(--accent); color: var(--black); border-color: var(--accent); opacity: 1; }
+.bgc .ord { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; }
+.bgc .ord b { font-family: var(--cond); font-size: 24px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bgc .arrows { display: flex; gap: 6px; }
+.bgc .arrow {
+  width: 42px; height: 42px; background: transparent;
+  border: 1.5px solid var(--line); border-radius: 3px; font-weight: 700;
+}
+.bgc .arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.bgc .numline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bgc .numline input {
+  width: 130px; padding: 12px; font: 700 21px var(--body); font-variant-numeric: tabular-nums;
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+.bgc .numline input:focus { border-color: var(--accent); }
+.bgc .hint { color: var(--bad); font-size: 15px; }
+.bgc .fb { padding: 16px; border-left: 5px solid; display: grid; gap: 8px; }
+.bgc .fb:focus { outline: none; }
+.bgc .fb.good { background: var(--good-tint); border-color: var(--good); }
+.bgc .fb.mid { background: var(--mid-tint); border-color: var(--mid); }
+.bgc .fb.bad { background: var(--bad-tint); border-color: var(--bad); }
+.bgc .fb strong { font-size: 18px; }
+.bgc .when { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- Resultado ---- */
+.bgc .score { font-size: clamp(88px, 27vw, 176px); line-height: .82; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.bgc .score small { font-size: .42em; }
+.bgc .t-row { display: grid; gap: 5px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.bgc .t-head { display: flex; justify-content: space-between; gap: 12px; }
+.bgc .t-head b:last-child { font-variant-numeric: tabular-nums; }
+.bgc .meter { height: 8px; background: var(--line); }
+.bgc .meter i { display: block; height: 100%; }
+.bgc .rev { display: grid; gap: 10px; }
+.bgc .rev li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.bgc .topics { border-top: 1px solid var(--line); }
+.bgc .topics li { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.bgc .topics span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bgc textarea {
+  width: 100%; min-height: 150px; padding: 10px; font: 14px/1.4 var(--body);
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+
+/* ---- Pie ---- */
+.bgc .pie { border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; font-size: 14px; color: var(--muted); }
+
+.bgc .enter { animation: bgc-rise .22s ease-out; }
+@keyframes bgc-rise { from { transform: translateY(8px); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .bgc .enter { animation: none; } }
+
+@media (max-width: 560px) {
+  .bgc { --aire: 16px; padding: 0 0 44px; }
+  .bgc .block { padding-top: 28px; padding-bottom: 26px; }
+  .bgc .dia-links { padding-left: 0; }
+}
+
+/* ---- Contenedor del test dentro de una pagina con leccion ---- */
+.bgc .test { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.bgc .salto { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 6px; }
+
+/* ============================================================
+   Capa de academia: portada con cuatro areas, carpetas y vistas
+   ============================================================ */
+
+.bgc .cab { display: grid; gap: 10px; }
+.bgc .volver {
+  font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; justify-self: start;
+}
+.bgc .volver:hover { color: var(--accent); text-decoration: none; }
+
+/* ---- Carpetas (una por dia) ---- */
+.bgc .carpetas { display: grid; gap: 10px; }
+.bgc .carpeta {
+  display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 15px 16px; text-decoration: none; color: var(--ink); text-align: left; width: 100%;
+}
+.bgc .carpeta:hover:not(.off) { border-color: var(--accent); text-decoration: none; }
+.bgc .carpeta.off { opacity: .5; cursor: not-allowed; }
+.bgc .carpeta-ico {
+  width: 46px; height: 36px; border: 2px solid var(--accent); border-radius: 3px;
+  position: relative; display: grid; place-items: center;
+  font-family: var(--cond); font-size: 17px; font-weight: 800; color: var(--accent); line-height: 1;
+}
+.bgc .carpeta-ico::before {
+  content: ""; position: absolute; top: -6px; left: -2px; width: 20px; height: 6px;
+  background: var(--accent); border-radius: 2px 2px 0 0;
+}
+.bgc .carpeta.off .carpeta-ico { border-color: var(--muted); color: var(--muted); }
+.bgc .carpeta.off .carpeta-ico::before { background: var(--muted); }
+.bgc .carpeta-tit { font-family: var(--display); font-size: 17px; font-weight: 700; line-height: 1.25; }
+.bgc .carpeta-sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.bgc .carpeta-fin { font-size: 20px; color: var(--accent); font-weight: 700; }
+.bgc .carpeta.off .carpeta-fin { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---- Broma / ley del PPC ---- */
+.bgc .ley {
+  background: var(--black); color: var(--cream); border-radius: 4px;
+  padding: 20px 22px; display: grid; gap: 7px;
+}
+.bgc .ley-num { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.bgc .ley-txt { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.35; }
+.bgc .ley-pie { font-size: 14px; color: #B7B5B0; }
+
+/* ---- Estado vacio ---- */
+.bgc .vacio {
+  border: 1.5px dashed var(--line); border-radius: 4px; padding: 26px 22px;
+  display: grid; gap: 6px; text-align: center; justify-items: center;
+}
+.bgc .vacio b { font-family: var(--display); font-size: 18px; font-weight: 700; }
+.bgc .vacio span { color: var(--muted); font-size: 15px; max-width: 46ch; }
+
+/* ---- Tablas de teoria ---- */
+.bgc .tabla { width: 100%; border-collapse: collapse; font-size: 15px; display: table; }
+.bgc .tabla th, .bgc .tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.bgc .tabla th { font-family: var(--display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom-width: 1.5px; }
+.bgc .tabla tr:last-child td { border-bottom: 0; }
+.bgc .tabla td b { color: var(--ink); }
+.bgc .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ---- Teoria: bloque ampliado ---- */
+.bgc .teoria { border-left: 3px solid var(--line); padding-left: 18px; display: grid; gap: 14px; }
+.bgc .teoria h3 { font-size: 19px; }
+.bgc .formula {
+  background: var(--black); color: var(--cream); border-radius: 3px; padding: 14px 16px;
+  font-family: var(--cond); font-size: 22px; font-weight: 700; letter-spacing: .01em;
+}
+.bgc .formula em { color: var(--accent); font-style: normal; }
+.bgc .chiste { font-size: 15px; color: var(--muted); font-style: italic; }
+
+.bgc .oculto { display: none !important; }
+
+@media (max-width: 560px) {
+  .bgc .carpeta { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 11px; }
+}
+
+/* ---- Modulos apilados en una sola pagina ---- */
+.bgc .modulo { display: grid; gap: 14px; scroll-margin-top: 20px; padding-top: 12px; }
+.bgc .modulo > .eyebrow { color: var(--accent); }
+.bgc .modulo-h { display: grid; gap: 6px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.bgc .modulo-h h2 { margin: 0; }
+.bgc .navmod { display: flex; flex-wrap: wrap; gap: 8px; }
+.bgc .navmod a {
+  border: 2px solid var(--black); border-radius: 4px; padding: 9px 15px;
+  font-size: 14px; font-weight: 800; color: var(--black); text-decoration: none;
+}
+.bgc .navmod a:hover { background: var(--black); color: var(--accent); text-decoration: none; }
+
+/* ---- Saludo personalizado ---- */
+.bgc .dani {
+  background: var(--black); color: var(--cream);
+  padding: 26px 22px; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; align-items: center;
+}
+.bgc .dani-foto {
+  width: 132px; height: 132px; border-radius: 50%;
+  background: var(--accent); overflow: hidden; display: grid; place-items: center;
+}
+.bgc .dani-foto::before {
+  content: "D"; grid-area: 1 / 1;
+  font-family: var(--cond); font-size: 62px; font-weight: 800; color: var(--black);
+}
+.bgc .dani-foto img { grid-area: 1 / 1; }
+.bgc .dani-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.bgc .dani-txt { display: grid; gap: 8px; }
+.bgc .dani-tit { font-family: var(--cond); font-size: 34px; font-weight: 800; line-height: .95; text-transform: uppercase; }
+.bgc .dani-tit em { color: var(--accent); font-style: normal; }
+.bgc .dani-txt p { font-size: 16px; line-height: 1.5; }
+.bgc .dani-pie { color: #B7B5B0; font-size: 14px; font-style: italic; }
+@media (max-width: 560px) {
+  .bgc .dani { grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 14px; padding: 20px 18px; }
+}
+
+/* ---- Acordeon de los resumenes ---- */
+.bgc .acor-lista { display: grid; gap: 8px; }
+.bgc .acor {
+  border: 1.5px solid var(--line); border-radius: 4px;
+  background: var(--surface); overflow: hidden;
+}
+.bgc .acor > summary {
+  list-style: none; cursor: pointer; padding: 15px 18px;
+  font-family: var(--display); font-size: 18px; font-weight: 700; line-height: 1.3;
+  display: grid; grid-template-columns: minmax(0, 1fr) 22px; gap: 12px; align-items: center;
+}
+.bgc .acor > summary::-webkit-details-marker { display: none; }
+.bgc .acor > summary::marker { content: ""; }
+.bgc .acor > summary::after {
+  content: "+"; font-family: var(--cond); font-size: 28px; font-weight: 700;
+  color: var(--accent); line-height: 1; text-align: center;
+}
+.bgc .acor[open] > summary::after { content: "\2013"; }
+.bgc .acor > summary:hover { color: var(--accent); }
+.bgc .acor[open] > summary { border-bottom: 1.5px solid var(--line); }
+.bgc .acor-cuerpo { padding: 18px; display: grid; gap: 14px; }
+.bgc .acor-cuerpo > *:first-child { margin-top: 0; }
+.bgc .acor-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.bgc .acor-barra .muted { margin: 0; }
+
+/* ---- Marca: LibertAds, de Bryan Gibe ---- */
+.bgc .wordmark-sub { font-size: 13px; font-weight: 600; opacity: .72; letter-spacing: .02em; margin-left: 10px; white-space: nowrap; }
+
+/* ---- Aviso de la cuenta con la que hay que entrar ---- */
+.bgc .aviso {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start;
+  background: var(--surface); border: 1.5px solid var(--accent); border-radius: 4px;
+  padding: 13px 15px; font-size: 15px; line-height: 1.5;
+}
+.bgc .aviso::before {
+  content: "!"; width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--accent); color: var(--black); border-radius: 50%;
+  font-family: var(--cond); font-size: 21px; font-weight: 800; line-height: 1;
+}
+.bgc .aviso b { font-weight: 800; word-break: break-all; }
+.bgc .aviso span { display: block; color: var(--muted); margin-top: 3px; }
+
+/* ============================================================
+   Bandas a sangre. Va al final a proposito: con la misma especificidad
+   gana la ultima regla, y antes la pisaba el padding de .block y .dani.
+   El ancho es el total, y el padding lateral calculado deja el contenido
+   alineado con la misma columna de lectura que el resto.
+   ============================================================ */
+.bgc > .block,
+.bgc > .dani {
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: max(var(--aire), calc((100% - var(--col)) / 2));
+}
+
+/* Dos bandas seguidas van pegadas, sin franja de fondo entre medias, como
+   en bryangibe.com. El hueco lo pone el gap del grid, asi que se anula. */
+.bgc > .block + .dani,
+.bgc > .dani + .block { margin-top: -20px; }
+
+/* ============================================================
+   Guia del profesor: piezas propias
+   ============================================================ */
+.bgc .principios { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+.bgc .idea span { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.bgc .num-foto::before { content: none; }
+.bgc .num-foto span { font-family: var(--cond); font-size: 70px; font-weight: 800; color: var(--black); line-height: 1; }
+.bgc .modulo h3 { margin-top: 8px; }
+.bgc .modulo > p.ctx { max-width: 70ch; }
+.bgc .preguntas ol { list-style: none; counter-reset: q; display: grid; gap: 8px; }
+.bgc .preguntas li { counter-increment: q; font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.35; display: grid; grid-template-columns: 30px 1fr; }
+.bgc .preguntas li::before { content: counter(q); font-family: var(--cond); font-size: 24px; font-weight: 800; color: var(--accent); }
+
+/* Tablas: numero en naranja */
+.bgc .tabla td:first-child { font-variant-numeric: tabular-nums; }
+.bgc #indice .tabla td:first-child { font-family: var(--cond); font-size: 20px; font-weight: 800; color: var(--accent); width: 44px; }
+.bgc #indice .tabla td:nth-child(2) { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.bgc #indice .tabla td:nth-child(3) { font-weight: 700; }
+
+/* Lecciones */
+.bgc .lec > summary { grid-template-columns: 52px minmax(0, 1fr) 22px; }
+.bgc .lec-num { font-family: var(--cond); font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.bgc .lec-tit { font-size: 19px; }
+.bgc .lab { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.bgc .resumen { display: grid; gap: 10px; }
+.bgc .resumen p { max-width: 70ch; }
+.bgc .resumen .bullets { margin-top: 2px; }
+.bgc .guion-wrap { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; }
+.bgc ol.guion { list-style: none; counter-reset: g; display: grid; gap: 10px; }
+.bgc ol.guion > li { counter-increment: g; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 10px; }
+.bgc ol.guion > li::before { content: counter(g); font-family: var(--cond); font-size: 22px; font-weight: 800; color: var(--accent); line-height: 1.15; }
+.bgc ol.guion > li > * { grid-column: 2; }
+.bgc ol.guion li p strong { font-weight: 800; }
+.bgc ol.guion ol, .bgc ol.guion ul { list-style: none; display: grid; gap: 6px; margin-top: 6px; }
+.bgc ol.guion ol li, .bgc ol.guion ul li { position: relative; padding-left: 20px; color: var(--muted); font-size: 16px; }
+.bgc ol.guion ol li::before, .bgc ol.guion ul li::before { content: ""; position: absolute; left: 0; top: 10px; width: 7px; height: 7px; background: var(--accent); }
+.bgc .conclaude { background: var(--black); color: var(--cream); border-radius: 4px; padding: 14px 16px; display: grid; gap: 6px; }
+.bgc .conclaude .lab { color: var(--accent); }
+.bgc .tarea { background: var(--mid-tint); border-left: 5px solid var(--accent); border-radius: 3px; padding: 14px 16px; display: grid; gap: 6px; }
+.bgc .tarea .lab { color: var(--mid); }
+.bgc .prompt { background: var(--black); color: var(--cream); border-radius: 4px; padding: 16px 18px; font: 500 14px/1.6 ui-monospace, Menlo, Consolas, monospace; white-space: pre-wrap; overflow-x: auto; margin: 0; }
+.bgc .lec .formula { margin: 2px 0; }
+
+/* Checklists de los anexos */
+.bgc ul.check { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.bgc ul.check li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.bgc ul.check .caja { width: 18px; height: 18px; border: 2px solid var(--accent); border-radius: 3px; margin-top: 3px; }
+
+@media (max-width: 560px) {
+  .bgc .lec > summary { grid-template-columns: 40px minmax(0, 1fr) 22px; }
+  .bgc .lec-num { font-size: 24px; }
+  .bgc .lec-tit { font-size: 17px; }
+  .bgc .num-foto { width: 96px; height: 96px; }
+  .bgc .num-foto span { font-size: 52px; }
+  .bgc #indice .tabla td:nth-child(2) { white-space: normal; }
+}
+
+/* ---- Impresion / PDF ---- */
+@page { size: A4; margin: 14mm 0; }
+@page :first { margin-top: 0; }
+@media print {
+  html, body { background: #FFFFFF !important; }
+  .bgc { --bg: #FFFFFF; --col: 640px; --aire: 52px; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding-bottom: 0; gap: 18px; font-size: 15px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bgc .navmod { display: none; }
+  .bgc .acor > summary::after, .bgc .acor[open] > summary::after { content: none; }
+  .bgc .scroll-x, .bgc .prompt, .bgc .acor { overflow: visible !important; }
+  .bgc .preguntas { break-before: auto !important; }
+  .bgc { display: block !important; }
+  .bgc > * { margin-top: 18px !important; }
+  .bgc > .block { margin-top: 0 !important; }
+  .bgc > .dani { margin-top: 0 !important; }
+  .bgc .modulo, .bgc .acor-lista, .bgc .acor-cuerpo, .bgc .resumen, .bgc .guion-wrap { display: block !important; }
+  .bgc .modulo > * + *, .bgc .acor-cuerpo > * + *, .bgc .resumen > * + *, .bgc .guion-wrap > * + * { margin-top: 12px; }
+  .bgc .modulo > .modulo-h { margin-top: 6px; margin-bottom: 4px; }
+  .bgc .lec { margin-top: 10px; }
+  .bgc .tabla { border-collapse: collapse; }
+  .bgc .tabla tr { break-inside: avoid; }
+  .bgc .acor > summary { padding: 12px 16px; }
+  .bgc .acor-cuerpo { padding: 14px 16px; }
+  .bgc .modulo { break-before: page; padding-top: 0; }
+  .bgc #como { break-before: auto; }
+  .bgc .ley { break-before: page; }
+  .bgc .ley + .modulo { break-before: auto; }
+  .bgc .modulo-h, .bgc .lec > summary, .bgc .lab, .bgc h3 { break-after: avoid; }
+  .bgc .idea, .bgc .tarea, .bgc .conclaude, .bgc .ley, .bgc ol.guion > li, .bgc ul.check li, .bgc .formula { break-inside: avoid; }
+  .bgc a { color: inherit; }
+}
+</style>
+
+<div class="bgc guia">
+
+  <section class="block">
+    <p class="wordmark">Libert<b>Ads</b> <span class="wordmark-sub">por Bryan Gibe</span></p>
+    <p class="eyebrow">Academia &#183; Gu&#237;a del profesor</p>
+    <h1>Gu&#237;a del profesor</h1>
+    <p class="lede">35 lecciones en nueve bloques. Para cada una: qu&#233; tiene que aprender el alumno, c&#243;mo sabes que lo ha aprendido y un guion con tiempos para darla.</p>
+    <nav class="navmod">
+      <a href="#como">C&#243;mo usarla</a>
+      <a href="#indice">&#205;ndice</a>
+      <a href="#medicion">Medici&#243;n</a>
+      <a href="#claude">Claude y MCP</a>
+      <a href="#google">Google Ads</a>
+      <a href="#meta">Meta Ads</a>
+      <a href="#ecommerce">Ecommerce</a>
+      <a href="#anexos">Anexos</a>
+    </nav>
+  </section>
+
+  <section class="dani">
+    <span class="dani-foto num-foto" aria-hidden="true"><span>35</span></span>
+    <div class="dani-txt">
+      <p class="dani-tit">Antes de cada <em>lecci&#243;n</em></p>
+      <p>Comprueba la interfaz y la documentaci&#243;n oficial. Google y Meta cambian men&#250;s, nombres y requisitos cada pocos meses, y los MCP todav&#237;a m&#225;s r&#225;pido.</p>
+      <p class="dani-pie">Cada lecci&#243;n trae lo mismo: resumen para ti, guion con tiempos, trabajo con Claude y tarea.</p>
+    </div>
+  </section>
+
+  <section class="modulo" id="como">
+    <p class="eyebrow">Antes de empezar</p>
+    <div class="modulo-h"><h2>C&#243;mo usar esta gu&#237;a</h2></div>
+    <p class="ctx">El curso tiene 35 lecciones sobre un proyecto real, y se pasa de una a otra por dominio, no por calendario. Cada lecci&#243;n trae dos partes: un <strong>resumen para ti</strong> (qu&#233; tiene que aprender y c&#243;mo sabes que lo ha aprendido) y un <strong>guion</strong> con bloques de tiempo para darla. Los tiempos son orientativos para sesiones de unos 90 minutos.</p><h3>Principios del curso</h3><div class="principios"><div class="idea"><b>Proyecto real desde el d&#237;a 1</b><span>Todo se aplica al mismo negocio, con presupuesto real y peque&#241;o (5&#8211;20 &#8364;/d&#237;a por plataforma).</span></div><div class="idea"><b>&#201;l toca, t&#250; preguntas</b><span>Si coges t&#250; el rat&#243;n, aprende menos. Tu herramienta principal es la pregunta "&#191;por qu&#233;?".</span></div><div class="idea"><b>Criterio antes que botones</b><span>Ya se dedica al PPC: el valor est&#225; en saber decidir, no en saber d&#243;nde est&#225; cada men&#250;.</span></div><div class="idea"><b>Medici&#243;n antes que campa&#241;as</b><span>No se lanza nada que no se pueda medir.</span></div><div class="idea"><b>Claude como tocateclas con correa</b><span>Desde la lecci&#243;n 8 usa Claude con MCP para leer datos, preparar cambios y ahorrar tiempo. Las decisiones y la ejecuci&#243;n final son suyas.</span></div><div class="idea"><b>Log de decisiones</b><span>En cada cambio apunta qu&#233; cambi&#243;, por qu&#233; y qu&#233; pas&#243; despu&#233;s. Al final del curso es su manual y su caso de estudio.</span></div></div><div class="ley preguntas"><p class="ley-num">Las tres preguntas que repites en todas las lecciones</p><ol><li>&#191;Qu&#233; dato te hace pensar eso?</li><li>&#191;Qu&#233; har&#237;as si te equivocas?</li><li>&#191;C&#243;mo sabr&#225;s dentro de 7 d&#237;as si ha funcionado?</li></ol></div>
+  </section>
+  <section class="modulo" id="indice">
+    <p class="eyebrow">El mapa</p>
+    <div class="modulo-h"><h2>&#205;ndice de lecciones</h2></div>
+    <p class="ctx">Son 35 lecciones en 9 bloques. Cada tipo de campa&#241;a de Google Ads y cada objetivo de Meta tiene su propia lecci&#243;n. Todas las campa&#241;as se montan, pero solo se activan las que encajan con el proyecto: el resto se deja en pausa o con presupuesto m&#237;nimo para practicar. Search se lanza en la lecci&#243;n 12. En Meta, la campa&#241;a principal se lanza en la 24 si el proyecto es de leads o en la 25 si vende online. Desde la 12 se a&#241;ade la revisi&#243;n semanal (ver el final de la gu&#237;a).</p><div class="scroll-x"><table class="tabla"><thead><tr><th>#</th><th>Bloque</th><th>Lecci&#243;n</th><th>Est&#225; superada cuando...</th></tr></thead><tbody><tr><td>1</td><td>Arranque</td><td>Intro al PPC</td><td>Sabe elegir entre Google y Meta seg&#250;n intenci&#243;n y demanda</td></tr><tr><td>2</td><td>Arranque</td><td>Diagn&#243;stico de nivel</td><td>Tienes su lista de huecos y fortalezas</td></tr><tr><td>3</td><td>Negocio</td><td>Brief y econom&#237;a de la cuenta</td><td>Calcula CPA m&#225;ximo, ROAS de equilibrio y presupuesto del proyecto</td></tr><tr><td>4</td><td>Negocio</td><td>Competencia y plan de medios</td><td>Presenta un plan con canales, presupuesto y objetivos num&#233;ricos</td></tr><tr><td>5</td><td>Medici&#243;n</td><td>GA4 y Google Tag Manager</td><td>Monta GA4 y GTM &#233;l solo y los verifica con Tag Assistant</td></tr><tr><td>6</td><td>Medici&#243;n</td><td>Conversiones en Google Ads y Meta</td><td>Conversiones mejoradas y API de Conversiones funcionando y deduplicadas</td></tr><tr><td>7</td><td>Medici&#243;n</td><td>Consent Mode, CRM y verificaci&#243;n</td><td>Explica qu&#233; se mide, qu&#233; no y por qu&#233;</td></tr><tr><td>8</td><td>Claude</td><td>Claude como tocateclas</td><td>Tiene sus reglas de trabajo escritas y un proyecto de Claude configurado</td></tr><tr><td>9</td><td>Claude</td><td>MCP de Google: crear y conectar</td><td>Consulta datos de Google Ads y GA4 desde Claude</td></tr><tr><td>10</td><td>Claude</td><td>MCP de Meta: conectar y usar</td><td>Consulta Meta desde Claude y aprueba cada cambio antes de que se haga</td></tr><tr><td>11</td><td>Google Ads</td><td>Search I: estructura y keywords</td><td>Tiene keyword research, estructura y lista de negativas del proyecto</td></tr><tr><td>12</td><td>Google Ads</td><td>Search II: anuncios, pujas y lanzamiento</td><td>Campa&#241;a de Search lanzada y revisada con checklist</td></tr><tr><td>13</td><td>Google Ads</td><td>Landing y CRO</td><td>Sabe distinguir un problema de anuncio de uno de landing</td></tr><tr><td>14</td><td>Google Ads</td><td>Performance Max</td><td>Monta una PMax con exclusiones y lee sus informes de canal</td></tr><tr><td>15</td><td>Google Ads</td><td>Shopping y Merchant Center</td><td>Tiene un feed sin errores cr&#237;ticos y una campa&#241;a de Shopping</td></tr><tr><td>16</td><td>Google Ads</td><td>Display</td><td>Monta remarketing con exclusiones de ubicaciones</td></tr><tr><td>17</td><td>Google Ads</td><td>YouTube (v&#237;deo)</td><td>Elige el formato de v&#237;deo seg&#250;n el objetivo y tiene campa&#241;a montada</td></tr><tr><td>18</td><td>Google Ads</td><td>Demand Gen</td><td>Monta Demand Gen y explica en qu&#233; se diferencia de PMax y de Meta</td></tr><tr><td>19</td><td>Google Ads</td><td>Aplicaciones</td><td>Completa la tabla de qu&#233; tipo de campa&#241;a usar para cada objetivo</td></tr><tr><td>20</td><td>Meta Ads</td><td>Estructura, audiencias y Advantage+</td><td>Activos de Meta listos y estructura decidida</td></tr><tr><td>21</td><td>Meta Ads</td><td>Creatividad y &#225;ngulos</td><td>Tiene 5 o m&#225;s creatividades con &#225;ngulos distintos</td></tr><tr><td>22</td><td>Meta Ads</td><td>Reconocimiento</td><td>Sabe cu&#225;ndo pagar por alcance y c&#243;mo controlar la frecuencia</td></tr><tr><td>23</td><td>Meta Ads</td><td>Tr&#225;fico e Interacci&#243;n</td><td>Monta una campa&#241;a de mensajes y explica por qu&#233; el tr&#225;fico barato enga&#241;a</td></tr><tr><td>24</td><td>Meta Ads</td><td>Clientes potenciales</td><td>Formulario con filtro y leads llegando al CRM</td></tr><tr><td>25</td><td>Meta Ads</td><td>Ventas y cat&#225;logo</td><td>Campa&#241;a de ventas con cat&#225;logo conectado</td></tr><tr><td>26</td><td>Meta Ads</td><td>Promoci&#243;n de app</td><td>Completa la tabla de qu&#233; objetivo usar para cada caso</td></tr><tr><td>27</td><td>Meta Ads</td><td>Testing y escalado</td><td>Tiene un sistema de testing con reglas escritas</td></tr><tr><td>28</td><td>Nivel pro</td><td>Optimizaci&#243;n y diagn&#243;stico</td><td>Diagnostica una ca&#237;da y propone acciones con datos</td></tr><tr><td>29</td><td>Nivel pro</td><td>Escalado, automatizaci&#243;n y reporting</td><td>Tiene informe en Looker Studio y un plan de escalado</td></tr><tr><td>30</td><td>Ecommerce</td><td>Econom&#237;a y medici&#243;n de una tienda</td><td>Calcula el ROAS de equilibrio por producto y el MER de la tienda</td></tr><tr><td>31</td><td>Ecommerce</td><td>Feed avanzado y Merchant Center</td><td>Feed optimizado con etiquetas personalizadas por margen</td></tr><tr><td>32</td><td>Ecommerce</td><td>Google Ads para ecommerce</td><td>Estructura por margen y rendimiento con PMax y Shopping</td></tr><tr><td>33</td><td>Ecommerce</td><td>Meta Ads para ecommerce</td><td>Cat&#225;logo, Advantage+ de ventas y retargeting din&#225;mico funcionando</td></tr><tr><td>34</td><td>Ecommerce</td><td>Rentabilidad, temporadas y escalado</td><td>Tiene un plan de temporada alta y lee resultados por cohortes</td></tr><tr><td>35</td><td>Cierre</td><td>Proyecto final</td><td>Presenta el caso completo como lo har&#237;a a un cliente</td></tr></tbody></table></div>
+  </section>
+  <section class="modulo" id="negocio">
+    <p class="eyebrow">Bloques 0 y 1</p>
+    <div class="modulo-h"><h2>Arranque y negocio</h2></div>
+    <details class="acor lec" id="leccion-1"><summary><span class="lec-num">01</span><span class="lec-tit">Intro al PPC</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Tipos de publicidad y c&#243;mo elegir entre Google Ads (demanda existente, intenci&#243;n de b&#250;squeda) y Meta Ads (generar demanda, interrumpir con creatividad). Abre la lecci&#243;n 2 con 5 minutos de repaso para comprobar que lo tiene claro.</p></div></div></details><details class="acor lec" id="leccion-2"><summary><span class="lec-num">02</span><span class="lec-tit">Diagn&#243;stico de nivel</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Como ya se dedica al PPC, no le ense&#241;es nada hoy: averigua qu&#233; sabe de verdad y qu&#233; hace "porque se hace as&#237;". Sales de la lecci&#243;n con su lista de huecos y con el proyecto real elegido. Los huecos m&#225;s habituales son el tracking, la econom&#237;a del negocio, el criterio de cu&#225;ndo tocar una campa&#241;a y la creatividad en Meta.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso de la lecci&#243;n 1 (10 min).</strong> P&#237;dele que te explique con un ejemplo propio cu&#225;ndo elegir&#237;a Google y cu&#225;ndo Meta.</p></li><li><p><strong>Auditor&#237;a en voz alta (40 min).</strong> Abre una cuenta suya o de un cliente. Que la audite explicando qu&#233; mira, en qu&#233; orden y por qu&#233;. T&#250; solo apuntas, no corriges.</p></li><li><p><strong>Preguntas de diagn&#243;stico (20 min).</strong></p><ul><li><p>&#191;C&#243;mo sabes que las conversiones que ves son reales?</p></li><li><p>&#191;Cu&#225;l es el CPA m&#225;ximo de esta cuenta y de d&#243;nde sale?</p></li><li><p>&#191;Cu&#225;ndo dejas de tocar una campa&#241;a nueva?</p></li><li><p>En Meta, &#191;qu&#233; pesa m&#225;s: la segmentaci&#243;n o la creatividad?</p></li><li><p>&#191;Qu&#233; har&#237;as si el CPA sube un 40 % de una semana a otra?</p></li></ul></li><li><p><strong>Elegir el proyecto real (15 min).</strong> Negocio, objetivo (leads, ventas o local), presupuesto disponible y accesos que necesit&#225;is.</p></li><li><p><strong>Cierre (5 min).</strong> Le cuentas qu&#233; bloques vais a reforzar y por qu&#233;.</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Conseguir los accesos del proyecto (web, Google Ads, Meta Business, GA4, GTM) y abrir su log de decisiones.</p></div></div></details><details class="acor lec" id="leccion-3"><summary><span class="lec-num">03</span><span class="lec-tit">Brief y econom&#237;a de la cuenta</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Esta lecci&#243;n le ense&#241;a a pensar como el due&#241;o del negocio. Un profesional del PPC que no sabe si una campa&#241;a gana dinero solo optimiza m&#233;tricas de plataforma. Sale con el brief del proyecto y sus n&#250;meros objetivo.</p><p>Conceptos clave: ticket medio, margen, LTV, tasa de cierre (en leads), CPA m&#225;ximo, ROAS de equilibrio, CPC m&#225;ximo y presupuesto m&#237;nimo para salir de la fase de aprendizaje.</p><div class="formula">CPA m&#225;x = <em>ticket medio &#215; margen</em> &#183; ROAS equilibrio = <em>1 &#247; margen</em></div></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; huecos salieron del diagn&#243;stico?</p></li><li><p><strong>El brief (25 min).</strong> Rellenad juntos la plantilla del anexo: oferta, cliente ideal, propuesta de valor, ciclo de venta, estacionalidad y objeciones.</p></li><li><p><strong>Los n&#250;meros (30 min).</strong> Ejemplo para empezar: ticket 200 &#8364;, margen 40 %, CPA m&#225;ximo 80 &#8364;. Con conversi&#243;n del 3 % en la landing, cada clic puede costar como m&#225;ximo 2,40 &#8364;. Despu&#233;s, que lo calcule &#233;l para el proyecto. En leads, a&#241;ade la tasa de cierre: si cierra 1 de cada 5 leads, el CPL m&#225;ximo es 16 &#8364;.</p></li><li><p><strong>Presupuesto (15 min).</strong> &#191;Cu&#225;nto hace falta para tener datos? Una referencia razonable es poder pagar unas 30&#8211;50 conversiones al mes por campa&#241;a. Si no llega, se optimiza a una conversi&#243;n m&#225;s alta del embudo.</p></li><li><p><strong>Cierre (10 min).</strong> Que te explique en 2 minutos por qu&#233; un ROAS de 3 puede perder dinero.</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Hoja de c&#225;lculo con la econom&#237;a del proyecto y tres escenarios (pesimista, realista, optimista).</p></div></div></details><details class="acor lec" id="leccion-4"><summary><span class="lec-num">04</span><span class="lec-tit">Competencia y plan de medios</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Cierra la estrategia antes de tocar ninguna plataforma. Sale con un plan de medios defendible: qu&#233; canales, en qu&#233; orden, con cu&#225;nto dinero y con qu&#233; objetivos a 30, 60 y 90 d&#237;as.</p><p>Herramientas: Biblioteca de anuncios de Meta, Centro de transparencia de anuncios de Google, Semrush (keywords y anuncios de pago de la competencia), b&#250;squedas manuales en inc&#243;gnito y la estructura de las landings de la competencia.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Que te recite los n&#250;meros del proyecto sin mirar.</p></li><li><p><strong>Investigaci&#243;n en directo (35 min).</strong> Tres competidores: qu&#233; anuncian, con qu&#233; &#225;ngulos y ofertas, a qu&#233; landing env&#237;an y desde cu&#225;ndo tienen activo cada anuncio. Pista: un anuncio de Meta activo durante meses suele ser uno que funciona.</p></li><li><p><strong>Plan de medios (30 min).</strong> Reparto del presupuesto entre Google y Meta seg&#250;n lo visto en la lecci&#243;n 1, el orden de lanzamiento y los KPIs de cada fase.</p></li><li><p><strong>Defensa (15 min).</strong> Haz de cliente esc&#233;ptico: &#191;por qu&#233; no todo en Meta?, &#191;qu&#233; pasa si en 30 d&#237;as no hay ventas?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Plan de medios en una p&#225;gina.</p></div></div></details>
+  </section>
+  <aside class="ley"><p class="ley-num">Ley no escrita del PPC n&#186; 3</p><p class="ley-txt">La conversi&#243;n que no se mide no existe. La que se mide mal existe todav&#237;a menos, pero el algoritmo se la cree.</p><p class="ley-pie">Por eso este bloque va antes que cualquier campa&#241;a.</p></aside>
+  <section class="modulo" id="medicion">
+    <p class="eyebrow">Bloque 2</p>
+    <div class="modulo-h"><h2>Medici&#243;n</h2></div>
+    <p class="ctx">Es el bloque que m&#225;s separa a un profesional del resto. Las campa&#241;as optimizan hacia lo que se mide: si la medici&#243;n est&#225; mal, el algoritmo aprende mal, sin avisar a nadie. No pases al bloque 3 hasta que el tracking del proyecto est&#233; verificado.</p><details class="acor lec" id="leccion-5"><summary><span class="lec-num">05</span><span class="lec-tit">GA4 y Google Tag Manager</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo montar y verificar GA4 con GTM sin ayuda. Conceptos clave: contenedor, etiquetas, activadores y variables, capa de datos (dataLayer), eventos recomendados y personalizados, eventos clave en GA4 y modo vista previa.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; acciones del proyecto son conversi&#243;n y cu&#225;les son solo se&#241;ales?</p></li><li><p><strong>Mapa de medici&#243;n (20 min).</strong> En papel: acciones primarias (compra, lead) y secundarias (scroll, clic en tel&#233;fono, a&#241;adir al carrito), d&#243;nde ocurren y qu&#233; dato llevan (valor, ID).</p></li><li><p><strong>Montaje en directo (40 min).</strong> &#201;l instala GTM, crea la etiqueta de Google, los eventos del mapa y los marca como eventos clave.</p></li><li><p><strong>Verificaci&#243;n (15 min).</strong> Vista previa de GTM, Tag Assistant e informe en tiempo real de GA4.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; pasa si alguien cambia el bot&#243;n del formulario ma&#241;ana?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Documento con el mapa de medici&#243;n final del proyecto.</p></div></div></details><details class="acor lec" id="leccion-6"><summary><span class="lec-num">06</span><span class="lec-tit">Conversiones en Google Ads y Meta</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Hoy se conectan las plataformas a la medici&#243;n. Conceptos clave:</p><ul class="bullets"><li><p><strong>Google Ads:</strong> etiqueta de conversi&#243;n frente a importar desde GA4, conversiones primarias y secundarias, conversiones mejoradas (datos hasheados del usuario) y ventanas de conversi&#243;n.</p></li><li><p><strong>Meta:</strong> p&#237;xel, API de Conversiones (CAPI), deduplicaci&#243;n con event_id, calidad de coincidencia de eventos (EMQ) y verificaci&#243;n del dominio.</p></li></ul></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Que te ense&#241;e en GA4 un evento clave entrando en tiempo real.</p></li><li><p><strong>Google Ads (30 min).</strong> Crear las conversiones, decidir cu&#225;l es primaria y activar las conversiones mejoradas desde GTM.</p></li><li><p><strong>Meta (35 min).</strong> P&#237;xel por GTM y CAPI por la integraci&#243;n de la plataforma de la web o por el gateway. Comprobar la deduplicaci&#243;n en el Administrador de eventos.</p></li><li><p><strong>Verificaci&#243;n (10 min).</strong> Una conversi&#243;n de prueba que tiene que aparecer en las dos plataformas.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Por qu&#233; Google y Meta nunca van a dar el mismo n&#250;mero de conversiones?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Conseguir una calidad de coincidencia aceptable en Meta y apuntar en el log el estado de cada conversi&#243;n.</p></div></div></details><details class="acor lec" id="leccion-7"><summary><span class="lec-num">07</span><span class="lec-tit">Consent Mode, CRM y verificaci&#243;n</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Cierra la medici&#243;n con lo que casi nadie hace bien. Conceptos clave: Consent Mode v2 (b&#225;sico frente a avanzado, obligatorio en la UE para usar audiencias y medici&#243;n completa en Google), banner de cookies (CMP), conversiones modeladas, conversiones offline o importadas desde el CRM en proyectos de leads y nociones de tracking server-side.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; conversi&#243;n optimiza cada plataforma en el proyecto?</p></li><li><p><strong>Consent Mode (25 min).</strong> Configurar la CMP con GTM y comprobar qu&#233; se env&#237;a cuando el usuario acepta y cuando rechaza.</p></li><li><p><strong>CRM y offline (25 min).</strong> Si es de leads: c&#243;mo devolver a Google y a Meta qu&#233; leads se convirtieron en clientes. Es lo que permite optimizar por leads buenos y no solo por formularios.</p></li><li><p><strong>Auditor&#237;a final de medici&#243;n (20 min).</strong> Que pase la checklist de medici&#243;n del anexo &#233;l solo.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; parte de nuestra medici&#243;n es fiable y cu&#225;l es aproximada?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Checklist de medici&#243;n en verde. Sin esto no se lanza nada.</p></div></div></details>
+  </section>
+  <aside class="ley"><p class="ley-num">Ley no escrita del PPC n&#186; 4</p><p class="ley-txt">La IA trabaja rapid&#237;simo. Sobre todo cuando se equivoca.</p><p class="ley-pie">Corolario: el bot&#243;n de &#171;Permitir siempre&#187; es el atajo m&#225;s caro de la cuenta.</p></aside>
+  <section class="modulo" id="claude">
+    <p class="eyebrow">Bloque 3</p>
+    <div class="modulo-h"><h2>Claude y MCP de Google y Meta</h2></div>
+    <p class="ctx">Claude le va a ahorrar horas de trabajo mec&#225;nico, pero solo si trabaja como un tocateclas: lee, prepara y propone, y es &#233;l quien aprueba y decide. Este bloque va despu&#233;s de la medici&#243;n y antes de las campa&#241;as para que lo use en todo lo que queda de curso.</p><details class="acor lec" id="leccion-8"><summary><span class="lec-num">08</span><span class="lec-tit">Claude como tocateclas, con correa</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Antes de conectar nada, hay que fijar las reglas. Sale con un proyecto de Claude configurado y sus reglas escritas.</p><p><strong>Las reglas de oro</strong></p><ol class="guion"><li><p><strong>Claude propone, &#233;l decide.</strong> Antes de cualquier cambio, Claude entrega un plan con qu&#233; cambia, de qu&#233; valor a qu&#233; valor y por qu&#233;.</p></li><li><p><strong>Solo lectura por defecto.</strong> Los permisos de escritura se dan solo cuando hacen falta, y se quitan despu&#233;s.</p></li><li><p><strong>Nunca "Permitir siempre" en herramientas que escriben.</strong> Cada creaci&#243;n, pausa o cambio de presupuesto se aprueba uno a uno.</p></li><li><p><strong>Todo lo nuevo se crea en pausa.</strong> Lo activa &#233;l, despu&#233;s de revisarlo en la interfaz.</p></li><li><p><strong>Los n&#250;meros, con fecha y fuente.</strong> Si Claude dice que el CPA ha subido, tiene que decir de qu&#233; periodo y de qu&#233; informe. Y &#233;l lo comprueba en la plataforma.</p></li><li><p><strong>Las decisiones de negocio no se delegan.</strong> Presupuesto, estrategia y qu&#233; se pausa son suyas.</p></li></ol><p><strong>Para qu&#233; s&#237; y para qu&#233; no</strong></p><div class="scroll-x"><table class="tabla"><thead><tr><th>Bien para Claude</th><th>Nunca solo</th></tr></thead><tbody><tr><td>Sacar informes y cruzar datos</td><td>Cambiar presupuestos</td></tr><tr><td>Revisar t&#233;rminos de b&#250;squeda y proponer negativas</td><td>Activar o pausar campa&#241;as</td></tr><tr><td>Redactar variantes de anuncios</td><td>Cambiar la estrategia de puja</td></tr><tr><td>Auditar una cuenta con una checklist</td><td>Borrar nada</td></tr><tr><td>Preparar una estructura para revisi&#243;n</td><td>Decidir qu&#233; funciona y qu&#233; no</td></tr></tbody></table></div><p><strong>Instrucciones de ejemplo para el proyecto de Claude</strong></p><pre class="prompt">Eres mi asistente de PPC. Reglas obligatorias:
+- Nunca hagas un cambio en una cuenta sin presentarme antes un plan en tabla (entidad, valor actual, valor nuevo, motivo) y esperar mi &quot;OK&quot; expl&#237;cito.
+- Todo lo que crees, cr&#233;alo en pausa.
+- No cambies presupuestos, pujas ni estados sin mi confirmaci&#243;n en el mismo mensaje.
+- Cada dato que me des lleva periodo, cuenta e informe de origen.
+- Si no est&#225;s seguro de algo, pregunta. No supongas.
+- Al terminar, resume lo que has hecho y lo que queda pendiente.</pre></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; tareas de su d&#237;a a d&#237;a son mec&#225;nicas y cu&#225;les requieren criterio?</p></li><li><p><strong>Qu&#233; es un MCP (15 min).</strong> Un conector que deja a Claude leer y, si se le permite, actuar en otra herramienta. M&#225;s acceso significa m&#225;s utilidad y m&#225;s riesgo.</p></li><li><p><strong>Crear el proyecto (25 min).</strong> Proyecto de Claude con las instrucciones de arriba, el brief, la econom&#237;a de la cuenta y el plan de medios como archivos.</p></li><li><p><strong>Primer uso sin MCP (30 min).</strong> P&#237;dele a Claude una auditor&#237;a de una exportaci&#243;n en CSV de una campa&#241;a. Que &#233;l compruebe cada afirmaci&#243;n contra los datos. Es el ejercicio clave: ver d&#243;nde acierta y d&#243;nde se inventa cosas.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; regla a&#241;adir&#237;as despu&#233;s de lo que has visto?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Sus reglas de trabajo con Claude, en sus palabras, a&#241;adidas al proyecto.</p></div></div></details><details class="acor lec" id="leccion-9"><summary><span class="lec-num">09</span><span class="lec-tit">MCP de Google: crear y conectar</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>El MCP oficial de Google Ads (<a href="https://github.com/googleads/google-ads-mcp">googleads/google-ads-mcp</a>) es de <strong>solo lectura</strong> y se instala en local. Es lo ideal para empezar. Conviene conectar tambi&#233;n GA4 con el MCP oficial de Google Analytics, para que Claude cruce datos de plataforma y de web.</p><p><strong>Lo que hace falta para Google Ads</strong></p><ol class="guion"><li><p><strong>Proyecto en Google Cloud</strong> con la API de Google Ads habilitada.</p></li><li><p><strong>Developer token</strong> del Centro de API, en una cuenta de administrador (MCC). Una cuenta normal no puede pedirlo. Empieza con acceso de prueba; para cuentas reales hay que solicitar acceso Basic, que pasa revisi&#243;n y puede tardar d&#237;as. <strong>P&#237;delo con antelaci&#243;n a la lecci&#243;n.</strong></p></li><li><p><strong>Credenciales OAuth</strong>, con Application Default Credentials (gcloud) o con la configuraci&#243;n de la librer&#237;a de Python de Google Ads.</p></li><li><p><strong>Configurar el cliente:</strong> el servidor se lanza con pipx desde el repositorio y recibe el developer token y el ID del proyecto como variables de entorno. Sigue los pasos del README del repositorio, no los de blogs de terceros, que a veces no coinciden.</p></li><li><p><strong>Para GA4:</strong> el MCP oficial de Google Analytics, con la API de Analytics Data y la API de Admin habilitadas en el mismo proyecto.</p></li></ol><p>El developer token es un secreto: nunca en un repositorio ni en un chat.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; reglas tienes con Claude?</p></li><li><p><strong>Montaje (45 min).</strong> Lo hace &#233;l con el README abierto. T&#250; solo desbloqueas.</p></li><li><p><strong>Primeras consultas (25 min).</strong> Gasto y conversiones de los &#250;ltimos 30 d&#237;as por campa&#241;a, t&#233;rminos de b&#250;squeda con gasto y sin conversiones, y sesiones de GA4 por fuente. Que compare cada cifra con la interfaz.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; informe semanal te ahorrar&#237;as con esto?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Un prompt guardado para el informe semanal de Google, comprobado contra la interfaz.</p></div></div></details><details class="acor lec" id="leccion-10"><summary><span class="lec-num">10</span><span class="lec-tit">MCP de Meta: conectar y usar</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>El conector oficial de Meta Ads est&#225; en <code>https://mcp.facebook.com/ads</code> y se a&#241;ade en Claude como conector personalizado (en Claude Code: <code>claude mcp add --transport http meta-ads https://mcp.facebook.com/ads</code>). A diferencia del de Google, <strong>este s&#237; puede escribir</strong>: crear y editar campa&#241;as, conjuntos, anuncios, audiencias y cat&#225;logos. Por eso aqu&#237; las reglas de la lecci&#243;n 8 importan m&#225;s que nunca.</p><p>Puntos clave:</p><ul class="bullets"><li><p><strong>El inicio de sesi&#243;n es con Facebook Login for Business.</strong> Hay que marcar la cuenta publicitaria durante el inicio de sesi&#243;n. Si Claude no la ve, desconectar, volver a conectar y marcarla.</p></li><li><p><strong>Permisos separados.</strong> ads_read y business_management para leer; ads_management solo si se quiere escribir. Empieza solo con lectura.</p></li><li><p><strong>Aprobaci&#243;n en cada cambio.</strong> Que nunca marque "Permitir siempre" en herramientas que crean o modifican.</p></li></ul><p>M&#225;s informaci&#243;n: <a href="https://admanage.ai/blog/connect-meta-ads-mcp-to-claude">gu&#237;a de conexi&#243;n</a> y <a href="https://elevarus.com/meta-ads-mcp-claude-operator-setup/">qu&#233; bloquear y qu&#233; no</a>. Son fuentes de terceros: comprueba los detalles en la documentaci&#243;n de Meta.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; diferencia hay entre el MCP de Google y el de Meta en cuanto a riesgo?</p></li><li><p><strong>Conexi&#243;n en solo lectura (20 min).</strong> Conectar y comprobar que ve la cuenta del proyecto.</p></li><li><p><strong>Lectura (25 min).</strong> Rendimiento por anuncio, frecuencia, anuncios con fatiga y Biblioteca de anuncios de la competencia.</p></li><li><p><strong>Ejercicio de escritura controlada (25 min).</strong> Con permisos de escritura, p&#237;dele a Claude que cree un conjunto de anuncios de prueba en pausa. Claude tiene que presentar primero el plan. &#201;l lo revisa, lo aprueba, lo comprueba en el Administrador de anuncios y despu&#233;s lo borra a mano.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; habr&#237;a pasado si hubieras dado "Permitir siempre"?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>A&#241;adir al proyecto de Claude las reglas espec&#237;ficas para Meta y quitar el permiso de escritura hasta la lecci&#243;n 27.</p></div></div></details>
+  </section>
+  <aside class="ley"><p class="ley-num">Ley no escrita del PPC n&#186; 1</p><p class="ley-txt">El cliente que menos invierte es siempre el que m&#225;s veces pregunta por qu&#233; no sale el primero.</p><p class="ley-pie">Corolario: tambi&#233;n es el que se busca a s&#237; mismo en Google quince veces al d&#237;a y luego se queja de que le gastas el presupuesto.</p></aside>
+  <section class="modulo" id="google">
+    <p class="eyebrow">Bloque 4</p>
+    <div class="modulo-h"><h2>Google Ads, todos los tipos de campa&#241;a</h2></div>
+    <p class="ctx">Una lecci&#243;n por cada tipo de campa&#241;a de Google Ads: Search, Performance Max, Shopping, Display, YouTube, Demand Gen y Aplicaciones. Se empieza por Search porque la intenci&#243;n de b&#250;squeda es m&#225;s clara y los primeros datos llegan antes. Todas se montan; solo se activan las que encajan con el proyecto. Desde aqu&#237;, cada lecci&#243;n tiene un apartado "Con Claude" para practicar el m&#233;todo del bloque 3.</p><details class="acor lec" id="leccion-11"><summary><span class="lec-num">11</span><span class="lec-tit">Search I: estructura y keywords</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con el keyword research del proyecto, la estructura de campa&#241;as y grupos de anuncios y la lista de negativas inicial. Conceptos clave: intenci&#243;n (transaccional, comercial, informacional), concordancias (amplia, de frase y exacta) y c&#243;mo se comportan hoy, cu&#225;ndo la amplia funciona (con buena medici&#243;n y puja inteligente) y cu&#225;ndo no, negativas a nivel de cuenta y de campa&#241;a y estructura por servicio o por intenci&#243;n.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Cu&#225;l es el CPC m&#225;ximo que puede pagar el proyecto?</p></li><li><p><strong>Keyword research (35 min).</strong> Planificador de palabras clave y Semrush. Que agrupe por intenci&#243;n y descarte por CPC m&#225;ximo.</p></li><li><p><strong>Estructura (25 min).</strong> Que dibuje la cuenta y defienda por qu&#233; tantos o tan pocos grupos. Regla: separar solo cuando cambia el anuncio, la landing o el presupuesto.</p></li><li><p><strong>Negativas (15 min).</strong> Lista inicial: gratis, empleo, curso, opiniones, competencia si no se quiere pujar por ella.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; keyword te da m&#225;s miedo y por qu&#233;?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>P&#237;dele que proponga negativas a partir del keyword research. &#201;l acepta o descarta una a una.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Hoja con keywords, grupos y negativas.</p></div></div></details><details class="acor lec" id="leccion-12"><summary><span class="lec-num">12</span><span class="lec-tit">Search II: anuncios, recursos, pujas y lanzamiento</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>D&#237;a de lanzamiento. Sale con la campa&#241;a de Search activa. Conceptos clave: anuncios RSA (hasta 15 t&#237;tulos y 4 descripciones, fijar posiciones solo cuando hace falta), calidad del anuncio, recursos (enlaces de sitio, textos destacados, extractos, llamada, formulario), Quality Score y sus tres componentes, estrategias de puja y cu&#225;ndo pasar de Maximizar conversiones a CPA objetivo.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Que te explique la estructura sin mirar.</p></li><li><p><strong>Anuncios (25 min).</strong> T&#237;tulos con keyword, beneficio, prueba y llamada a la acci&#243;n. Que cada t&#237;tulo funcione solo.</p></li><li><p><strong>Recursos (15 min).</strong> Todos los que apliquen.</p></li><li><p><strong>Configuraci&#243;n y puja (20 min).</strong> Ubicaci&#243;n por presencia y no por inter&#233;s, redes (quitar Display), programaci&#243;n y puja inicial. Explica por qu&#233; se empieza sin CPA objetivo.</p></li><li><p><strong>Checklist y lanzamiento (15 min).</strong> Pasar la checklist de lanzamiento del anexo y activar.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; vas a mirar ma&#241;ana y qu&#233; no vas a tocar en 7 d&#237;as?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que Claude redacte 30 t&#237;tulos y &#233;l elija 15 con criterio. Las campa&#241;as las crea &#233;l en la interfaz.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Primera entrada en el log y empezar la revisi&#243;n semanal.</p></div></div></details><details class="acor lec" id="leccion-13"><summary><span class="lec-num">13</span><span class="lec-tit">Landing y CRO</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo diagnosticar si el problema es del anuncio o de la landing. Conceptos clave: coherencia entre anuncio y landing, propuesta de valor arriba del todo, un solo objetivo por p&#225;gina, prueba social, fricci&#243;n del formulario, velocidad en m&#243;vil, mapas de calor y grabaciones con Microsoft Clarity y tests A/B.</p><p>Regla de diagn&#243;stico: CTR bueno y conversi&#243;n mala apunta a la landing. CTR malo apunta al anuncio o a la keyword.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Primeros datos de la campa&#241;a: &#191;qu&#233; ves?</p></li><li><p><strong>Auditor&#237;a de la landing (30 min).</strong> Con el m&#243;vil en la mano, como un usuario que viene del anuncio.</p></li><li><p><strong>Clarity (20 min).</strong> Instalar y ver grabaciones reales si ya hay tr&#225;fico.</p></li><li><p><strong>Hip&#243;tesis de mejora (20 min).</strong> Tres cambios priorizados por impacto y esfuerzo.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; cambiar&#237;as primero y c&#243;mo medir&#237;as si ha funcionado?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>P&#225;sale la landing y el anuncio y p&#237;dele una auditor&#237;a de coherencia. &#201;l la contrasta con lo visto en Clarity.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Implementar el cambio n&#250;mero 1.</p></div></div></details><details class="acor lec" id="leccion-14"><summary><span class="lec-num">14</span><span class="lec-tit">Performance Max</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo montar una PMax y, sobre todo, control&#225;ndola. Conceptos clave: el inventario que cubre (Search, Shopping, Display, YouTube, Discover, Gmail y Maps), grupos de recursos, se&#241;ales de audiencia, temas de b&#250;squeda, exclusiones de marca, keywords negativas a nivel de campa&#241;a, expansi&#243;n de URL final e informes de canales, t&#233;rminos de b&#250;squeda y recursos. El riesgo principal: que se lleve el tr&#225;fico de marca y el remarketing y parezca que funciona.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Estado de la campa&#241;a de Search.</p></li><li><p><strong>C&#243;mo funciona (20 min).</strong> Qu&#233; decide el algoritmo, qu&#233; controlas t&#250; y por qu&#233; la medici&#243;n del bloque 2 es aqu&#237; m&#225;s cr&#237;tica que nunca.</p></li><li><p><strong>Montaje (35 min).</strong> Grupos de recursos por tema u oferta, se&#241;ales con listas propias, exclusiones de marca y negativas.</p></li><li><p><strong>Lectura de informes (15 min).</strong> En una cuenta que ya tenga PMax: informe de canales y de t&#233;rminos de b&#250;squeda.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;C&#243;mo sabr&#237;as si PMax est&#225; canibalizando tu campa&#241;a de Search?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que saque con el MCP de Google el informe de canales y de t&#233;rminos de b&#250;squeda. &#201;l lo interpreta.</p></div><div class="tarea"><p class="lab">Tarea</p><p>PMax montada (activa si encaja con el proyecto, si no en pausa) y decisi&#243;n apuntada en el log.</p></div></div></details><details class="acor lec" id="leccion-15"><summary><span class="lec-num">15</span><span class="lec-tit">Shopping y Merchant Center</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con un feed sin errores cr&#237;ticos y una campa&#241;a de Shopping. Conceptos clave: alta y verificaci&#243;n en Merchant Center, reclamaci&#243;n del sitio, fuentes del feed (manual, Google Sheets o integraci&#243;n con Shopify o WooCommerce), atributos obligatorios, diagn&#243;sticos y productos rechazados, listados gratuitos, Shopping est&#225;ndar frente a PMax con feed, grupos de productos y prioridad de campa&#241;a. Si el proyecto no vende online, la lecci&#243;n se hace con una tienda de prueba.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; has visto en los informes de PMax?</p></li><li><p><strong>Merchant Center en directo (30 min).</strong> Alta, verificaci&#243;n y conexi&#243;n con Google Ads.</p></li><li><p><strong>El feed (20 min).</strong> Errores t&#237;picos: precio que no coincide con la web, im&#225;genes con texto, GTIN que falta.</p></li><li><p><strong>Campa&#241;a de Shopping est&#225;ndar (20 min).</strong> Estructura por grupos de productos y puja.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Cu&#225;ndo Shopping est&#225;ndar y cu&#225;ndo PMax?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que revise un export del feed y proponga mejoras de t&#237;tulos. &#201;l elige cu&#225;les aplicar.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Feed sin errores cr&#237;ticos en Merchant Center.</p></div></div></details><details class="acor lec" id="leccion-16"><summary><span class="lec-num">16</span><span class="lec-tit">Display</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo cu&#225;ndo Display sirve y cu&#225;ndo es tirar el dinero. Sirve para remarketing, alcance barato y nichos con ubicaciones concretas. Suele fallar como prospecci&#243;n para conversi&#243;n directa. Conceptos clave: anuncios adaptables de display, segmentaci&#243;n por audiencias, temas y ubicaciones, exclusiones de ubicaciones y de apps, l&#237;mite de frecuencia y conversiones post-impresi&#243;n.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;C&#243;mo va el feed?</p></li><li><p><strong>Para qu&#233; s&#237; y para qu&#233; no (15 min).</strong> Casos reales de Display que funciona y que no.</p></li><li><p><strong>Montaje de remarketing (30 min).</strong> Lista de visitantes, anuncios adaptables y frecuencia.</p></li><li><p><strong>Exclusiones (15 min).</strong> Apps de juegos para m&#243;vil, contenido sensible y ubicaciones sin valor.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;C&#243;mo medir&#237;as una campa&#241;a de Display que no convierte en &#250;ltimo clic?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que revise el informe de ubicaciones y proponga exclusiones. &#201;l decide.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Remarketing de Display montado y lista de exclusiones guardada.</p></div></div></details><details class="acor lec" id="leccion-17"><summary><span class="lec-num">17</span><span class="lec-tit">YouTube (campa&#241;as de v&#237;deo)</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale eligiendo el formato de v&#237;deo seg&#250;n el objetivo. Conceptos clave: objetivos (alcance, visualizaciones, consideraci&#243;n), formatos (in-stream saltable y no saltable, bumper de 6 segundos, in-feed y Shorts), segmentaci&#243;n (audiencias, temas, palabras clave y canales), m&#233;tricas (CPV, tasa de visualizaci&#243;n, conversiones post-visualizaci&#243;n y aumento de b&#250;squedas de marca) y la estructura de un anuncio que funciona: marca y mensaje en los primeros 5 segundos. Google ha ido moviendo las campa&#241;as de v&#237;deo orientadas a conversi&#243;n a Demand Gen: comprueba la interfaz antes de la lecci&#243;n.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Datos del remarketing de Display.</p></li><li><p><strong>Formatos y estructura de un anuncio (20 min).</strong> Ver anuncios reales y analizarlos.</p></li><li><p><strong>Montaje (30 min).</strong> Una campa&#241;a con el formato que encaja con el objetivo del proyecto.</p></li><li><p><strong>Medici&#243;n (15 min).</strong> Qu&#233; se mide y qu&#233; no, y c&#243;mo leer el aumento de b&#250;squedas de marca.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; formato elegir&#237;as para un lanzamiento y cu&#225;l para vender?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que escriba guiones de 15 y 30 segundos a partir de los &#225;ngulos de la lecci&#243;n 4. &#201;l los adapta.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Un v&#237;deo de 15&#8211;30 segundos grabado y la campa&#241;a montada.</p></div></div></details><details class="acor lec" id="leccion-18"><summary><span class="lec-num">18</span><span class="lec-tit">Demand Gen</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale entendiendo que Demand Gen es lo m&#225;s parecido a Meta dentro de Google: la creatividad manda. Conceptos clave: inventario (YouTube con Shorts, Discover, Gmail y la red de display de Google), formatos (imagen, v&#237;deo, carrusel y producto con feed), audiencias similares a partir de listas propias, optimizaci&#243;n a conversiones y presupuesto m&#237;nimo para salir de aprendizaje.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; tal funciona el v&#237;deo?</p></li><li><p><strong>Demand Gen frente a PMax y Meta (15 min).</strong> Cu&#225;ndo usar cada uno.</p></li><li><p><strong>Montaje (35 min).</strong> Con las creatividades del v&#237;deo y los &#225;ngulos de la lecci&#243;n 4.</p></li><li><p><strong>Presupuesto y aprendizaje (15 min).</strong> Cu&#225;nto hace falta y cu&#225;nto esperar antes de juzgar.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; creatividad llevar&#237;as tambi&#233;n a Meta?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que proponga variantes de titulares y descripciones por &#225;ngulo.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Campa&#241;a de Demand Gen montada.</p></div></div></details><details class="acor lec" id="leccion-19"><summary><span class="lec-num">19</span><span class="lec-tit">Campa&#241;as de aplicaciones</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Cierra el bloque de Google. Conceptos clave: campa&#241;as de instalaciones, de interacci&#243;n y de prerregistro, medici&#243;n con Firebase o con un partner de medici&#243;n (MMP), limitaciones de medici&#243;n en iOS, recursos (textos, im&#225;genes y v&#237;deos) y puja por instalaci&#243;n o por acci&#243;n dentro de la app. Si el proyecto no tiene app, la lecci&#243;n se hace con un caso pr&#225;ctico y la campa&#241;a se monta en pausa.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Primeros datos de Demand Gen.</p></li><li><p><strong>Cu&#225;ndo tiene sentido (15 min).</strong> Apps de servicio, de suscripci&#243;n o de juego.</p></li><li><p><strong>Medici&#243;n de apps (20 min).</strong> Firebase, MMP y qu&#233; cambia en iOS.</p></li><li><p><strong>Montaje en pausa (20 min).</strong> Recursos y objetivo de puja.</p></li><li><p><strong>Resumen del bloque (15 min).</strong> Que complete &#233;l solo la tabla: tipo de campa&#241;a, para qu&#233; sirve, qu&#233; necesita y riesgo principal.</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>La tabla resumen de los tipos de campa&#241;a de Google, revisada contigo.</p></div></div></details>
+  </section>
+  <aside class="ley"><p class="ley-num">Ley no escrita del PPC n&#186; 2</p><p class="ley-txt">Toda campa&#241;a que nadie mira sigue gastando el presupuesto exactamente igual de r&#225;pido.</p><p class="ley-pie">Y suele hacerlo un viernes por la tarde.</p></aside>
+  <section class="modulo" id="meta">
+    <p class="eyebrow">Bloque 5</p>
+    <div class="modulo-h"><h2>Meta Ads, todos los objetivos</h2></div>
+    <p class="ctx">Meta tiene seis objetivos de campa&#241;a: Reconocimiento, Tr&#225;fico, Interacci&#243;n, Clientes potenciales, Promoci&#243;n de la app y Ventas. Hay una lecci&#243;n por objetivo (Tr&#225;fico e Interacci&#243;n van juntos), m&#225;s estructura, creatividad y testing. La idea que tiene que quedarle grabada: en Meta, el algoritmo encuentra a la audiencia y la creatividad le dice a qui&#233;n buscar. La campa&#241;a principal se lanza con el objetivo que encaja con el proyecto: lecci&#243;n 24 si es de leads, lecci&#243;n 25 si vende online.</p><details class="acor lec" id="leccion-20"><summary><span class="lec-num">20</span><span class="lec-tit">Estructura, audiencias y Advantage+</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con los activos de Meta listos y la estructura decidida. Conceptos clave: portfolio comercial, cuentas, p&#225;ginas, p&#237;xel y dominio. Campa&#241;a, conjunto y anuncio. Los seis objetivos y qu&#233; optimiza cada uno. Advantage+ (audiencia, ubicaciones y presupuesto de campa&#241;a). Segmentaci&#243;n amplia frente a intereses. P&#250;blicos personalizados, similares y exclusiones. Consolidaci&#243;n: pocas campa&#241;as con presupuesto suficiente para salir de la fase de aprendizaje (unas 50 conversiones a la semana por conjunto como referencia).</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; tipo de campa&#241;a de Google usar&#237;as para cada objetivo?</p></li><li><p><strong>Activos (20 min).</strong> Portfolio, permisos, p&#237;xel, API de Conversiones y dominio verificado.</p></li><li><p><strong>Los seis objetivos (20 min).</strong> Para qu&#233; sirve cada uno y qu&#233; evento optimiza.</p></li><li><p><strong>Estructura y audiencias (25 min).</strong> Decidir la estructura con el presupuesto real. P&#250;blicos personalizados y exclusiones.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; har&#237;as distinto con la mitad de presupuesto?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que liste en solo lectura los p&#250;blicos y el estado del p&#237;xel. &#201;l lo comprueba en el Administrador de eventos.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Documento con la estructura de Meta para el proyecto.</p></div></div></details><details class="acor lec" id="leccion-21"><summary><span class="lec-num">21</span><span class="lec-tit">Creatividad y &#225;ngulos</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>La lecci&#243;n m&#225;s importante de Meta. Sale con al menos cinco creatividades con &#225;ngulos distintos. Conceptos clave: &#225;ngulo (dolor, deseo, objeci&#243;n, comparaci&#243;n, prueba social), hook de los primeros 3 segundos, formatos (v&#237;deo vertical, imagen, carrusel), UGC, copy y la diferencia entre probar &#225;ngulos y probar colores de bot&#243;n.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; &#225;ngulos usaba la competencia en la lecci&#243;n 4?</p></li><li><p><strong>Sacar &#225;ngulos del cliente (25 min).</strong> De rese&#241;as, preguntas frecuentes y objeciones del brief. Lista de 10 &#225;ngulos.</p></li><li><p><strong>Elegir y guionizar (30 min).</strong> Los 5 mejores, cada uno con hook, cuerpo y llamada a la acci&#243;n.</p></li><li><p><strong>Producir (20 min).</strong> Al menos una versi&#243;n por &#225;ngulo, aunque sea grabada con el m&#243;vil.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Cu&#225;l crees que va a ganar? Ap&#250;ntalo en el log.</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que proponga 20 hooks por &#225;ngulo y &#233;l elija. Qu&#233; &#225;ngulo gana lo deciden los datos, no Claude.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Cinco creatividades listas con su copy.</p></div></div></details><details class="acor lec" id="leccion-22"><summary><span class="lec-num">22</span><span class="lec-tit">Reconocimiento</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo cu&#225;ndo tiene sentido pagar por alcance y c&#243;mo controlar la frecuencia. Conceptos clave: optimizaci&#243;n a alcance, a recuerdo del anuncio y a impresiones, l&#237;mite de frecuencia, compra de alcance y frecuencia (reservada), CPM y alcance &#250;nico. Cu&#225;ndo s&#237;: lanzamientos, negocios locales con zona peque&#241;a y para alimentar p&#250;blicos de remarketing (por ejemplo, gente que ha visto el 50 % de un v&#237;deo).</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Que presente sus cinco creatividades.</p></li><li><p><strong>Para qu&#233; s&#237; y para qu&#233; no (20 min).</strong> Por qu&#233; un CPM barato no significa nada si no sabes qu&#233; compras.</p></li><li><p><strong>Montaje (30 min).</strong> Campa&#241;a de alcance con l&#237;mite de frecuencia y p&#250;blico de v&#237;deo creado a partir de ella.</p></li><li><p><strong>Lectura (15 min).</strong> Alcance, frecuencia y recuerdo estimado.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;C&#243;mo justificar&#237;as esta inversi&#243;n ante un cliente que solo mira ventas?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que calcule el alcance y la frecuencia por semana a partir de los datos. &#201;l los comprueba.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Campa&#241;a en pausa o con presupuesto m&#237;nimo y p&#250;blico de v&#237;deo creado.</p></div></div></details><details class="acor lec" id="leccion-23"><summary><span class="lec-num">23</span><span class="lec-tit">Tr&#225;fico e Interacci&#243;n</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo por qu&#233; el tr&#225;fico barato enga&#241;a y c&#243;mo usar las campa&#241;as de mensajes. Conceptos clave:</p><ul class="bullets"><li><p><strong>Tr&#225;fico:</strong> clics en el enlace frente a visitas a la p&#225;gina de destino, y por qu&#233; optimizar a clics trae curiosos.</p></li><li><p><strong>Interacci&#243;n:</strong> mensajes (WhatsApp, Messenger e Instagram Direct), interacci&#243;n con publicaciones, reproducciones de v&#237;deo y respuestas a eventos.</p></li><li><p><strong>Mensajes:</strong> muy &#250;tiles para servicios y negocios locales, siempre que alguien responda r&#225;pido o haya una automatizaci&#243;n con preguntas de filtro.</p></li></ul></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; tal el alcance y la frecuencia?</p></li><li><p><strong>El enga&#241;o del tr&#225;fico barato (15 min).</strong> Comparar clics, visitas reales y conversiones.</p></li><li><p><strong>Campa&#241;a de mensajes (35 min).</strong> Montaje a WhatsApp con mensaje de bienvenida y preguntas frecuentes.</p></li><li><p><strong>Seguimiento (15 min).</strong> C&#243;mo medir qu&#233; conversaciones acaban en venta.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Para qu&#233; negocio elegir&#237;as mensajes en vez de formulario?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que redacte el flujo de bienvenida y las respuestas r&#225;pidas. &#201;l lo ajusta al tono del negocio.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Campa&#241;a de mensajes montada (activa si encaja con el proyecto).</p></div></div></details><details class="acor lec" id="leccion-24"><summary><span class="lec-num">24</span><span class="lec-tit">Clientes potenciales</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Si el proyecto es de leads, hoy se lanza la campa&#241;a principal de Meta. Conceptos clave: formularios instant&#225;neos (m&#225;s volumen, menos calidad) frente a conversiones en la web, formulario de mayor intenci&#243;n, preguntas de filtro, llamadas y mensajes como destino, conexi&#243;n con el CRM y optimizaci&#243;n por calidad del lead devolviendo eventos del CRM por la API de Conversiones.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Conversaciones de la campa&#241;a de mensajes.</p></li><li><p><strong>Formulario frente a web (15 min).</strong> Volumen, calidad y coste por cliente real.</p></li><li><p><strong>Montaje (35 min).</strong> Formulario con preguntas de filtro, conexi&#243;n con el CRM y checklist de lanzamiento del anexo.</p></li><li><p><strong>Calidad (15 min).</strong> C&#243;mo devolver a Meta qu&#233; leads fueron buenos.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; no vas a tocar en los pr&#243;ximos 7 d&#237;as?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que redacte las preguntas de filtro a partir del brief. &#201;l elige.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Leads llegando al CRM y a&#241;adir Meta a la revisi&#243;n semanal.</p></div></div></details><details class="acor lec" id="leccion-25"><summary><span class="lec-num">25</span><span class="lec-tit">Ventas y cat&#225;logo</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Si el proyecto vende online, hoy se lanza la campa&#241;a principal de Meta. Conceptos clave: conversiones en la web con el evento Purchase y su valor, campa&#241;as Advantage+ de ventas, cat&#225;logo y anuncios de cat&#225;logo (din&#225;micos), colecciones, prospecci&#243;n frente a retargeting, y optimizaci&#243;n por valor con ROAS m&#237;nimo.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; diferencia hay entre optimizar a leads y a ventas?</p></li><li><p><strong>Cat&#225;logo (20 min).</strong> Crearlo o conectarlo desde la tienda y vincularlo al p&#237;xel.</p></li><li><p><strong>Montaje (35 min).</strong> Campa&#241;a Advantage+ de ventas o campa&#241;a manual de ventas, seg&#250;n presupuesto. Checklist de lanzamiento.</p></li><li><p><strong>Retargeting din&#225;mico (10 min).</strong> Qu&#233; aporta y cu&#225;ndo canibaliza.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Cu&#225;ndo pondr&#237;as un ROAS m&#237;nimo?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que revise el estado del cat&#225;logo y los errores de coincidencia con el p&#237;xel en solo lectura.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Campa&#241;a de ventas activa (si el proyecto vende online) o montada en pausa.</p></div></div></details><details class="acor lec" id="leccion-26"><summary><span class="lec-num">26</span><span class="lec-tit">Promoci&#243;n de la app</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Cierra los objetivos de Meta. Conceptos clave: instalaciones frente a eventos dentro de la app, SDK de Meta o partner de medici&#243;n (MMP), limitaciones de medici&#243;n en iOS y campa&#241;as Advantage+ de apps. Si no hay app, la campa&#241;a se monta en pausa.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Primeros datos de la campa&#241;a principal.</p></li><li><p><strong>Medici&#243;n de apps en Meta (20 min).</strong> SDK, MMP y qu&#233; cambia en iOS.</p></li><li><p><strong>Montaje en pausa (25 min).</strong></p></li><li><p><strong>Resumen del bloque (25 min).</strong> Que complete &#233;l solo la tabla: objetivo, cu&#225;ndo usarlo, qu&#233; evento optimiza y riesgo principal. Y que la compare con la tabla de Google de la lecci&#243;n 19.</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Las dos tablas resumen, Google y Meta, revisadas contigo.</p></div></div></details><details class="acor lec" id="leccion-27"><summary><span class="lec-num">27</span><span class="lec-tit">Testing y escalado en Meta</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con un sistema para probar creatividades de forma continua. Conceptos clave: qu&#233; reinicia la fase de aprendizaje, cu&#225;ndo juzgar un anuncio (por gasto, no por d&#237;as), m&#233;tricas de creatividad (hook rate, hold rate, CTR y coste por resultado), frecuencia y fatiga, y el ciclo: probar, ganar, escalar, renovar.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; creatividad va ganando y por qu&#233; crees que gana?</p></li><li><p><strong>Reglas de testing (25 min).</strong> Escribid juntos cu&#225;ndo se apaga un anuncio (por ejemplo, gasto de 2 veces el CPA objetivo sin conversi&#243;n) y cu&#225;ndo entran nuevos.</p></li><li><p><strong>Estructura de testing (20 min).</strong> D&#243;nde viven los anuncios nuevos y c&#243;mo pasan a la campa&#241;a principal.</p></li><li><p><strong>Ejercicio con Claude y escritura (20 min).</strong> Claude prepara una variante de anuncio en pausa con el MCP de Meta, con plan previo y aprobaci&#243;n. &#201;l la revisa y la activa a mano.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Cada cu&#225;nto necesitas creatividades nuevas con este presupuesto?</p></li></ol></div><div class="tarea"><p class="lab">Tarea</p><p>Reglas de testing escritas en el log.</p></div></div></details>
+  </section>
+  <section class="modulo" id="pro">
+    <p class="eyebrow">Bloque 6</p>
+    <div class="modulo-h"><h2>Nivel pro</h2></div>
+    <details class="acor lec" id="leccion-28"><summary><span class="lec-num">28</span><span class="lec-tit">Optimizaci&#243;n y diagn&#243;stico</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>La lecci&#243;n del criterio. Sale sabiendo diagnosticar una ca&#237;da en orden y no a ciegas. El orden de diagn&#243;stico es: 1) &#191;la medici&#243;n funciona?, 2) &#191;ha cambiado la subasta o la competencia?, 3) &#191;ha cambiado algo en la cuenta? (historial de cambios), 4) &#191;ha cambiado la creatividad o la landing?, 5) &#191;es estacionalidad?</p><p>Herramientas: informe de t&#233;rminos de b&#250;squeda, informaci&#243;n de subastas, segmentos (dispositivo, hora, ubicaci&#243;n), historial de cambios, desglose por ubicaci&#243;n y edad en Meta, frecuencia y modelos de atribuci&#243;n.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; has cambiado esta semana y por qu&#233;?</p></li><li><p><strong>Caso simulado (30 min).</strong> Pl&#225;ntale: "el CPA ha subido un 40 % esta semana". Que siga el orden de diagn&#243;stico en voz alta.</p></li><li><p><strong>Caso real (35 min).</strong> Optimizaci&#243;n completa de las campa&#241;as del proyecto.</p></li><li><p><strong>Cierre (15 min).</strong> Que resuma tres decisiones y su motivo.</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>P&#237;dele a Claude un diagn&#243;stico con los dos MCP. &#201;l compara el diagn&#243;stico de Claude con el suyo y decide.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Escribir su propia checklist de optimizaci&#243;n semanal.</p></div></div></details><details class="acor lec" id="leccion-29"><summary><span class="lec-num">29</span><span class="lec-tit">Escalado, automatizaci&#243;n y reporting</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con un informe en Looker Studio y un plan de escalado. Conceptos clave:</p><ul class="bullets"><li><p><strong>Escalado vertical:</strong> subir presupuesto en saltos de un 15&#8211;20 % cada pocos d&#237;as para no romper el aprendizaje.</p></li><li><p><strong>Escalado horizontal:</strong> nuevos &#225;ngulos, audiencias, keywords o tipos de campa&#241;a.</p></li><li><p><strong>Cu&#225;ndo escalar:</strong> CPA estable por debajo del objetivo durante al menos 2 semanas.</p></li><li><p><strong>Automatizaci&#243;n:</strong> reglas automatizadas y scripts de Google Ads (por ejemplo, alertas de gasto o de ca&#237;das de conversi&#243;n).</p></li><li><p><strong>Reporting:</strong> Looker Studio con Google Ads, Meta (a trav&#233;s de un conector) y GA4. Contar resultados de negocio, no m&#233;tricas de plataforma.</p></li></ul></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Est&#225; el proyecto listo para escalar? &#191;Por qu&#233;?</p></li><li><p><strong>Plan de escalado (25 min).</strong> Por plataforma, con fechas y umbrales.</p></li><li><p><strong>Automatizaci&#243;n (20 min).</strong> Una regla y un script de alerta.</p></li><li><p><strong>Informe (30 min).</strong> Looker Studio con 5 KPIs como m&#225;ximo, orientado al cliente.</p></li><li><p><strong>Cierre (5 min).</strong> &#191;Qu&#233; contar&#237;as a un cliente si este mes sale peor?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que Claude redacte el comentario mensual del informe a partir de los datos. &#201;l lo corrige antes de enviarlo.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Informe enviado al "cliente" (t&#250;).</p></div></div></details>
+  </section>
+  <aside class="ley"><p class="ley-num">Ley no escrita del PPC n&#186; 5</p><p class="ley-txt">El producto que m&#225;s vende casi nunca es el que m&#225;s margen deja.</p><p class="ley-pie">Y es justo el que el cliente quiere empujar en Black Friday.</p></aside>
+  <section class="modulo" id="ecommerce">
+    <p class="eyebrow">Bloque 7</p>
+    <div class="modulo-h"><h2>Ecommerce</h2></div>
+    <p class="ctx">Una vez visto todo, se junta para una tienda online. Aqu&#237; no se aprende un tipo de campa&#241;a nuevo: se aprende a combinar la tienda, Google y Meta para que el negocio gane dinero, no solo para que el ROAS se vea bonito. Si el proyecto no es ecommerce, este bloque se hace con la tienda de un conocido o con una tienda de prueba.</p><details class="acor lec" id="leccion-30"><summary><span class="lec-num">30</span><span class="lec-tit">Econom&#237;a y medici&#243;n de una tienda</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale sabiendo si una tienda gana dinero con la publicidad. Conceptos clave: margen por producto (no el medio), ticket medio, coste de env&#237;o y devoluciones, recompra y LTV, ROAS de equilibrio por producto, MER, POAS (beneficio sobre inversi&#243;n) y clientes nuevos frente a recurrentes. En medici&#243;n: evento de compra con valor, moneda e ID de pedido, integraciones nativas de la tienda (Shopify, WooCommerce) con Google y Meta, y c&#243;mo cuadrar lo que dicen las plataformas con los pedidos reales.</p><div class="formula">MER = <em>ingresos totales de la tienda</em> &#247; <em>inversi&#243;n publicitaria total</em></div></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; ROAS necesita esta tienda para no perder dinero?</p></li><li><p><strong>Hoja de m&#225;rgenes por producto (25 min).</strong> Con coste, env&#237;o y devoluciones.</p></li><li><p><strong>Medici&#243;n de la tienda (30 min).</strong> Comparar las compras en GA4, Google Ads y Meta con los pedidos reales del mismo periodo.</p></li><li><p><strong>MER y POAS (15 min).</strong> Por qu&#233; se escala mirando el negocio y no la plataforma.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Por qu&#233; un ROAS de 4 puede perder dinero en un producto y ganarlo en otro?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que cruce un export de pedidos con las conversiones de las plataformas. &#201;l revisa las diferencias.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Hoja de m&#225;rgenes por producto y la diferencia entre pedidos reales y conversiones medidas.</p></div></div></details><details class="acor lec" id="leccion-31"><summary><span class="lec-num">31</span><span class="lec-tit">Feed avanzado y Merchant Center</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>En ecommerce, el feed es la segmentaci&#243;n: decide en qu&#233; b&#250;squedas sales en Shopping y qu&#233; muestra el cat&#225;logo de Meta. Conceptos clave: t&#237;tulos optimizados (marca, producto y atributo clave), tipo de producto y categor&#237;a, im&#225;genes, etiquetas personalizadas por margen, por rendimiento (productos h&#233;roe y zombi), por temporada y por stock, reglas de feed, feeds complementarios, promociones, rese&#241;as de productos y el mismo feed para el cat&#225;logo de Meta.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> &#191;Qu&#233; productos dejan m&#225;s margen?</p></li><li><p><strong>Auditor&#237;a del feed (25 min).</strong> T&#237;tulos, atributos que faltan y diagn&#243;sticos.</p></li><li><p><strong>Etiquetas personalizadas (30 min).</strong> Margen alto, medio y bajo, y productos h&#233;roe y zombi.</p></li><li><p><strong>Reglas y feed complementario (15 min).</strong> Cambiar el feed sin tocar la tienda.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; etiqueta te ayudar&#237;a m&#225;s a decidir presupuesto?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que clasifique los productos en h&#233;roe, medio y zombi a partir del informe de productos. &#201;l revisa los criterios.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Feed con etiquetas personalizadas aplicadas.</p></div></div></details><details class="acor lec" id="leccion-32"><summary><span class="lec-num">32</span><span class="lec-tit">Google Ads para ecommerce</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con una estructura de Google pensada para una tienda. Conceptos clave: estructura por margen y rendimiento (PMax o Shopping por grupos de etiquetas), PMax solo con feed frente a PMax con recursos, Search de marca protegido, Search gen&#233;rico para categor&#237;as clave, ROAS objetivo por grupo, remarketing din&#225;mico, objetivo de adquisici&#243;n de clientes nuevos y ajustes de estacionalidad.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Las etiquetas del feed.</p></li><li><p><strong>Dise&#241;ar la estructura (25 min).</strong> En papel, con los grupos de etiquetas.</p></li><li><p><strong>Montaje (35 min).</strong> Con exclusiones de marca y prioridades claras.</p></li><li><p><strong>Pujas por valor (10 min).</strong> ROAS objetivo y cu&#225;ndo activarlo.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Qu&#233; haces con los productos zombi?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que saque con el MCP de Google el rendimiento por producto. &#201;l decide qu&#233; se mueve de grupo.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Estructura de Google para la tienda montada.</p></div></div></details><details class="acor lec" id="leccion-33"><summary><span class="lec-num">33</span><span class="lec-tit">Meta Ads para ecommerce</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con Meta montado para una tienda. Conceptos clave: campa&#241;as Advantage+ de ventas, anuncios de cat&#225;logo para prospecci&#243;n y para retargeting, colecciones y experiencias instant&#225;neas, creatividades de producto (UGC, unboxing, comparativas y demostraciones), ofertas, exclusi&#243;n de compradores recientes, clientes nuevos frente a recurrentes y reparto de presupuesto entre prospecci&#243;n y retargeting.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Estructura de Google para la tienda.</p></li><li><p><strong>Estructura de Meta para una tienda (20 min).</strong> Cu&#225;ntas campa&#241;as y para qu&#233;.</p></li><li><p><strong>Creatividades de producto (25 min).</strong> Una por producto h&#233;roe.</p></li><li><p><strong>Montaje (25 min).</strong> Conectado al cat&#225;logo y con exclusiones.</p></li><li><p><strong>Cierre (10 min).</strong> &#191;Cu&#225;ndo deja de compensar el retargeting?</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que proponga hooks para cada producto h&#233;roe. &#201;l elige.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Meta para la tienda montado y conectado al cat&#225;logo.</p></div></div></details><details class="acor lec" id="leccion-34"><summary><span class="lec-num">34</span><span class="lec-tit">Rentabilidad, temporadas y escalado</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Sale con un plan de temporada alta y sabiendo leer una tienda a medio plazo. Conceptos clave: calendario comercial (rebajas, Black Friday, Navidad y fechas propias del sector), preparar la temporada con antelaci&#243;n (creatividades, presupuesto y ajustes de estacionalidad), promociones que no destruyen margen, an&#225;lisis por cohortes y recompra, coordinaci&#243;n con email y SMS, y escalar por MER en vez de por el ROAS de cada plataforma.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Repaso (10 min).</strong> Primeros datos de Google y Meta en la tienda.</p></li><li><p><strong>Calendario comercial (15 min).</strong> Fechas clave del a&#241;o para esta tienda.</p></li><li><p><strong>Plan de temporada alta (30 min).</strong> Presupuesto, fechas, ofertas y creatividades.</p></li><li><p><strong>Cohortes y recompra (20 min).</strong> Cu&#225;nto vale de verdad un cliente nuevo.</p></li><li><p><strong>Cierre (15 min).</strong> Que te presente el informe de la tienda como a un cliente.</p></li></ol></div><div class="conclaude"><p class="lab">Con Claude</p><p>Que redacte un borrador del plan de temporada alta con los datos del a&#241;o anterior. &#201;l lo corrige.</p></div><div class="tarea"><p class="lab">Tarea</p><p>Plan de temporada alta con presupuesto, fechas y creatividades.</p></div></div></details>
+  </section>
+  <section class="modulo" id="cierre">
+    <p class="eyebrow">Bloque 8</p>
+    <div class="modulo-h"><h2>Cierre</h2></div>
+    <details class="acor lec" id="leccion-35"><summary><span class="lec-num">35</span><span class="lec-tit">Proyecto final</span></summary><div class="acor-cuerpo"><div class="resumen"><p class="lab">Resumen para ti</p><p>Presenta el caso completo como lo har&#237;a en una reuni&#243;n con un cliente. Lo eval&#250;as con la plantilla del anexo.</p></div><div class="guion-wrap"><p class="lab">Guion</p><ol class="guion"><li><p><strong>Presentaci&#243;n (30 min).</strong> Objetivos, n&#250;meros, medici&#243;n, estructura, creatividades, resultados, aprendizajes y pr&#243;ximos pasos.</p></li><li><p><strong>Preguntas de cliente dif&#237;cil (20 min).</strong> &#191;Por qu&#233; no hemos vendido m&#225;s?, &#191;por qu&#233; Google y Meta no cuadran con mi CRM?, &#191;para qu&#233; te pago si lo hace la IA?</p></li><li><p><strong>Feedback (25 min).</strong> Qu&#233; domina, qu&#233; debe seguir practicando.</p></li><li><p><strong>Cierre (15 min).</strong> Plan de los pr&#243;ximos 90 d&#237;as del proyecto.</p></li></ol></div><div class="tarea"><p class="lab">Resultado</p><p>Su log de decisiones convertido en un caso de estudio para su portfolio.</p></div></div></details>
+  </section>
+  <section class="modulo" id="semanal">
+    <p class="eyebrow">Desde la lecci&#243;n 12</p>
+    <div class="modulo-h"><h2>Revisi&#243;n semanal</h2></div>
+    <p class="ctx">Son 30 minutos a la semana, en paralelo a las lecciones, y es donde se forma el criterio. La dirige &#233;l; t&#250; solo preguntas "&#191;por qu&#233;?".</p><ol class="guion"><li><p><strong>Medici&#243;n (3 min).</strong> &#191;Entran conversiones con normalidad en las dos plataformas?</p></li><li><p><strong>N&#250;meros frente al objetivo (7 min).</strong> Gasto, conversiones, CPA o ROAS frente a lo calculado en la lecci&#243;n 3.</p></li><li><p><strong>Google (7 min).</strong> T&#233;rminos de b&#250;squeda, negativas nuevas y anuncios.</p></li><li><p><strong>Meta (7 min).</strong> Creatividades ganadoras y perdedoras, frecuencia y fatiga.</p></li><li><p><strong>Decisiones (6 min).</strong> M&#225;ximo tres cambios, apuntados en el log con su motivo.</p></li></ol><p class="ctx">Con Claude: que prepare el resumen de los puntos 1 a 4 con los MCP antes de la reuni&#243;n. Las decisiones del punto 5 las toma &#233;l.</p>
+  </section>
+  <section class="modulo" id="anexos">
+    <p class="eyebrow">Material</p>
+    <div class="modulo-h"><h2>Anexos</h2></div>
+    <h3>Plantilla de brief</h3><ul class="bullets"><li><p>Negocio y oferta (qu&#233; se vende y a qu&#233; precio)</p></li><li><p>Cliente ideal y sus problemas</p></li><li><p>Propuesta de valor y diferencial frente a la competencia</p></li><li><p>Ticket medio, margen, LTV y tasa de cierre</p></li><li><p>Ciclo de venta y estacionalidad</p></li><li><p>Objeciones frecuentes</p></li><li><p>Objetivo del proyecto a 30, 60 y 90 d&#237;as</p></li><li><p>Presupuesto mensual disponible</p></li></ul><h3>Checklist de medici&#243;n</h3><ul class="check"><li><span class="caja"></span><span>GTM instalado en todas las p&#225;ginas</span></li><li><span class="caja"></span><span>GA4 recibe eventos y los eventos clave est&#225;n marcados</span></li><li><span class="caja"></span><span>Conversi&#243;n primaria definida en Google Ads, con valor si aplica</span></li><li><span class="caja"></span><span>Conversiones mejoradas activas</span></li><li><span class="caja"></span><span>P&#237;xel de Meta y API de Conversiones activos y deduplicados</span></li><li><span class="caja"></span><span>Dominio verificado en Meta</span></li><li><span class="caja"></span><span>Consent Mode v2 configurado y probado aceptando y rechazando</span></li><li><span class="caja"></span><span>Conversi&#243;n de prueba visible en GA4, Google Ads y Meta</span></li><li><span class="caja"></span><span>Importaci&#243;n desde el CRM (si es un proyecto de leads)</span></li></ul><h3>Checklist de lanzamiento en Google</h3><ul class="check"><li><span class="caja"></span><span>Ubicaci&#243;n por presencia y redes de Display desactivadas en Search</span></li><li><span class="caja"></span><span>Negativas a&#241;adidas</span></li><li><span class="caja"></span><span>Al menos un anuncio RSA por grupo con calidad buena o excelente</span></li><li><span class="caja"></span><span>Recursos a&#241;adidos</span></li><li><span class="caja"></span><span>Puja y presupuesto coherentes con la lecci&#243;n 3</span></li><li><span class="caja"></span><span>URLs finales funcionando y con la landing correcta</span></li><li><span class="caja"></span><span>Conversi&#243;n primaria correcta en la configuraci&#243;n de la campa&#241;a</span></li></ul><h3>Checklist de lanzamiento en Meta</h3><ul class="check"><li><span class="caja"></span><span>Evento de optimizaci&#243;n correcto</span></li><li><span class="caja"></span><span>Exclusiones de clientes actuales si el objetivo es captaci&#243;n</span></li><li><span class="caja"></span><span>Ubicaciones revisadas</span></li><li><span class="caja"></span><span>Creatividades en todos los formatos necesarios</span></li><li><span class="caja"></span><span>UTMs en las URLs</span></li><li><span class="caja"></span><span>Reglas de testing escritas</span></li></ul><h3>Plantilla del log de decisiones</h3><div class="scroll-x"><table class="tabla"><thead><tr><th>Fecha</th><th>Plataforma</th><th>Cambio</th><th>Motivo (dato)</th><th>Resultado a 7 d&#237;as</th></tr></thead><tbody><tr><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div><h3>Evaluaci&#243;n del proyecto final</h3><div class="scroll-x"><table class="tabla"><thead><tr><th>Criterio</th><th>Qu&#233; miras</th></tr></thead><tbody><tr><td>Negocio</td><td>Conoce sus n&#250;meros y decide con ellos</td></tr><tr><td>Medici&#243;n</td><td>Sabe qu&#233; es fiable y qu&#233; es aproximado</td></tr><tr><td>Estructura</td><td>Cada decisi&#243;n de estructura tiene un motivo</td></tr><tr><td>Creatividad</td><td>Prueba &#225;ngulos, no detalles</td></tr><tr><td>Criterio</td><td>Sabe cu&#225;ndo no tocar</td></tr><tr><td>Uso de Claude</td><td>Delega lo mec&#225;nico y revisa todo</td></tr><tr><td>Comunicaci&#243;n</td><td>Cuenta resultados de negocio a un cliente</td></tr><tr><td>Ecommerce</td><td>Lee la tienda por margen y MER, no solo por ROAS de plataforma</td></tr></tbody></table></div>
+  </section>
+  <section class="modulo" id="fuentes">
+    <p class="eyebrow">Referencias</p>
+    <div class="modulo-h"><h2>Fuentes</h2></div>
+    <ul class="bullets"><li><p><a href="https://github.com/googleads/google-ads-mcp">Google Ads MCP oficial (googleads/google-ads-mcp)</a></p></li><li><p><a href="https://admanage.ai/blog/connect-meta-ads-mcp-to-claude">C&#243;mo conectar el MCP de Meta Ads a Claude (AdManage)</a></p></li><li><p><a href="https://elevarus.com/meta-ads-mcp-claude-operator-setup/">MCP de Meta Ads: qu&#233; conectar y qu&#233; bloquear (Elevarus)</a></p></li><li><p><a href="https://mcp.directory/blog/meta-ads-cli-mcp">Meta Ads MCP y CLI (mcp.directory)</a></p></li></ul>
+  </section>
+
+  <section class="plain">
+    <div class="pie">
+      <span>Libert<b>Ads</b> &#183; de Bryan Gibe &#183; Gu&#237;a del profesor</span>
+      <span><a href="https://bryangibe.com">bryangibe.com</a></span>
+    </div>
+  </section>
+
+</div>
+<script>
+/* Ajuste fino del ancho dentro de GHL (mismo que en la academia). */
+(function () {
+  var el = document.querySelector(".bgc");
+  if (!el) return;
+  function ajusta() {
+    el.style.marginLeft = "0px";
+    el.style.width = "auto";
+    var izq = el.getBoundingClientRect().left;
+    el.style.marginLeft = -izq + "px";
+    el.style.width = document.documentElement.clientWidth + "px";
+  }
+  ajusta();
+  window.addEventListener("resize", ajusta);
+  window.addEventListener("orientationchange", ajusta);
+  window.addEventListener("load", ajusta);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajusta); }
+})();
+</script>
+</body>
+</html>
