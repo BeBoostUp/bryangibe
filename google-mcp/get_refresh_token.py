@@ -20,6 +20,11 @@ import http.server
 
 import requests
 
+try:  # consola de Windows
+    sys.stdout.reconfigure(errors="replace")
+except Exception:
+    pass
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 from core import accounts  # noqa: E402
@@ -95,12 +100,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
 
 def write_env(key, value):
-    content = open(accounts.ENV_PATH).read() if os.path.exists(accounts.ENV_PATH) else ""
+    content = open(accounts.ENV_PATH, encoding="utf-8").read() if os.path.exists(accounts.ENV_PATH) else ""
     if re.search(rf"^{key}=.*$", content, flags=re.M):
         content = re.sub(rf"^{key}=.*$", f"{key}={value}", content, flags=re.M)
     else:
         content = content.rstrip("\n") + f"\n{key}={value}\n"
-    with open(accounts.ENV_PATH, "w") as f:
+    with open(accounts.ENV_PATH, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
     try:
         os.chmod(accounts.ENV_PATH, 0o600)

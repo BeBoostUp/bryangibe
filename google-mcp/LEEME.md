@@ -24,13 +24,15 @@ tres capas:
 
 Además, `google_api_request` solo envía el token a `https://*.googleapis.com`.
 
-## Instalar (Mac)
+## Instalar
 
-```bash
-bash install.sh
-```
+**Mac:** abre Terminal en la carpeta descomprimida y ejecuta `bash install.sh`.
 
-Copia la carpeta a `~/google-mcp`, registra el servidor `google` en `~/.claude.json`
+**Windows:** haz doble clic en `install.bat`. Necesitas Python 3 de
+https://www.python.org/downloads/windows/ (marca "Add python.exe to PATH" al instalarlo).
+
+El instalador copia la carpeta a tu carpeta de usuario (`~/google-mcp` o
+`C:\Users\<tu usuario>\google-mcp`), registra el servidor `google` en `.claude.json`
 (quitando los 6 antiguos, con copia de seguridad) y te ofrece conectar `bryan` y
 `academy`. Reinicia Claude.
 
@@ -40,6 +42,8 @@ Copia la carpeta a `~/google-mcp`, registra el servidor `google` en `~/.claude.j
 cd ~/google-mcp && python3 get_refresh_token.py bryan
 cd ~/google-mcp && python3 get_refresh_token.py academy
 ```
+
+En Windows (PowerShell): `cd ~\google-mcp; python get_refresh_token.py academy`
 
 Un login pide todos los permisos de una vez (Ads, GA4, GTM, Search Console, Indexing, Site
 Verification, Merchant, Business Profile, YouTube y YouTube Analytics, Gmail, Drive, Docs,

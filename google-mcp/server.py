@@ -137,6 +137,12 @@ def handle(req):
 
 
 def main():
+    # Windows: UTF-8 y saltos de línea \n en el canal JSON-RPC
+    for st in (sys.stdin, sys.stdout):
+        try:
+            st.reconfigure(encoding="utf-8", newline="\n")
+        except Exception:
+            pass
     if LOAD_ERRORS:
         sys.stderr.write("Módulos con error al cargar: %s\n" % LOAD_ERRORS)
     for line in sys.stdin:
