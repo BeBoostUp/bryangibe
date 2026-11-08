@@ -1,0 +1,750 @@
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
+
+/* ============================================================
+   Curso PPC - Bryan Gibe
+   Todo va dentro de .bgc para no pelearse con los estilos de GHL.
+   Sin modo oscuro a proposito: la pagina de GHL de alrededor es clara.
+   ============================================================ */
+
+.bgc {
+  --bg: #F5F1E8;
+  --surface: #FFFDF9;
+  --ink: #1A1815;
+  --muted: #585650;
+  --line: #E0D9CB;
+  --accent: #FF6A1A;
+  --black: #101010;
+  --cream: #F5F1E8;
+  --good: #0B6E47;
+  --good-tint: #E6F1E6;
+  --bad: #B3261E;
+  --bad-tint: #FAE8E1;
+  --mid: #8A5A00;
+  --mid-tint: #F7EBD8;
+  --display: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --cond: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  /* La fila de GHL tiene un contenedor con ancho maximo, asi que el bloque
+     se sale de el a lo ancho de la ventana. El script del final lo afina
+     con clientWidth, que no cuenta la barra de scroll, para que no aparezca
+     scroll horizontal en los navegadores que la pintan por fuera. */
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 0 0 calc(50% - 50vw);
+  padding: 0 0 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  text-align: left;
+
+  /* Ancho de la columna de lectura. El fondo y las bandas de color van a
+     sangre; solo el texto se queda en esta medida para que se pueda leer. */
+  --col: 780px;
+  --aire: 22px;
+}
+
+/* GHL mete el bloque dentro de su propia seccion: esto lo saca a ancho
+   completo aunque la plantilla traiga padding o un contenedor estrecho. */
+.bgc { box-sizing: border-box; }
+.bgc > * {
+  width: min(100% - (var(--aire) * 2), var(--col));
+  margin-inline: auto;
+}
+
+
+/* Reset defensivo: GHL mete sus propios margenes, pesos y colores. */
+.bgc *, .bgc *::before, .bgc *::after { box-sizing: border-box; }
+.bgc h1, .bgc h2, .bgc h3, .bgc p, .bgc ul, .bgc ol, .bgc li, .bgc figure {
+  margin: 0; padding: 0; color: inherit; text-align: inherit;
+}
+.bgc ul, .bgc ol { list-style: none; }
+.bgc a { color: var(--accent); text-decoration: none; font-weight: 700; }
+.bgc a:hover { text-decoration: underline; }
+.bgc button {
+  font: inherit; color: inherit; cursor: pointer; margin: 0;
+  text-transform: none; letter-spacing: normal; box-shadow: none;
+  -webkit-appearance: none; appearance: none;
+}
+.bgc button:disabled { cursor: not-allowed; opacity: .5; }
+.bgc :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.bgc .block > *, .bgc .plain > * { min-width: 0; }
+
+.bgc h1, .bgc .score { font-family: var(--cond); text-transform: uppercase; text-wrap: balance; }
+.bgc h2, .bgc h3 { font-family: var(--display); text-wrap: balance; }
+
+/* ---- Bloque naranja: portada y resultado ---- */
+.bgc .block {
+  background: var(--accent); color: var(--black);
+  padding: 38px 26px 34px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;
+}
+.bgc .block :focus-visible { outline-color: var(--black); }
+.bgc .block a { color: var(--black); }
+.bgc .wordmark { font-family: var(--display); font-size: 19px; font-weight: 400; letter-spacing: -.015em; }
+.bgc .wordmark b { font-weight: 800; }
+.bgc .eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 13px; letter-spacing: .11em; text-transform: uppercase;
+}
+.bgc .eyebrow::before { content: ""; flex: none; width: 26px; height: 2px; background: currentColor; }
+.bgc h1 { font-size: clamp(50px, 14vw, 96px); line-height: .88; font-weight: 800; letter-spacing: -.005em; }
+.bgc .lede { max-width: 58ch; }
+
+/* ---- Secciones sobre crema ---- */
+.bgc .plain { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.bgc .muted { color: var(--muted); font-size: 15px; }
+.bgc h2 { font-size: clamp(26px, 5.8vw, 34px); line-height: 1.14; font-weight: 700; letter-spacing: -.012em; }
+.bgc h2:focus { outline: none; }
+.bgc h3 { font-size: 21px; font-weight: 700; }
+.bgc .ctx { color: var(--muted); }
+
+/* ---- Botones ---- */
+.bgc .cta {
+  background: var(--accent); color: var(--black); border: 0; border-radius: 4px;
+  padding: 15px 26px; font-weight: 800; letter-spacing: .01em; justify-self: start;
+  display: inline-block; text-decoration: none;
+}
+.bgc .cta:hover:not(:disabled) { filter: brightness(1.08); text-decoration: none; }
+.bgc .block .cta { background: var(--black); color: var(--cream); }
+.bgc .block .cta:hover:not(:disabled) { filter: none; opacity: .86; }
+.bgc .ghost {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 13px 24px; font-weight: 700; color: var(--ink);
+  display: inline-block; text-decoration: none;
+}
+.bgc .ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---- Indice de dias (portada) ---- */
+.bgc .dias { border-top: 1px solid var(--line); }
+.bgc .dias li { border-bottom: 1px solid var(--line); padding: 18px 0; display: grid; gap: 10px; }
+.bgc .dia-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: baseline; }
+.bgc .dia-num { font-family: var(--cond); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); }
+.bgc .dia-tit { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.2; }
+.bgc .dia-sub { color: var(--muted); font-size: 15px; margin-top: 4px; }
+.bgc .dia-links { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 66px; }
+.bgc .pill {
+  border: 1.5px solid var(--line); border-radius: 4px; padding: 8px 16px;
+  font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; display: inline-block;
+}
+.bgc .pill:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .pill.on { background: var(--accent); border-color: var(--accent); color: var(--black); }
+.bgc .pill.on:hover { filter: brightness(1.08); color: var(--black); }
+.bgc .tag {
+  font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border: 1.5px solid var(--line); border-radius: 3px; padding: 5px 10px;
+  display: inline-block;
+}
+.bgc li.pendiente { opacity: .55; }
+
+/* ---- Leccion ---- */
+.bgc .leccion { display: grid; gap: 18px; }
+.bgc .leccion p { max-width: 66ch; }
+.bgc .bullets { display: grid; gap: 9px; }
+.bgc .bullets li { position: relative; padding-left: 26px; }
+.bgc .bullets li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; background: var(--accent); }
+.bgc .idea {
+  background: var(--surface); border: 1.5px solid var(--line); border-left: 5px solid var(--accent);
+  border-radius: 3px; padding: 16px 18px; display: grid; gap: 7px;
+}
+.bgc .idea b { font-family: var(--display); font-size: 17px; font-weight: 700; }
+.bgc .min { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* ---- Barra de progreso del test ---- */
+.bgc .bar { display: grid; gap: 9px; }
+.bgc .bar-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+.bgc .bar-row b { color: var(--ink); }
+.bgc .ticks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
+.bgc .ticks i { height: 8px; background: var(--line); }
+.bgc .ticks i.now { background: var(--accent); }
+.bgc .ticks i.good { background: var(--good); }
+.bgc .ticks i.mid { background: var(--mid); }
+.bgc .ticks i.bad { background: var(--bad); }
+
+/* ---- Preguntas ---- */
+.bgc .stack { display: grid; gap: 10px; }
+.bgc .opt {
+  display: block; width: 100%; text-align: left; background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: 3px; padding: 13px 15px;
+}
+.bgc .opt:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .opt:disabled, .bgc .row.locked { opacity: 1; cursor: default; }
+.bgc .opt.sel { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.bgc .ok { background: var(--good-tint); border-color: var(--good) !important; }
+.bgc .no { background: var(--bad-tint); border-color: var(--bad) !important; }
+.bgc .mark { font-weight: 700; margin-right: 6px; }
+.bgc .ok .mark { color: var(--good); }
+.bgc .no .mark { color: var(--bad); }
+.bgc .why { display: block; font-size: 15px; color: var(--muted); margin-top: 5px; }
+.bgc .row {
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 12px 14px; display: grid; gap: 9px;
+}
+.bgc .segs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.bgc .seg {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 8px 4px; font-size: 15px; font-weight: 600;
+}
+.bgc .seg:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .seg.on { background: var(--accent); color: var(--black); border-color: var(--accent); opacity: 1; }
+.bgc .ord { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; }
+.bgc .ord b { font-family: var(--cond); font-size: 24px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bgc .arrows { display: flex; gap: 6px; }
+.bgc .arrow {
+  width: 42px; height: 42px; background: transparent;
+  border: 1.5px solid var(--line); border-radius: 3px; font-weight: 700;
+}
+.bgc .arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.bgc .numline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bgc .numline input {
+  width: 130px; padding: 12px; font: 700 21px var(--body); font-variant-numeric: tabular-nums;
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+.bgc .numline input:focus { border-color: var(--accent); }
+.bgc .hint { color: var(--bad); font-size: 15px; }
+.bgc .fb { padding: 16px; border-left: 5px solid; display: grid; gap: 8px; }
+.bgc .fb:focus { outline: none; }
+.bgc .fb.good { background: var(--good-tint); border-color: var(--good); }
+.bgc .fb.mid { background: var(--mid-tint); border-color: var(--mid); }
+.bgc .fb.bad { background: var(--bad-tint); border-color: var(--bad); }
+.bgc .fb strong { font-size: 18px; }
+.bgc .when { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- Resultado ---- */
+.bgc .score { font-size: clamp(88px, 27vw, 176px); line-height: .82; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.bgc .score small { font-size: .42em; }
+.bgc .t-row { display: grid; gap: 5px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.bgc .t-head { display: flex; justify-content: space-between; gap: 12px; }
+.bgc .t-head b:last-child { font-variant-numeric: tabular-nums; }
+.bgc .meter { height: 8px; background: var(--line); }
+.bgc .meter i { display: block; height: 100%; }
+.bgc .rev { display: grid; gap: 10px; }
+.bgc .rev li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.bgc .topics { border-top: 1px solid var(--line); }
+.bgc .topics li { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.bgc .topics span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bgc textarea {
+  width: 100%; min-height: 150px; padding: 10px; font: 14px/1.4 var(--body);
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+
+/* ---- Pie ---- */
+.bgc .pie { border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; font-size: 14px; color: var(--muted); }
+
+.bgc .enter { animation: bgc-rise .22s ease-out; }
+@keyframes bgc-rise { from { transform: translateY(8px); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .bgc .enter { animation: none; } }
+
+@media (max-width: 560px) {
+  .bgc { --aire: 16px; padding: 0 0 44px; }
+  .bgc .block { padding-top: 28px; padding-bottom: 26px; }
+  .bgc .dia-links { padding-left: 0; }
+}
+
+/* ---- Contenedor del test dentro de una pagina con leccion ---- */
+.bgc .test { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.bgc .salto { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 6px; }
+
+/* ============================================================
+   Capa de academia: portada con cuatro areas, carpetas y vistas
+   ============================================================ */
+
+.bgc .cab { display: grid; gap: 10px; }
+.bgc .volver {
+  font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; justify-self: start;
+}
+.bgc .volver:hover { color: var(--accent); text-decoration: none; }
+
+/* ---- Carpetas (una por dia) ---- */
+.bgc .carpetas { display: grid; gap: 10px; }
+.bgc .carpeta {
+  display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 15px 16px; text-decoration: none; color: var(--ink); text-align: left; width: 100%;
+}
+.bgc .carpeta:hover:not(.off) { border-color: var(--accent); text-decoration: none; }
+.bgc .carpeta.off { opacity: .5; cursor: not-allowed; }
+.bgc .carpeta-ico {
+  width: 46px; height: 36px; border: 2px solid var(--accent); border-radius: 3px;
+  position: relative; display: grid; place-items: center;
+  font-family: var(--cond); font-size: 17px; font-weight: 800; color: var(--accent); line-height: 1;
+}
+.bgc .carpeta-ico::before {
+  content: ""; position: absolute; top: -6px; left: -2px; width: 20px; height: 6px;
+  background: var(--accent); border-radius: 2px 2px 0 0;
+}
+.bgc .carpeta.off .carpeta-ico { border-color: var(--muted); color: var(--muted); }
+.bgc .carpeta.off .carpeta-ico::before { background: var(--muted); }
+.bgc .carpeta-tit { font-family: var(--display); font-size: 17px; font-weight: 700; line-height: 1.25; }
+.bgc .carpeta-sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.bgc .carpeta-fin { font-size: 20px; color: var(--accent); font-weight: 700; }
+.bgc .carpeta.off .carpeta-fin { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---- Broma / ley del PPC ---- */
+.bgc .ley {
+  background: var(--black); color: var(--cream); border-radius: 4px;
+  padding: 20px 22px; display: grid; gap: 7px;
+}
+.bgc .ley-num { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.bgc .ley-txt { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.35; }
+.bgc .ley-pie { font-size: 14px; color: #B7B5B0; }
+
+/* ---- Estado vacio ---- */
+.bgc .vacio {
+  border: 1.5px dashed var(--line); border-radius: 4px; padding: 26px 22px;
+  display: grid; gap: 6px; text-align: center; justify-items: center;
+}
+.bgc .vacio b { font-family: var(--display); font-size: 18px; font-weight: 700; }
+.bgc .vacio span { color: var(--muted); font-size: 15px; max-width: 46ch; }
+
+/* ---- Tablas de teoria ---- */
+.bgc .tabla { width: 100%; border-collapse: collapse; font-size: 15px; display: table; }
+.bgc .tabla th, .bgc .tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.bgc .tabla th { font-family: var(--display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom-width: 1.5px; }
+.bgc .tabla tr:last-child td { border-bottom: 0; }
+.bgc .tabla td b { color: var(--ink); }
+.bgc .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ---- Teoria: bloque ampliado ---- */
+.bgc .teoria { border-left: 3px solid var(--line); padding-left: 18px; display: grid; gap: 14px; }
+.bgc .teoria h3 { font-size: 19px; }
+.bgc .formula {
+  background: var(--black); color: var(--cream); border-radius: 3px; padding: 14px 16px;
+  font-family: var(--cond); font-size: 22px; font-weight: 700; letter-spacing: .01em;
+}
+.bgc .formula em { color: var(--accent); font-style: normal; }
+.bgc .chiste { font-size: 15px; color: var(--muted); font-style: italic; }
+
+.bgc .oculto { display: none !important; }
+
+@media (max-width: 560px) {
+  .bgc .carpeta { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 11px; }
+}
+
+/* ---- Modulos apilados en una sola pagina ---- */
+.bgc .modulo { display: grid; gap: 14px; scroll-margin-top: 20px; padding-top: 12px; }
+.bgc .modulo > .eyebrow { color: var(--accent); }
+.bgc .modulo-h { display: grid; gap: 6px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.bgc .modulo-h h2 { margin: 0; }
+.bgc .navmod { display: flex; flex-wrap: wrap; gap: 8px; }
+.bgc .navmod a {
+  border: 2px solid var(--black); border-radius: 4px; padding: 9px 15px;
+  font-size: 14px; font-weight: 800; color: var(--black); text-decoration: none;
+}
+.bgc .navmod a:hover { background: var(--black); color: var(--accent); text-decoration: none; }
+
+/* ---- Saludo personalizado ---- */
+.bgc .dani {
+  background: var(--black); color: var(--cream);
+  padding: 26px 22px; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; align-items: center;
+}
+.bgc .dani-foto {
+  width: 132px; height: 132px; border-radius: 50%;
+  background: var(--accent); overflow: hidden; display: grid; place-items: center;
+}
+.bgc .dani-foto::before {
+  content: "D"; grid-area: 1 / 1;
+  font-family: var(--cond); font-size: 62px; font-weight: 800; color: var(--black);
+}
+.bgc .dani-foto img { grid-area: 1 / 1; }
+.bgc .dani-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.bgc .dani-txt { display: grid; gap: 8px; }
+.bgc .dani-tit { font-family: var(--cond); font-size: 34px; font-weight: 800; line-height: .95; text-transform: uppercase; }
+.bgc .dani-tit em { color: var(--accent); font-style: normal; }
+.bgc .dani-txt p { font-size: 16px; line-height: 1.5; }
+.bgc .dani-pie { color: #B7B5B0; font-size: 14px; font-style: italic; }
+@media (max-width: 560px) {
+  .bgc .dani { grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 14px; padding: 20px 18px; }
+}
+
+/* ---- Acordeon de los resumenes ---- */
+.bgc .acor-lista { display: grid; gap: 8px; }
+.bgc .acor {
+  border: 1.5px solid var(--line); border-radius: 4px;
+  background: var(--surface); overflow: hidden;
+}
+.bgc .acor > summary {
+  list-style: none; cursor: pointer; padding: 15px 18px;
+  font-family: var(--display); font-size: 18px; font-weight: 700; line-height: 1.3;
+  display: grid; grid-template-columns: minmax(0, 1fr) 22px; gap: 12px; align-items: center;
+}
+.bgc .acor > summary::-webkit-details-marker { display: none; }
+.bgc .acor > summary::marker { content: ""; }
+.bgc .acor > summary::after {
+  content: "+"; font-family: var(--cond); font-size: 28px; font-weight: 700;
+  color: var(--accent); line-height: 1; text-align: center;
+}
+.bgc .acor[open] > summary::after { content: "\2013"; }
+.bgc .acor > summary:hover { color: var(--accent); }
+.bgc .acor[open] > summary { border-bottom: 1.5px solid var(--line); }
+.bgc .acor-cuerpo { padding: 18px; display: grid; gap: 14px; }
+.bgc .acor-cuerpo > *:first-child { margin-top: 0; }
+.bgc .acor-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.bgc .acor-barra .muted { margin: 0; }
+
+/* ---- Marca: LibertAds, de Bryan Gibe ---- */
+.bgc .wordmark-sub { font-size: 13px; font-weight: 600; opacity: .72; letter-spacing: .02em; margin-left: 10px; white-space: nowrap; }
+
+/* ---- Aviso de la cuenta con la que hay que entrar ---- */
+.bgc .aviso {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start;
+  background: var(--surface); border: 1.5px solid var(--accent); border-radius: 4px;
+  padding: 13px 15px; font-size: 15px; line-height: 1.5;
+}
+.bgc .aviso::before {
+  content: "!"; width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--accent); color: var(--black); border-radius: 50%;
+  font-family: var(--cond); font-size: 21px; font-weight: 800; line-height: 1;
+}
+.bgc .aviso b { font-weight: 800; word-break: break-all; }
+.bgc .aviso span { display: block; color: var(--muted); margin-top: 3px; }
+
+/* ============================================================
+   Bandas a sangre. Va al final a proposito: con la misma especificidad
+   gana la ultima regla, y antes la pisaba el padding de .block y .dani.
+   El ancho es el total, y el padding lateral calculado deja el contenido
+   alineado con la misma columna de lectura que el resto.
+   ============================================================ */
+.bgc > .block,
+.bgc > .dani {
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: max(var(--aire), calc((100% - var(--col)) / 2));
+}
+
+/* Dos bandas seguidas van pegadas, sin franja de fondo entre medias, como
+   en bryangibe.com. El hueco lo pone el gap del grid, asi que se anula. */
+.bgc > .block + .dani,
+.bgc > .dani + .block { margin-top: -20px; }
+
+/* ============================================================
+   Programa del curso: piezas propias de esta pagina
+   ============================================================ */
+.bgc .principios, .bgc .mcp { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+.bgc .idea span { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.bgc .acor .dias { border-top: 0; }
+.bgc .acor .dias li:last-child { border-bottom: 0; padding-bottom: 4px; }
+.bgc .acor .dias li:first-child { padding-top: 4px; }
+.bgc .dia-tit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 20px; }
+.bgc .dia-ok { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 8px; padding-left: 14px; border-left: 3px solid var(--accent); }
+.bgc .tag-on { color: var(--black); border-color: var(--accent); background: var(--accent); }
+.bgc .bullets b { font-weight: 800; }
+.bgc ol.topics li span:first-child { color: var(--ink); }
+.bgc ol.topics li b { color: var(--accent); font-family: var(--cond); font-size: 19px; margin-right: 4px; }
+.bgc .formula { font-size: 19px; }
+.bgc .modulo h3 { margin-top: 6px; }
+.bgc .navmod a.nav-cta { background: var(--black); color: var(--accent); }
+.bgc .navmod a.nav-cta:hover { background: var(--black); color: var(--cream); }
+.bgc .cierre-tit { font-family: var(--cond); font-size: clamp(44px, 11vw, 72px); line-height: .9; font-weight: 800; text-transform: uppercase; }
+/* Circulo de la banda "Para quien es": numero de clases en vez de foto */
+.bgc .num-foto::before { content: none; }
+.bgc .num-foto span { font-family: var(--cond); font-size: 70px; font-weight: 800; color: var(--black); line-height: 1; }
+@media (max-width: 560px) {
+  .bgc .dia-head { grid-template-columns: 40px minmax(0, 1fr); gap: 10px; }
+  .bgc .dia-num { font-size: 32px; }
+  .bgc .dia-tit { font-size: 18px; }
+  .bgc .num-foto { width: 96px; height: 96px; }
+  .bgc .num-foto span { font-size: 52px; }
+}
+</style>
+
+<div class="bgc">
+
+  <!-- ====================== PORTADA ====================== -->
+  <section class="block">
+    <p class="wordmark">Libert<b>Ads</b> <span class="wordmark-sub">por Bryan Gibe</span></p>
+    <p class="eyebrow">Academia &#183; Curso de PPC</p>
+    <h1>Curso de PPC</h1>
+    <p class="lede">Google Ads, Meta Ads y Claude en 35 lecciones sobre un proyecto real. Una regla: t&#250; tocas, yo pregunto. Aqu&#237; tienes qu&#233; se aprende, en qu&#233; orden y c&#243;mo sabr&#225;s que lo dominas.</p>
+    <nav class="navmod">
+      <a href="#como">C&#243;mo trabajamos</a>
+      <a href="#temario">Temario</a>
+      <a href="#claude">Claude y MCP</a>
+      <a href="#semanal">Revisi&#243;n semanal</a>
+      <a href="#final">Proyecto final</a>
+      <a href="#apuntarme" class="nav-cta">Quiero apuntarme</a>
+    </nav>
+  </section>
+
+  <!-- ====================== PARA QUI&#201;N ES ====================== -->
+  <section class="dani para">
+    <span class="dani-foto num-foto" aria-hidden="true"><span>35</span></span>
+    <div class="dani-txt">
+      <p class="dani-tit">Para qui&#233;n <em>es</em></p>
+      <p>Para quien ya monta campa&#241;as en Google Ads o Meta Ads y quiere dar el salto: saber por qu&#233; funcionan, cu&#225;ndo no hay que tocarlas y c&#243;mo medirlas para que no te mientan. Todos los tipos de campa&#241;a de Google y Meta, y un bloque de ecommerce, sobre un proyecto real con dinero real y poco.</p>
+      <p class="dani-pie">Se pasa de lecci&#243;n cuando lo dominas, no cuando lo dice el calendario.</p>
+    </div>
+  </section>
+
+  <!-- ====================== C&#211;MO TRABAJAMOS ====================== -->
+  <section class="modulo" id="como">
+    <p class="eyebrow">Antes de empezar</p>
+    <div class="modulo-h">
+      <h2>C&#243;mo vamos a trabajar</h2>
+    </div>
+    <p class="ctx">Seis reglas que valen para todo el curso.</p>
+    <div class="principios">
+      <div class="idea"><b>Proyecto real desde el d&#237;a 1</b><span>Todo se aplica al mismo negocio, con presupuesto peque&#241;o: entre 5 y 20 &#8364; al d&#237;a por plataforma.</span></div>
+      <div class="idea"><b>T&#250; tocas, yo pregunto</b><span>El rat&#243;n es tuyo. Mi trabajo es preguntarte &#171;&#191;por qu&#233;?&#187; hasta que la respuesta tenga un dato detr&#225;s.</span></div>
+      <div class="idea"><b>Criterio antes que botones</b><span>D&#243;nde est&#225; cada men&#250; lo sabes. Lo que vamos a entrenar es decidir.</span></div>
+      <div class="idea"><b>Medici&#243;n antes que campa&#241;as</b><span>No se lanza nada que no se pueda medir. Si la medici&#243;n falla, el algoritmo aprende mal y no avisa.</span></div>
+      <div class="idea"><b>Claude con correa</b><span>Desde la lecci&#243;n 8 trabajas con Claude: &#233;l lee, prepara y propone. T&#250; apruebas y decides.</span></div>
+      <div class="idea"><b>Log de decisiones</b><span>Cada cambio, con su motivo y su resultado a 7 d&#237;as. Al final ser&#225; tu manual y tu caso de estudio.</span></div>
+    </div>
+  </section>
+
+  <aside class="ley">
+    <p class="ley-num">Ley no escrita del PPC n&#186; 3</p>
+    <p class="ley-txt">La conversi&#243;n que no se mide no existe. La que se mide mal existe todav&#237;a menos, pero el algoritmo se la cree.</p>
+    <p class="ley-pie">Por eso el bloque de medici&#243;n va antes que cualquier campa&#241;a.</p>
+  </aside>
+
+  <!-- ====================== TEMARIO ====================== -->
+  <section class="modulo" id="temario">
+    <p class="eyebrow">El temario</p>
+    <div class="modulo-h">
+      <h2>35 lecciones en nueve bloques</h2>
+    </div>
+    <p class="ctx">Una lecci&#243;n por cada tipo de campa&#241;a de Google Ads y por cada objetivo de Meta, y al final un bloque de ecommerce que lo junta todo. Todas las campa&#241;as se montan; solo se activan las que encajan con tu proyecto. Abre el bloque que quieras.</p>
+
+    <div class="acor-lista">
+
+      <details class="acor" open>
+        <summary>Bloque 0 &#183; Arranque</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">01</span><div><p class="dia-tit">Intro al PPC</p><p class="dia-sub">Tipos de publicidad y c&#243;mo elegir entre Google Ads y Meta Ads.</p><p class="dia-ok">La das por superada cuando eliges plataforma seg&#250;n intenci&#243;n y demanda.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">02</span><div><p class="dia-tit">Diagn&#243;stico</p><p class="dia-sub">Auditas una cuenta en voz alta, sin que nadie te corrija, para ver qu&#233; dominas y qu&#233; no. Elegimos el proyecto real.</p><p class="dia-ok">La das por superada cuando tenemos tu mapa de fortalezas y huecos.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 1 &#183; Negocio y estrategia</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">03</span><div><p class="dia-tit">Brief y econom&#237;a de la cuenta</p><p class="dia-sub">Ticket medio, margen, LTV, tasa de cierre, CPA m&#225;ximo, ROAS de equilibrio y presupuesto m&#237;nimo para tener datos.</p><p class="dia-ok">La das por superada cuando calculas los n&#250;meros del proyecto sin mirar.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">04</span><div><p class="dia-tit">Competencia y plan de medios</p><p class="dia-sub">Biblioteca de anuncios de Meta, Centro de transparencia de Google y Semrush. Reparto del presupuesto y objetivos a 30, 60 y 90 d&#237;as.</p><p class="dia-ok">La das por superada cuando defiendes tu plan ante un cliente esc&#233;ptico.</p></div></div></li>
+          </ol>
+          <div class="formula">CPA m&#225;x = <em>ticket medio &#215; margen</em> &#183; ROAS equilibrio = <em>1 &#247; margen</em></div>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 2 &#183; Medici&#243;n</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">05</span><div><p class="dia-tit">GA4 y Google Tag Manager</p><p class="dia-sub">Mapa de medici&#243;n, etiquetas, activadores, dataLayer y eventos clave.</p><p class="dia-ok">La das por superada cuando lo montas t&#250; solo y lo verificas con Tag Assistant.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">06</span><div><p class="dia-tit">Conversiones en Google Ads y Meta</p><p class="dia-sub">Conversiones primarias y secundarias, conversiones mejoradas, p&#237;xel, API de Conversiones y deduplicaci&#243;n.</p><p class="dia-ok">La das por superada cuando una conversi&#243;n de prueba aparece en las dos plataformas.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">07</span><div><p class="dia-tit">Consent Mode, CRM y verificaci&#243;n</p><p class="dia-sub">Consent Mode v2, conversiones modeladas, importaci&#243;n desde el CRM y nociones de server-side.</p><p class="dia-ok">La das por superada cuando explicas qu&#233; parte de tu medici&#243;n es fiable y cu&#225;l aproximada.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 3 &#183; Claude y MCP</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">08</span><div><p class="dia-tit">Claude como tocateclas</p><p class="dia-sub">Qu&#233; es un MCP, qu&#233; se delega y qu&#233; no, y tus reglas de trabajo escritas en un proyecto de Claude.</p><p class="dia-ok">La das por superada cuando pillas a Claude invent&#225;ndose un dato.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">09</span><div><p class="dia-tit">MCP de Google: crear y conectar</p><p class="dia-sub">Proyecto en Google Cloud, developer token, credenciales y MCP oficiales de Google Ads y GA4.</p><p class="dia-ok">La das por superada cuando consultas Google Ads y GA4 desde Claude.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">10</span><div><p class="dia-tit">MCP de Meta: conectar y usar</p><p class="dia-sub">Conector oficial de Meta Ads, permisos de lectura y escritura y aprobaci&#243;n de cada cambio.</p><p class="dia-ok">La das por superada cuando Claude prepara un cambio en pausa y t&#250; lo apruebas.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 4 &#183; Google Ads, todos los tipos de campa&#241;a</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">11</span><div><p class="dia-tit">Search I: estructura y keywords</p><p class="dia-sub">Intenci&#243;n de b&#250;squeda, concordancias, negativas y estructura de cuenta.</p><p class="dia-ok">La das por superada cuando cada grupo de anuncios tiene un motivo.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">12</span><div><p class="dia-tit">Search II: anuncios, pujas y lanzamiento <span class="tag tag-on">Lanzamiento</span></p><p class="dia-sub">Anuncios RSA, recursos, Quality Score, estrategias de puja y checklist de lanzamiento.</p><p class="dia-ok">La das por superada cuando tu campa&#241;a de Search est&#225; activa y bien revisada.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">13</span><div><p class="dia-tit">Landing y CRO</p><p class="dia-sub">Coherencia entre anuncio y landing, fricci&#243;n, velocidad en m&#243;vil, Microsoft Clarity y tests A/B.</p><p class="dia-ok">La das por superada cuando distingues un problema de anuncio de uno de landing.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">14</span><div><p class="dia-tit">Performance Max</p><p class="dia-sub">Grupos de recursos, se&#241;ales de audiencia, temas de b&#250;squeda, exclusiones de marca e informes de canales.</p><p class="dia-ok">La das por superada cuando montas una PMax con exclusiones y lees sus informes.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">15</span><div><p class="dia-tit">Shopping y Merchant Center</p><p class="dia-sub">Alta y verificaci&#243;n, feed, diagn&#243;sticos, listados gratuitos y Shopping est&#225;ndar frente a PMax.</p><p class="dia-ok">La das por superada cuando tienes un feed sin errores cr&#237;ticos y una campa&#241;a de Shopping.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">16</span><div><p class="dia-tit">Display</p><p class="dia-sub">Remarketing, anuncios adaptables, segmentaci&#243;n por audiencias, temas y ubicaciones, y exclusiones.</p><p class="dia-ok">La das por superada cuando montas remarketing con exclusiones de ubicaciones.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">17</span><div><p class="dia-tit">YouTube (v&#237;deo)</p><p class="dia-sub">Formatos in-stream, bumper, in-feed y Shorts, segmentaci&#243;n y m&#233;tricas de v&#237;deo.</p><p class="dia-ok">La das por superada cuando eliges el formato seg&#250;n el objetivo.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">18</span><div><p class="dia-tit">Demand Gen</p><p class="dia-sub">YouTube, Discover y Gmail con creatividad: imagen, v&#237;deo, carrusel y producto.</p><p class="dia-ok">La das por superada cuando explicas en qu&#233; se diferencia de PMax y de Meta.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">19</span><div><p class="dia-tit">Aplicaciones</p><p class="dia-sub">Instalaciones, interacci&#243;n y prerregistro, Firebase y medici&#243;n en iOS.</p><p class="dia-ok">La das por superada cuando completas la tabla de qu&#233; campa&#241;a usar para cada objetivo.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 5 &#183; Meta Ads, todos los objetivos</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">20</span><div><p class="dia-tit">Estructura, audiencias y Advantage+</p><p class="dia-sub">Portfolio comercial, los seis objetivos, consolidaci&#243;n, segmentaci&#243;n amplia, p&#250;blicos y exclusiones.</p><p class="dia-ok">La das por superada cuando tu estructura cabe en tu presupuesto.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">21</span><div><p class="dia-tit">Creatividad y &#225;ngulos</p><p class="dia-sub">&#193;ngulos, hooks de 3 segundos, formatos y UGC. En Meta, la creatividad es la segmentaci&#243;n.</p><p class="dia-ok">La das por superada cuando tienes cinco creatividades con &#225;ngulos distintos.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">22</span><div><p class="dia-tit">Reconocimiento</p><p class="dia-sub">Alcance, recuerdo del anuncio, l&#237;mite de frecuencia y p&#250;blicos de v&#237;deo para remarketing.</p><p class="dia-ok">La das por superada cuando sabes cu&#225;ndo pagar por alcance y c&#243;mo controlar la frecuencia.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">23</span><div><p class="dia-tit">Tr&#225;fico e Interacci&#243;n</p><p class="dia-sub">Por qu&#233; el tr&#225;fico barato enga&#241;a y campa&#241;as de mensajes a WhatsApp, Messenger e Instagram.</p><p class="dia-ok">La das por superada cuando montas una campa&#241;a de mensajes con respuestas preparadas.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">24</span><div><p class="dia-tit">Clientes potenciales <span class="tag tag-on">Lanzamiento (leads)</span></p><p class="dia-sub">Formularios instant&#225;neos frente a web, preguntas de filtro, CRM y optimizaci&#243;n por calidad del lead.</p><p class="dia-ok">La das por superada cuando los leads llegan al CRM y sabes cu&#225;les son buenos.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">25</span><div><p class="dia-tit">Ventas y cat&#225;logo <span class="tag tag-on">Lanzamiento (ventas)</span></p><p class="dia-sub">Evento de compra con valor, Advantage+ de ventas, cat&#225;logo, anuncios din&#225;micos y ROAS m&#237;nimo.</p><p class="dia-ok">La das por superada cuando tienes una campa&#241;a de ventas con el cat&#225;logo conectado.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">26</span><div><p class="dia-tit">Promoci&#243;n de la app</p><p class="dia-sub">Instalaciones frente a eventos dentro de la app, SDK, MMP y medici&#243;n en iOS.</p><p class="dia-ok">La das por superada cuando completas la tabla de qu&#233; objetivo usar para cada caso.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">27</span><div><p class="dia-tit">Testing y escalado en Meta</p><p class="dia-sub">Fase de aprendizaje, cu&#225;ndo juzgar un anuncio, hook rate, fatiga y ciclo de testing.</p><p class="dia-ok">La das por superada cuando tienes reglas de testing escritas y funcionando.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 6 &#183; Nivel pro</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">28</span><div><p class="dia-tit">Optimizaci&#243;n y diagn&#243;stico</p><p class="dia-sub">El orden para diagnosticar una ca&#237;da: medici&#243;n, subasta, cambios en la cuenta, creatividad o landing, y estacionalidad.</p><p class="dia-ok">La das por superada cuando diagnosticas una ca&#237;da con datos y en orden.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">29</span><div><p class="dia-tit">Escalado, automatizaci&#243;n y reporting</p><p class="dia-sub">Escalado vertical y horizontal, reglas, scripts y un informe en Looker Studio que entienda un cliente.</p><p class="dia-ok">La das por superada cuando tienes informe y plan de escalado.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 7 &#183; Ecommerce</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">30</span><div><p class="dia-tit">Econom&#237;a y medici&#243;n de una tienda</p><p class="dia-sub">Margen por producto, ticket medio, devoluciones, LTV, MER, POAS y cuadrar las plataformas con los pedidos reales.</p><p class="dia-ok">La das por superada cuando sabes si la tienda gana dinero con la publicidad.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">31</span><div><p class="dia-tit">Feed avanzado y Merchant Center</p><p class="dia-sub">T&#237;tulos, atributos, etiquetas personalizadas por margen y rendimiento, reglas de feed y el mismo feed para Meta.</p><p class="dia-ok">La das por superada cuando tu feed separa productos h&#233;roe, medios y zombi.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">32</span><div><p class="dia-tit">Google Ads para ecommerce</p><p class="dia-sub">Estructura por margen con PMax y Shopping, marca protegida, ROAS objetivo por grupo y clientes nuevos.</p><p class="dia-ok">La das por superada cuando tu estructura de Google reparte el dinero por margen.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">33</span><div><p class="dia-tit">Meta Ads para ecommerce</p><p class="dia-sub">Advantage+ de ventas, cat&#225;logo para prospecci&#243;n y retargeting, creatividades de producto y ofertas.</p><p class="dia-ok">La das por superada cuando Meta trabaja con el cat&#225;logo y excluye a compradores recientes.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">34</span><div><p class="dia-tit">Rentabilidad, temporadas y escalado</p><p class="dia-sub">Calendario comercial, Black Friday, promociones sin destruir margen, cohortes, recompra y escalado por MER.</p><p class="dia-ok">La das por superada cuando tienes un plan de temporada alta con presupuesto y fechas.</p></div></div></li>
+          </ol>
+          <div class="formula">MER = <em>ingresos totales</em> &#247; <em>inversi&#243;n publicitaria total</em></div>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 8 &#183; Cierre</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">35</span><div><p class="dia-tit">Proyecto final</p><p class="dia-sub">Presentas el caso completo como lo har&#237;as en una reuni&#243;n con un cliente.</p><p class="dia-ok">La das por superada cuando sobrevives a las preguntas del cliente dif&#237;cil.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ====================== CLAUDE Y MCP ====================== -->
+  <section class="modulo" id="claude">
+    <p class="eyebrow">Claude y MCP</p>
+    <div class="modulo-h">
+      <h2>Claude trabaja para ti, no por ti</h2>
+    </div>
+    <p class="ctx">Con los MCP, Claude puede leer tus cuentas de Google Ads, GA4 y Meta y, si le dejas, hacer cambios. Te va a ahorrar horas de trabajo mec&#225;nico. Las decisiones siguen siendo tuyas.</p>
+
+    <h3>Las reglas de oro</h3>
+    <ul class="bullets">
+      <li><b>Claude propone, t&#250; decides.</b> Antes de cualquier cambio, un plan en tabla: qu&#233; cambia, de qu&#233; a qu&#233; y por qu&#233;.</li>
+      <li><b>Solo lectura por defecto.</b> El permiso de escritura se da cuando hace falta y se quita despu&#233;s.</li>
+      <li><b>Nunca &#171;Permitir siempre&#187;</b> en herramientas que crean, pausan o cambian presupuesto.</li>
+      <li><b>Todo lo nuevo, en pausa.</b> Lo activas t&#250; despu&#233;s de revisarlo en la plataforma.</li>
+      <li><b>Cada n&#250;mero, con fecha y fuente.</b> Y lo compruebas en la interfaz.</li>
+    </ul>
+
+    <div class="scroll-x">
+      <table class="tabla">
+        <thead><tr><th>Bien para Claude</th><th>Nunca solo</th></tr></thead>
+        <tbody>
+          <tr><td>Sacar informes y cruzar datos</td><td>Cambiar presupuestos</td></tr>
+          <tr><td>Proponer negativas a partir de t&#233;rminos de b&#250;squeda</td><td>Activar o pausar campa&#241;as</td></tr>
+          <tr><td>Redactar variantes de anuncios y hooks</td><td>Cambiar la estrategia de puja</td></tr>
+          <tr><td>Auditar una cuenta con una checklist</td><td>Borrar nada</td></tr>
+          <tr><td>Preparar una estructura para revisarla</td><td>Decidir qu&#233; funciona y qu&#233; no</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mcp">
+      <div class="idea"><b>MCP de Google Ads y GA4</b><span>Oficiales de Google y de solo lectura. Se instalan en local con un proyecto de Google Cloud, un developer token y credenciales OAuth.</span></div>
+      <div class="idea"><b>MCP de Meta Ads</b><span>Conector oficial de Meta. Este s&#237; puede crear y editar campa&#241;as, as&#237; que se empieza solo con permisos de lectura.</span></div>
+    </div>
+  </section>
+
+  <aside class="ley">
+    <p class="ley-num">Ley no escrita del PPC n&#186; 4</p>
+    <p class="ley-txt">La IA trabaja rapid&#237;simo. Sobre todo cuando se equivoca.</p>
+    <p class="ley-pie">Corolario: el bot&#243;n de &#171;Permitir siempre&#187; es el atajo m&#225;s caro de la cuenta.</p>
+  </aside>
+
+  <!-- ====================== REVISI&#211;N SEMANAL ====================== -->
+  <section class="modulo" id="semanal">
+    <p class="eyebrow">Desde la lecci&#243;n 12</p>
+    <div class="modulo-h">
+      <h2>La revisi&#243;n semanal</h2>
+    </div>
+    <p class="ctx">Treinta minutos a la semana, en paralelo a las lecciones. La diriges t&#250;; yo solo pregunto. Es donde se entrena el criterio.</p>
+    <ol class="topics">
+      <li><span><b>1.</b> Medici&#243;n: &#191;entran conversiones en las dos plataformas?</span><span>3 min</span></li>
+      <li><span><b>2.</b> N&#250;meros frente al objetivo de la lecci&#243;n 3</span><span>7 min</span></li>
+      <li><span><b>3.</b> Google: t&#233;rminos de b&#250;squeda, negativas y anuncios</span><span>7 min</span></li>
+      <li><span><b>4.</b> Meta: creatividades, frecuencia y fatiga</span><span>7 min</span></li>
+      <li><span><b>5.</b> Decisiones: tres cambios como m&#225;ximo, al log</span><span>6 min</span></li>
+    </ol>
+    <p class="muted">Claude puede prepararte los puntos 1 a 4 antes de la reuni&#243;n. El punto 5 es tuyo.</p>
+  </section>
+
+  <!-- ====================== PROYECTO FINAL ====================== -->
+  <section class="modulo" id="final">
+    <p class="eyebrow">Lecci&#243;n 35</p>
+    <div class="modulo-h">
+      <h2>El proyecto final</h2>
+    </div>
+    <p class="ctx">Presentas el caso completo como si fuera una reuni&#243;n con un cliente: objetivos, n&#250;meros, medici&#243;n, estructura, creatividades, resultados, aprendizajes y pr&#243;ximos pasos. Despu&#233;s vienen las preguntas inc&#243;modas.</p>
+    <div class="scroll-x">
+      <table class="tabla">
+        <thead><tr><th>Qu&#233; se eval&#250;a</th><th>Qu&#233; tiene que verse</th></tr></thead>
+        <tbody>
+          <tr><td><b>Negocio</b></td><td>Conoces tus n&#250;meros y decides con ellos</td></tr>
+          <tr><td><b>Medici&#243;n</b></td><td>Sabes qu&#233; es fiable y qu&#233; es aproximado</td></tr>
+          <tr><td><b>Estructura</b></td><td>Cada decisi&#243;n tiene un motivo</td></tr>
+          <tr><td><b>Creatividad</b></td><td>Pruebas &#225;ngulos, no colores de bot&#243;n</td></tr>
+          <tr><td><b>Criterio</b></td><td>Sabes cu&#225;ndo no tocar</td></tr>
+          <tr><td><b>Uso de Claude</b></td><td>Delegas lo mec&#225;nico y lo revisas todo</td></tr>
+          <tr><td><b>Ecommerce</b></td><td>Lees la tienda por margen y MER, no solo por ROAS</td></tr>
+          <tr><td><b>Comunicaci&#243;n</b></td><td>Cuentas resultados de negocio, no m&#233;tricas de plataforma</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="idea"><b>Lo que te llevas</b><span>Tu log de decisiones convertido en un caso de estudio real para tu portfolio.</span></div>
+  </section>
+
+  <!-- ====================== APUNTARME ====================== -->
+  <section class="block cierre" id="apuntarme">
+    <p class="eyebrow">&#191;Te interesa?</p>
+    <h2 class="cierre-tit">Hablemos</h2>
+    <p class="lede">Trabajamos sobre un proyecto real desde el primer d&#237;a. Cu&#233;ntame en qu&#233; punto est&#225;s y te digo si el curso encaja contigo.</p>
+    <div class="actions"><a class="cta" href="https://bryangibe.com">Quiero informaci&#243;n</a></div>
+  </section>
+
+  <section class="plain">
+    <div class="pie">
+      <span>Libert<b>Ads</b> &#183; de Bryan Gibe</span>
+      <span><a href="https://bryangibe.com">bryangibe.com</a></span>
+    </div>
+  </section>
+
+</div>
+<script>
+/* Ajuste fino del ancho dentro de GHL (mismo que en la academia). */
+(function () {
+  var el = document.querySelector(".bgc");
+  if (!el) return;
+  function ajusta() {
+    el.style.marginLeft = "0px";
+    el.style.width = "auto";
+    var izq = el.getBoundingClientRect().left;
+    el.style.marginLeft = -izq + "px";
+    el.style.width = document.documentElement.clientWidth + "px";
+  }
+  ajusta();
+  window.addEventListener("resize", ajusta);
+  window.addEventListener("orientationchange", ajusta);
+  window.addEventListener("load", ajusta);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajusta); }
+})();
+</script>
