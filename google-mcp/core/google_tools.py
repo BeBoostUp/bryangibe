@@ -28,6 +28,11 @@ def _check_host(url):
     if u.scheme != "https" or not (host == "googleapis.com" or host.endswith(".googleapis.com")):
         raise ValueError("Por seguridad solo se permiten URLs https://*.googleapis.com "
                          "(el token nunca se envía a otros dominios).")
+    from core import scopes as _scopes
+    for g in _scopes.excluded():
+        grp = _scopes.GROUPS[g]
+        if host in grp["hosts"] or (host == "www.googleapis.com" and any(u.path.startswith(p) for p in grp["paths"])):
+            raise ValueError(f"El servicio '{g}' está desactivado en esta instalación (GOOGLE_MCP_EXCLUDE).")
 
 
 def request(method, url, account=None, params=None, body=None, headers=None,

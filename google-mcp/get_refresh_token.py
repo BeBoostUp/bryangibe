@@ -28,9 +28,12 @@ except Exception:
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 from core import accounts  # noqa: E402
-from core.scopes import SCOPES  # noqa: E402
+from core import scopes as _scopes  # noqa: E402
 
 accounts.bootstrap(verify=False)
+SCOPES = _scopes.active_scopes()
+if _scopes.excluded():
+    print('[i] Sin permisos de: ' + ', '.join(_scopes.excluded()) + ' (GOOGLE_MCP_EXCLUDE)')
 
 LABEL = (sys.argv[1] if len(sys.argv) > 1 else "").strip().lower()
 NEW_LABEL = False

@@ -22,7 +22,7 @@ import requests
 from dotenv import dotenv_values
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENV_PATH = os.path.join(ROOT, ".env")
+ENV_PATH = os.environ.get("GOOGLE_MCP_ENV_PATH") or os.path.join(ROOT, ".env")
 
 # Lista por defecto. Se puede cambiar en el .env con
 #   GOOGLE_MCP_ACCOUNTS=bryan=bryan@bryangibe.com,academy=academy@bryangibe.com,marketing=marketing@beboostup.com

@@ -93,6 +93,23 @@ proyecto si hace falta), cubre lo que no tenga herramienta propia.
 
 Para ver todo lo accesible en las dos cuentas: `google_inventory`.
 
+## Paquete para empleados (sin contraseñas)
+
+Para que tu equipo use bryan@ y academy@ sin iniciar sesión ni saber tus contraseñas:
+
+```bash
+cd ~/google-mcp && python3 crear_paquete_empleados.py
+```
+
+1. Eliges qué servicios personales dejar fuera (Gmail, Drive, Docs/Sheets, Calendar). Lo que
+   dejes fuera no se pide a Google: esos tokens no pueden leer tu correo aunque lo intenten.
+2. Inicias sesión tú con bryan@ y con academy@ (tokens nuevos solo para el paquete).
+3. El zip queda en tu Escritorio. Ellos ejecutan `install.sh` o `install.bat`, sin login.
+
+Para cortarles el acceso: `python3 revocar_paquete_empleados.py <zip>`. Google puede
+desconectar también tus propios tokens de esa cuenta; si pasa, vuelve a ejecutar
+`python3 get_refresh_token.py bryan`.
+
 ## Seguridad
 
 El `.env` contiene el client secret de OAuth y los refresh tokens: equivalen a tus

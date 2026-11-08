@@ -69,3 +69,41 @@ SCOPES = [
     "https://www.googleapis.com/auth/display-video",
     "https://www.googleapis.com/auth/doubleclicksearch",
 ]
+
+
+# Grupos que se pueden EXCLUIR (GOOGLE_MCP_EXCLUDE=gmail,drive,docs,calendar en el .env).
+# Un token generado sin esos permisos NO puede tocar esos datos aunque alguien lo intente.
+GROUPS = {
+    "gmail": {"scopes": ["https://mail.google.com/",
+                         "https://www.googleapis.com/auth/gmail.settings.basic",
+                         "https://www.googleapis.com/auth/gmail.settings.sharing",
+                         "https://www.googleapis.com/auth/postmaster.readonly"],
+              "tools": ["gmail_", "postmaster_"],
+              "hosts": ["gmail.googleapis.com", "gmailpostmastertools.googleapis.com"], "paths": ["/gmail/"]},
+    "drive": {"scopes": ["https://www.googleapis.com/auth/drive"],
+              "tools": ["drive_"], "hosts": ["drive.googleapis.com"], "paths": ["/drive/", "/upload/drive/"]},
+    "docs": {"scopes": ["https://www.googleapis.com/auth/documents",
+                        "https://www.googleapis.com/auth/spreadsheets",
+                        "https://www.googleapis.com/auth/presentations",
+                        "https://www.googleapis.com/auth/forms.body",
+                        "https://www.googleapis.com/auth/forms.responses.readonly"],
+             "tools": ["docs_", "sheets_", "slides_", "forms_"],
+             "hosts": ["docs.googleapis.com", "sheets.googleapis.com", "slides.googleapis.com", "forms.googleapis.com"], "paths": []},
+    "calendar": {"scopes": ["https://www.googleapis.com/auth/calendar",
+                            "https://www.googleapis.com/auth/tasks",
+                            "https://www.googleapis.com/auth/contacts"],
+                 "tools": ["calendar_", "tasks_", "contacts_"],
+                 "hosts": ["calendar.googleapis.com", "tasks.googleapis.com", "people.googleapis.com"], "paths": ["/calendar/"]},
+}
+
+
+def excluded(env=None):
+    import os
+    raw = (env if env is not None else os.environ.get("GOOGLE_MCP_EXCLUDE", "")).lower()
+    return [g.strip() for g in raw.replace(";", ",").split(",") if g.strip() in GROUPS]
+
+
+def active_scopes(exclude=None):
+    ex = excluded() if exclude is None else exclude
+    drop = {s for g in ex for s in GROUPS[g]["scopes"]}
+    return [s for s in SCOPES if s not in drop]

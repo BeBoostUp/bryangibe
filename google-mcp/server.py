@@ -77,6 +77,12 @@ for modname, prefix, title in MODULES:
 
 TOOLS.extend(google_tools.TOOLS)
 
+# Servicios excluidos (GOOGLE_MCP_EXCLUDE): se ocultan sus herramientas
+from core import scopes as _scopes  # noqa: E402
+_HIDDEN = tuple(p for g in _scopes.excluded() for p in _scopes.GROUPS[g]["tools"])
+if _HIDDEN:
+    TOOLS = [t for t in TOOLS if not t["name"].startswith(_HIDDEN)]
+
 
 def inventory(services=None):
     labels = [l for l in accounts.ALLOWED if accounts.STATUS.get(l, {}).get("source")]
@@ -106,6 +112,8 @@ def call_tool(name, args):
             raise ValueError(f"Cuenta '{acct}' NO permitida. Solo: " +
                              ", ".join(f"{l} ({e})" for l, e in accounts.ALLOWED.items()))
         args = dict(args, account=a)
+    if _HIDDEN and name.startswith(_HIDDEN):
+        raise ValueError("Servicio desactivado en esta instalación (GOOGLE_MCP_EXCLUDE).")
     if name == "google_inventory":
         return inventory(args.get("services"))
     if name in google_tools.HANDLERS:
