@@ -34,6 +34,11 @@ import re, sys
 old, new = sys.argv[1], sys.argv[2]
 ov = dict(re.findall(r"^([A-Z0-9_]+)=(.+)$", open(old).read(), flags=re.M))
 txt = open(new).read()
+if ov.get("GOOGLE_MCP_ACCOUNTS") and "GOOGLE_MCP_ACCOUNTS=" in txt:  # une las cuentas de antes con las del paquete
+    m = re.search(r"^GOOGLE_MCP_ACCOUNTS=(.*)$", txt, flags=re.M)
+    cur = [x for x in (m.group(1) if m else "").split(",") if x]
+    merged = ",".join(cur + [x for x in ov["GOOGLE_MCP_ACCOUNTS"].split(",") if x and x.split("=")[0] not in [c.split("=")[0] for c in cur]])
+    txt = re.sub(r"^GOOGLE_MCP_ACCOUNTS=.*$", "GOOGLE_MCP_ACCOUNTS=" + merged, txt, flags=re.M) if m else txt + "\nGOOGLE_MCP_ACCOUNTS=" + merged + "\n"
 for k, v in ov.items():
     if k.startswith(("GOOGLE_REFRESH_TOKEN_", "GOOGLE_ADS_LOGIN_CUSTOMER_ID_", "GOOGLE_API_KEY")):
         if re.search(rf"^{k}=$", txt, flags=re.M):
@@ -58,9 +63,14 @@ if os.path.exists(cfg):
     with open(cfg, encoding="utf-8") as f:
         data = json.load(f)
 servers = data.setdefault("mcpServers", {})
-for old in ("googleads", "searchconsole", "tagmanager", "ga4", "merchantcenter", "gmail", "workspace"):
-    if servers.pop(old, None) is not None:
-        print("    quitado antiguo:", old)
+import re as _re
+_envtxt = open(os.path.join(dest, ".env"), encoding="utf-8").read() if os.path.exists(os.path.join(dest, ".env")) else ""
+if _re.search(r"^GOOGLE_MCP_OPEN=1", _envtxt, flags=_re.M):
+    print("    modo 'todas las cuentas': los MCP antiguos se CONSERVAN (no se quita ningun acceso)")
+else:
+    for old in ("googleads", "searchconsole", "tagmanager", "ga4", "merchantcenter", "gmail", "workspace"):
+        if servers.pop(old, None) is not None:
+            print("    quitado antiguo:", old)
 servers["google"] = {"type": "stdio", "command": py, "args": [os.path.join(dest, "server.py")], "env": {}}
 with open(cfg, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2, ensure_ascii=False)
@@ -69,11 +79,11 @@ PY
 
 echo "== 5/5 Conectar cuentas (un login por cuenta = TODOS los servicios de Google)"
 cd "$DEST"
-for acc in bryan academy; do
+for acc in $("$PY" -c "import sys; sys.path.insert(0, '.'); from core import accounts; accounts.bootstrap(verify=False); print(' '.join(accounts.ALLOWED))"); do
   if grep -q "^GOOGLE_REFRESH_TOKEN_$(echo $acc | tr a-z A-Z)=." .env; then
     echo "    $acc ya conectada (para renovarla: cd ~/google-mcp && python3 get_refresh_token.py $acc)"
   else
-    read -r -p "    ¿Conectar ahora '$acc' ($acc@bryangibe.com)? Se abrira el navegador [S/n] " ans
+    read -r -p "    ¿Conectar ahora '$acc'? Se abrira el navegador [S/n] " ans
     if [ -z "$ans" ] || [[ "$ans" =~ ^[sSyY] ]]; then "$PY" get_refresh_token.py "$acc" || echo "    [!] $acc no se conecto; repitelo luego."; fi
   fi
 done

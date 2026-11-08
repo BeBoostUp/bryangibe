@@ -33,11 +33,17 @@ from core.scopes import SCOPES  # noqa: E402
 accounts.bootstrap(verify=False)
 
 LABEL = (sys.argv[1] if len(sys.argv) > 1 else "").strip().lower()
-if LABEL not in accounts.ALLOWED:
+NEW_LABEL = False
+if not re.fullmatch(r"[a-z0-9_]+", LABEL or "-"):
     print("Uso: python3 get_refresh_token.py <" + "|".join(accounts.ALLOWED) + ">")
-    print("Este MCP solo admite: " + ", ".join(accounts.ALLOWED.values()))
     sys.exit(1)
-EMAIL = accounts.ALLOWED[LABEL]
+if LABEL not in accounts.ALLOWED:
+    if not accounts.open_mode():
+        print("Uso: python3 get_refresh_token.py <" + "|".join(accounts.ALLOWED) + ">")
+        print("Este MCP solo admite: " + ", ".join(accounts.ALLOWED.values()))
+        sys.exit(1)
+    NEW_LABEL = True  # modo abierto: se registra el email con el que inicies sesion
+EMAIL = accounts.ALLOWED.get(LABEL)
 CLIENT_ID, CLIENT_SECRET = accounts.client_id(), accounts.client_secret()
 REDIRECT_URI = "http://127.0.0.1:8787/oauth2callback"
 if not CLIENT_ID or not CLIENT_SECRET:
@@ -52,7 +58,7 @@ auth_url = "https://accounts.google.com/o/oauth2/v2/auth?" + urllib.parse.urlenc
     "access_type": "offline",
     "prompt": "consent select_account",
     "include_granted_scopes": "true",
-    "login_hint": EMAIL,
+    **({"login_hint": EMAIL} if EMAIL else {}),
 })
 
 result = {"refresh_token": None, "access_token": None, "error": None}
@@ -78,7 +84,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             result["error"] = d.get("error_description") or str(d)
             return self._reply("No se recibio refresh_token: " + result["error"])
         got, scopes = accounts.token_email(d["access_token"])
-        if got != EMAIL:
+        if NEW_LABEL and got:
+            result["email"] = got
+        elif got != EMAIL:
             # revoca el token para no dejar nada colgando
             requests.post("https://oauth2.googleapis.com/revoke",
                           params={"token": d["refresh_token"]}, timeout=20)
@@ -86,7 +94,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self._reply(result["error"])
         missing = [s for s in SCOPES if s not in scopes and s != "openid"]
         result.update(refresh_token=d["refresh_token"], access_token=d["access_token"], missing=missing)
-        self._reply(f"Listo: {EMAIL} conectado a TODO el ecosistema de Google. Cierra esta pestana.")
+        self._reply(f"Listo: {got} conectado a TODO el ecosistema de Google. Cierra esta pestana.")
 
     def _reply(self, msg):
         self.send_response(200)
@@ -133,7 +141,7 @@ def discover_ads_login_cid(access_token):
 
 
 print("=" * 64)
-print(f"Cuenta: {LABEL}  ->  debes iniciar sesion con {EMAIL}")
+print(f"Cuenta: {LABEL}  ->  inicia sesion con {EMAIL or 'la cuenta de Google que quieras anadir'}")
 print(f"Se piden {len(SCOPES)} permisos (Ads, GA4, GTM, Search Console, Merchant, Business")
 print("Profile, YouTube, Gmail, Drive, Docs, Sheets, Calendar, Cloud/BigQuery, Looker Studio...)")
 print("Si no se abre el navegador, copia esta URL:\n")
@@ -153,6 +161,11 @@ if not result["refresh_token"]:
     print("\n[X]", result["error"])
     sys.exit(1)
 
+if NEW_LABEL:
+    EMAIL = result["email"]
+    pairs = dict(accounts.ALLOWED, **{LABEL: EMAIL})
+    write_env("GOOGLE_MCP_ACCOUNTS", ",".join(f"{l}={e}" for l, e in pairs.items()))
+    print(f"[OK] Cuenta nueva registrada: {LABEL} = {EMAIL}")
 write_env(f"GOOGLE_REFRESH_TOKEN_{LABEL.upper()}", result["refresh_token"])
 print(f"\n[OK] GOOGLE_REFRESH_TOKEN_{LABEL.upper()} guardado ({EMAIL}).")
 if result.get("missing"):

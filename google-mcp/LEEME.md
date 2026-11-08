@@ -24,6 +24,20 @@ tres capas:
 
 Además, `google_api_request` solo envía el token a `https://*.googleapis.com`.
 
+## Modo "todas las cuentas" (ordenador principal)
+
+Si el `.env` tiene `GOOGLE_MCP_OPEN=1`, la lista de cuentas sale de `GOOGLE_MCP_ACCOUNTS`
+(pares `etiqueta=email` separados por comas) y puedes añadir cuentas nuevas cuando quieras:
+
+```bash
+cd ~/google-mcp && python3 get_refresh_token.py sockdata
+```
+
+Inicias sesión con la cuenta que quieras: su email queda registrado y fijado a esa etiqueta.
+En este modo el instalador NO quita los 6 MCP antiguos.
+
+Sin `GOOGLE_MCP_OPEN`, el MCP solo admite bryan@ y academy@ (modo restringido).
+
 ## Instalar
 
 **Mac:** abre Terminal en la carpeta descomprimida y ejecuta `bash install.sh`.

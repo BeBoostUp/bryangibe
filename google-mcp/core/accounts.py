@@ -24,10 +24,31 @@ from dotenv import dotenv_values
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_PATH = os.path.join(ROOT, ".env")
 
-ALLOWED = {
+# Lista por defecto. Se puede cambiar en el .env con
+#   GOOGLE_MCP_ACCOUNTS=bryan=bryan@bryangibe.com,academy=academy@bryangibe.com,marketing=marketing@beboostup.com
+# y GOOGLE_MCP_OPEN=1 permite conectar cuentas nuevas con get_refresh_token.py <etiqueta>
+# (el email con el que inicies sesión queda registrado y fijado a esa etiqueta).
+DEFAULT_ALLOWED = {
     "bryan": "bryan@bryangibe.com",
     "academy": "academy@bryangibe.com",
 }
+ALLOWED = dict(DEFAULT_ALLOWED)
+
+
+def open_mode():
+    return os.environ.get("GOOGLE_MCP_OPEN", "").strip() == "1"
+
+
+def _load_allowed():
+    raw = os.environ.get("GOOGLE_MCP_ACCOUNTS", "").strip()
+    if not raw:
+        return
+    ALLOWED.clear()
+    for part in raw.replace(";", ",").split(","):
+        if "=" in part:
+            l, e = part.split("=", 1)
+            if l.strip() and e.strip():
+                ALLOWED[l.strip().lower()] = e.strip().lower()
 
 # Prefijos de refresh token de cada módulo heredado
 MODULE_PREFIXES = {
@@ -91,6 +112,7 @@ def bootstrap(verify=True):
     for k, v in file_vals.items():
         if k not in os.environ and v is not None:
             os.environ[k] = v
+    _load_allowed()
 
     # 1) Cliente OAuth común para todos los módulos
     cid, csec = client_id(), client_secret()

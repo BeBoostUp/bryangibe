@@ -49,6 +49,11 @@ home, py, dest, oldenv = (sys.argv[1:] + ["", "", "", ""])[:4]
 if oldenv and os.path.exists(oldenv):
     ov = dict(re.findall(r"^([A-Z0-9_]+)=(.+)$", open(oldenv, encoding="utf-8").read(), flags=re.M))
     p = os.path.join(dest, ".env"); txt = open(p, encoding="utf-8").read()
+    if ov.get("GOOGLE_MCP_ACCOUNTS") and "GOOGLE_MCP_ACCOUNTS=" in txt:  # une las cuentas de antes con las del paquete
+        m = re.search(r"^GOOGLE_MCP_ACCOUNTS=(.*)$", txt, flags=re.M)
+        cur = [x for x in (m.group(1) if m else "").split(",") if x]
+        merged = ",".join(cur + [x for x in ov["GOOGLE_MCP_ACCOUNTS"].split(",") if x and x.split("=")[0] not in [c.split("=")[0] for c in cur]])
+        txt = re.sub(r"^GOOGLE_MCP_ACCOUNTS=.*$", "GOOGLE_MCP_ACCOUNTS=" + merged, txt, flags=re.M) if m else txt + "\nGOOGLE_MCP_ACCOUNTS=" + merged + "\n"
     for k, v in ov.items():
         if k.startswith(("GOOGLE_REFRESH_TOKEN_", "GOOGLE_ADS_LOGIN_CUSTOMER_ID_", "GOOGLE_API_KEY")):
             if re.search(rf"^{k}=$", txt, flags=re.M):
@@ -64,9 +69,14 @@ if os.path.exists(cfg):
     with open(cfg, encoding="utf-8") as f:
         data = json.load(f)
 servers = data.setdefault("mcpServers", {})
-for old in ("googleads", "searchconsole", "tagmanager", "ga4", "merchantcenter", "gmail", "workspace"):
-    if servers.pop(old, None) is not None:
-        print("    quitado antiguo:", old)
+import re as _re
+_envtxt = open(os.path.join(dest, ".env"), encoding="utf-8").read() if os.path.exists(os.path.join(dest, ".env")) else ""
+if _re.search(r"^GOOGLE_MCP_OPEN=1", _envtxt, flags=_re.M):
+    print("    modo 'todas las cuentas': los MCP antiguos se CONSERVAN (no se quita ningun acceso)")
+else:
+    for old in ("googleads", "searchconsole", "tagmanager", "ga4", "merchantcenter", "gmail", "workspace"):
+        if servers.pop(old, None) is not None:
+            print("    quitado antiguo:", old)
 servers["google"] = {"type": "stdio", "command": py, "args": [os.path.join(dest, "server.py")],
                      "env": {"PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}}
 with open(cfg, "w", encoding="utf-8") as f:
@@ -79,16 +89,17 @@ if ($OLDENV) { & $PY $tmp $env:USERPROFILE $PY $DEST $OLDENV } else { & $PY $tmp
 Remove-Item $tmp
 
 # .env solo legible por tu usuario
-try { icacls $ENVF /inheritance:r /grant:r "$($env:USERNAME):(R,W)" | Out-Null } catch { }
+try { icacls $ENVF /inheritance:r /grant:r "$($env:USERNAME):(M)" | Out-Null } catch { }
 
 Write-Host "== 5/5 Conectar cuentas (un login por cuenta = TODOS los servicios de Google)"
 Set-Location $DEST
-foreach ($acc in @("bryan", "academy")) {
+$labels = (& $PY -c "import sys; sys.path.insert(0, '.'); from core import accounts; accounts.bootstrap(verify=False); print(' '.join(accounts.ALLOWED))").Split(" ")
+foreach ($acc in $labels) {
     $key = "GOOGLE_REFRESH_TOKEN_" + $acc.ToUpper()
     if (Select-String -Path $ENVF -Pattern "^$key=." -Quiet) {
         Write-Host "    $acc ya conectada (para renovarla: cd $DEST ; python get_refresh_token.py $acc)"
     } else {
-        $ans = Read-Host "    Conectar ahora '$acc' ($acc@bryangibe.com)? Se abrira el navegador [S/n]"
+        $ans = Read-Host "    Conectar ahora '$acc'? Se abrira el navegador [S/n]"
         if ($ans -eq "" -or $ans -match "^[sSyY]") {
             & $PY get_refresh_token.py $acc
             if ($LASTEXITCODE -ne 0) { Write-Host "    [!] $acc no se conecto; repitelo luego." }
