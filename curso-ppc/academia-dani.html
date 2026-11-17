@@ -985,16 +985,38 @@
 })();
 </script>
 
-  <!-- ====================== 4. TESTS ====================== -->
+  <!-- ====================== 4. TESTS ======================
+       Un desplegable por dia. PARA ANADIR EL TEST DE UN DIA NUEVO:
+       1) copia el bloque <details class="dia-acor"> de abajo, pegalo debajo
+          y cambia el id del details, el numero, el titulo y el id del
+          <main> (por ejemplo bgc-test-2);
+       2) copia entero el <script> del test del final, y en su cabecera
+          cambia APP_ID, DIA y BEST_KEY, y pon las preguntas nuevas.
+       ============================================================ -->
   <section class="modulo" id="tests">
     <div class="modulo-h">
       <p class="eyebrow">M&oacute;dulo 4</p>
       <h2>Tests de clases</h2>
     </div>
-    <p class="muted">Veintiuna preguntas sacadas de la clase, con el orden de las preguntas y de las respuestas barajado en cada intento. Se corrigen al momento, te dicen el porqu&eacute; y en qu&eacute; minuto est&aacute; cada cosa. Unos 15 minutos, sin l&iacute;mite de tiempo, y repetible las veces que quieras.</p>
+    <p class="muted">Un test por clase, con el orden de las preguntas y de las respuestas barajado en cada intento. Se corrigen al momento, te dicen el porqu&eacute; y en qu&eacute; minuto de la clase est&aacute; cada cosa. Sin l&iacute;mite de tiempo y repetible las veces que quieras.</p>
 
-    <h3>D&iacute;a 1 &middot; Intro al PPC</h3>
-    <main class="test" id="bgc-test" aria-live="polite"></main>
+    <div class="dias-res">
+
+      <details class="dia-acor" id="test-dia-1">
+        <summary>
+          <span class="dia-acor-num">01</span>
+          <span class="dia-acor-txt">
+            <span class="dia-acor-tit">D&iacute;a 1 &middot; Intro al PPC</span>
+            <span class="dia-acor-sub">21 preguntas &middot; unos 15 minutos</span>
+          </span>
+          <span class="dia-acor-mas" aria-hidden="true"></span>
+        </summary>
+        <div class="dia-acor-cuerpo">
+          <main class="test" id="bgc-test" aria-live="polite"></main>
+        </div>
+      </details>
+
+    </div>
   </section>
 
   <section class="plain">
@@ -1008,6 +1030,11 @@
 <script>
 (function () {
   "use strict";
+
+  /* ---- Lo unico que cambia de un dia a otro (ademas de las preguntas) ---- */
+  var APP_ID = "bgc-test";      /* id del <main> de este dia */
+  var DIA = "1";                /* numero del dia */
+  var BEST_KEY = "ppc-d1-best"; /* donde se guarda la mejor nota de este dia */
 
   var TOPICS = { plat: "Elegir plataforma", marg: "Margen y presupuesto", canal: "Canales", lead: "Embudos y leads", herr: "Herramientas y medici\u00f3n" };
 
@@ -1214,7 +1241,7 @@
   var BY_ID = {};
   QUESTIONS.forEach(function (q) { BY_ID[q.id] = q; });
 
-  var app = document.getElementById("bgc-test");
+  var app = document.getElementById(APP_ID);
   if (!app) return;
   var state;
 
@@ -1272,8 +1299,8 @@
       .filter(function (q) { return (state.pts[q.id] || 0) < 0.999; });
   }
 
-  function readBest() { try { return Number(localStorage.getItem("ppc-d1-best")) || null; } catch (e) { return null; } }
-  function saveBest(v) { try { if (v > (readBest() || 0)) localStorage.setItem("ppc-d1-best", String(v)); } catch (e) {} }
+  function readBest() { try { return Number(localStorage.getItem(BEST_KEY)) || null; } catch (e) { return null; } }
+  function saveBest(v) { try { if (v > (readBest() || 0)) localStorage.setItem(BEST_KEY, String(v)); } catch (e) {} }
 
   function arriba() {
     var y = app.getBoundingClientRect().top + window.pageYOffset - 24;
@@ -1289,7 +1316,7 @@
     return '<section class="plain">' +
       '<ul class="topics">' + rows + '</ul>' +
       (best ? '<p class="muted">Tu mejor nota hasta ahora: ' + best + ' %.</p>' : "") +
-      '<button class="cta" data-act="begin" id="bgc-begin">Empezar el test</button>' +
+      '<button class="cta" data-act="begin" id="' + APP_ID + '-begin">Empezar el test</button>' +
       '</section>';
   }
 
@@ -1371,24 +1398,24 @@
       var head = lv === "good" ? "Bien." : lv === "mid" ? "Casi: " + Math.round(p * 100) + " % de esta." : "Esta no.";
       var answer = q.type === "num" ? " La respuesta es " + q.answer + " " + q.unit + "." : "";
       var last = state.i === state.order.length - 1;
-      fb = '<div class="fb ' + lv + '" tabindex="-1" id="bgc-fb">' +
+      fb = '<div class="fb ' + lv + '" tabindex="-1" id="' + APP_ID + '-fb">' +
         '<strong>' + head + (lv === "good" ? "" : answer) + '</strong>' +
         '<p>' + q.ex + '</p>' +
         '<p class="when">Est\u00e1 en la clase, minuto ' + q.min + '</p>' +
         '</div>' +
-        '<button class="cta" data-act="next" id="bgc-next">' + (last ? "Ver mi resultado" : "Siguiente") + '</button>';
+        '<button class="cta" data-act="next" id="' + APP_ID + '-next">' + (last ? "Ver mi resultado" : "Siguiente") + '</button>';
     }
     return '<header class="bar">' +
       '<div class="bar-row"><span><b>Pregunta ' + (state.i + 1) + ' de ' + state.order.length + '</b> \u00b7 ' + TOPICS[q.topic] + '</span>' +
       '<span>' + (state.streak > 1 ? "Racha: " + state.streak : "") + '</span></div>' +
       '<div class="ticks" aria-hidden="true">' + viewTicks() + '</div>' +
       '</header>' +
-      '<h2 tabindex="-1" id="bgc-qh" class="enter">' + q.q + '</h2>' +
+      '<h2 tabindex="-1" id="' + APP_ID + '-qh" class="enter">' + q.q + '</h2>' +
       viewBody(q, done) + fb;
   }
 
   function resultText() {
-    var lines = ["Test PPC D\u00eda 1: " + totalPct() + " %"];
+    var lines = ["Test PPC D\u00eda " + DIA + ": " + totalPct() + " %"];
     themeScores().forEach(function (t) { lines.push(t.name + ": " + t.pct + " %"); });
     var m = misses();
     if (m.length) {
@@ -1416,11 +1443,11 @@
     var copied = state.copy === "ok"
       ? '<p class="muted">Copiado. P\u00e9gaselo a Bryan por WhatsApp.</p>'
       : state.copy === "fail"
-        ? '<p class="muted">No se ha podido copiar solo. Selecciona este texto y env\u00edaselo a Bryan:</p><textarea id="bgc-result-text" readonly>' + resultText() + '</textarea>'
+        ? '<p class="muted">No se ha podido copiar solo. Selecciona este texto y env\u00edaselo a Bryan:</p><textarea id="' + APP_ID + '-result-text" readonly>' + resultText() + '</textarea>'
         : "";
     return '<section class="block enter">' +
       '<p class="wordmark">Libert<b>Ads</b></p>' +
-      '<p class="eyebrow">Tu resultado \u00b7 D\u00eda 1</p>' +
+      '<p class="eyebrow">Tu resultado \u00b7 D\u00eda ' + DIA + '</p>' +
       '<p class="score">' + pct + '<small> %</small></p>' +
       '<p class="lede">' + line + '</p>' +
       '</section>' +
@@ -1429,8 +1456,8 @@
       '<section class="plain">' +
       '<p class="muted">Envi\u00e1ndole el resultado a Bryan, el siguiente test volver\u00e1 sobre lo que m\u00e1s te haya costado.</p>' +
       '<div class="actions">' +
-      '<button class="cta" data-act="copy" id="bgc-copy">Copiar resultado para Bryan</button>' +
-      '<button class="ghost" data-act="again" id="bgc-again">Repetir el test</button>' +
+      '<button class="cta" data-act="copy" id="' + APP_ID + '-copy">Copiar resultado para Bryan</button>' +
+      '<button class="ghost" data-act="again" id="' + APP_ID + '-again">Repetir el test</button>' +
       '</div>' + copied + '</section>';
   }
 
@@ -1447,7 +1474,7 @@
     state.pts[q.id] = p;
     state.streak = p >= 0.999 ? state.streak + 1 : 0;
     state.hint = false;
-    render("bgc-fb");
+    render(APP_ID + "-fb");
   }
 
   app.addEventListener("click", function (e) {
@@ -1455,7 +1482,7 @@
     if (!b || b.disabled) return;
     var act = b.getAttribute("data-act"), i = Number(b.getAttribute("data-i"));
     var q = state.screen === "q" ? BY_ID[state.order[state.i]] : null;
-    if (act === "begin" || act === "again") { state = newGame(); render("bgc-qh"); arriba(); return; }
+    if (act === "begin" || act === "again") { state = newGame(); render(APP_ID + "-qh"); arriba(); return; }
     if (act === "pick") { state.drafts[q.id] = i; submit(q); return; }
     if (act === "cls") { state.drafts[q.id][i] = Number(b.getAttribute("data-c")); render(); return; }
     if (act === "tog") {
@@ -1472,7 +1499,7 @@
     if (act === "next") {
       if (state.i === state.order.length - 1) { state.screen = "end"; saveBest(totalPct()); }
       else state.i += 1;
-      render(state.screen === "end" ? "bgc-copy" : "bgc-qh");
+      render(state.screen === "end" ? APP_ID + "-copy" : APP_ID + "-qh");
       arriba();
       return;
     }
