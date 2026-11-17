@@ -1,4 +1,17 @@
 <meta name="robots" content="noindex, nofollow">
+<script>
+/* NOINDEX: GHL pega este bloque en el cuerpo de la pagina, y ahi Google puede
+   ignorar la etiqueta robots. Este script la copia a la cabecera (head) al
+   cargar, que es donde Google la lee. */
+(function () {
+  var h = document.head || document.getElementsByTagName("head")[0];
+  if (!h || h.querySelector('meta[name="robots"][content*="noindex"]')) return;
+  var m = document.createElement("meta");
+  m.name = "robots";
+  m.content = "noindex, nofollow";
+  h.insertBefore(m, h.firstChild);
+})();
+</script>
 <style>
 
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
