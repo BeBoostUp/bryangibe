@@ -1,0 +1,1491 @@
+<!-- ============================================================
+     ACADEMIA PPC  ->  una sola URL en bryangibe.com
+     Pegar entero en un elemento "Custom JS/HTML" a ancho completo.
+
+     EL PROGRAMA (bloques del curso) Y CUATRO MODULOS APILADOS:
+       1. Grabaciones    -> enlaces a Drive
+       2. Transcripciones-> enlaces a Drive
+       3. Resumenes      -> abiertos en la propia pagina
+       4. Tests          -> el test corre aqui mismo
+
+     PARA PONER UN ENLACE DE DRIVE: busca "PEGA-AQUI" y sustituye
+     el href. Quita tambien la clase "off" de ese <a> y cambia el
+     "Pendiente" del final por la flecha. Esta explicado en el README.
+     ============================================================ -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
+
+/* ============================================================
+   Curso PPC - Bryan Gibe
+   Todo va dentro de .bgc para no pelearse con los estilos de GHL.
+   Sin modo oscuro a proposito: la pagina de GHL de alrededor es clara.
+   ============================================================ */
+
+.bgc {
+  --bg: #F5F1E8;
+  --surface: #FFFDF9;
+  --ink: #1A1815;
+  --muted: #585650;
+  --line: #E0D9CB;
+  --accent: #FF6A1A;
+  --black: #101010;
+  --cream: #F5F1E8;
+  --good: #0B6E47;
+  --good-tint: #E6F1E6;
+  --bad: #B3261E;
+  --bad-tint: #FAE8E1;
+  --mid: #8A5A00;
+  --mid-tint: #F7EBD8;
+  --display: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --cond: "Barlow Condensed", "Arial Narrow", Impact, sans-serif;
+  --body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+  /* La fila de GHL tiene un contenedor con ancho maximo, asi que el bloque
+     se sale de el a lo ancho de la ventana. El script del final lo afina
+     con clientWidth, que no cuenta la barra de scroll, para que no aparezca
+     scroll horizontal en los navegadores que la pintan por fuera. */
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0 0 0 calc(50% - 50vw);
+  padding: 0 0 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  text-align: left;
+
+  /* Ancho de la columna de lectura. El fondo y las bandas de color van a
+     sangre; solo el texto se queda en esta medida para que se pueda leer. */
+  --col: 780px;
+  --aire: 22px;
+}
+
+/* GHL mete el bloque dentro de su propia seccion: esto lo saca a ancho
+   completo aunque la plantilla traiga padding o un contenedor estrecho. */
+.bgc { box-sizing: border-box; }
+.bgc > * {
+  width: min(100% - (var(--aire) * 2), var(--col));
+  margin-inline: auto;
+}
+
+
+/* Reset defensivo: GHL mete sus propios margenes, pesos y colores. */
+.bgc *, .bgc *::before, .bgc *::after { box-sizing: border-box; }
+.bgc h1, .bgc h2, .bgc h3, .bgc p, .bgc ul, .bgc ol, .bgc li, .bgc figure {
+  margin: 0; padding: 0; color: inherit; text-align: inherit;
+}
+.bgc ul, .bgc ol { list-style: none; }
+.bgc a { color: var(--accent); text-decoration: none; font-weight: 700; }
+.bgc a:hover { text-decoration: underline; }
+.bgc button {
+  font: inherit; color: inherit; cursor: pointer; margin: 0;
+  text-transform: none; letter-spacing: normal; box-shadow: none;
+  -webkit-appearance: none; appearance: none;
+}
+.bgc button:disabled { cursor: not-allowed; opacity: .5; }
+.bgc :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.bgc .block > *, .bgc .plain > * { min-width: 0; }
+
+.bgc h1, .bgc .score { font-family: var(--cond); text-transform: uppercase; text-wrap: balance; }
+.bgc h2, .bgc h3 { font-family: var(--display); text-wrap: balance; }
+
+/* ---- Bloque naranja: portada y resultado ---- */
+.bgc .block {
+  background: var(--accent); color: var(--black);
+  padding: 38px 26px 34px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;
+}
+.bgc .block :focus-visible { outline-color: var(--black); }
+.bgc .block a { color: var(--black); }
+.bgc .wordmark { font-family: var(--display); font-size: 19px; font-weight: 400; letter-spacing: -.015em; }
+.bgc .wordmark b { font-weight: 800; }
+.bgc .eyebrow {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 13px; letter-spacing: .11em; text-transform: uppercase;
+}
+.bgc .eyebrow::before { content: ""; flex: none; width: 26px; height: 2px; background: currentColor; }
+.bgc h1 { font-size: clamp(50px, 14vw, 96px); line-height: .88; font-weight: 800; letter-spacing: -.005em; }
+.bgc .lede { max-width: 58ch; }
+
+/* ---- Secciones sobre crema ---- */
+.bgc .plain { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.bgc .muted { color: var(--muted); font-size: 15px; }
+.bgc h2 { font-size: clamp(26px, 5.8vw, 34px); line-height: 1.14; font-weight: 700; letter-spacing: -.012em; }
+.bgc h2:focus { outline: none; }
+.bgc h3 { font-size: 21px; font-weight: 700; }
+.bgc .ctx { color: var(--muted); }
+
+/* ---- Botones ---- */
+.bgc .cta {
+  background: var(--accent); color: var(--black); border: 0; border-radius: 4px;
+  padding: 15px 26px; font-weight: 800; letter-spacing: .01em; justify-self: start;
+  display: inline-block; text-decoration: none;
+}
+.bgc .cta:hover:not(:disabled) { filter: brightness(1.08); text-decoration: none; }
+.bgc .block .cta { background: var(--black); color: var(--cream); }
+.bgc .block .cta:hover:not(:disabled) { filter: none; opacity: .86; }
+.bgc .ghost {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 13px 24px; font-weight: 700; color: var(--ink);
+  display: inline-block; text-decoration: none;
+}
+.bgc .ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---- Indice de dias (portada) ---- */
+.bgc .dias { border-top: 1px solid var(--line); }
+.bgc .dias li { border-bottom: 1px solid var(--line); padding: 18px 0; display: grid; gap: 10px; }
+.bgc .dia-head { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: baseline; }
+.bgc .dia-num { font-family: var(--cond); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); }
+.bgc .dia-tit { font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.2; }
+.bgc .dia-sub { color: var(--muted); font-size: 15px; margin-top: 4px; }
+.bgc .dia-links { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 66px; }
+.bgc .pill {
+  border: 1.5px solid var(--line); border-radius: 4px; padding: 8px 16px;
+  font-size: 15px; font-weight: 700; color: var(--ink); text-decoration: none; display: inline-block;
+}
+.bgc .pill:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.bgc .pill.on { background: var(--accent); border-color: var(--accent); color: var(--black); }
+.bgc .pill.on:hover { filter: brightness(1.08); color: var(--black); }
+.bgc .tag {
+  font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border: 1.5px solid var(--line); border-radius: 3px; padding: 5px 10px;
+  display: inline-block;
+}
+.bgc li.pendiente { opacity: .55; }
+
+/* ---- Leccion ---- */
+.bgc .leccion { display: grid; gap: 18px; }
+.bgc .leccion p { max-width: 66ch; }
+.bgc .bullets { display: grid; gap: 9px; }
+.bgc .bullets li { position: relative; padding-left: 26px; }
+.bgc .bullets li::before { content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; background: var(--accent); }
+.bgc .idea {
+  background: var(--surface); border: 1.5px solid var(--line); border-left: 5px solid var(--accent);
+  border-radius: 3px; padding: 16px 18px; display: grid; gap: 7px;
+}
+.bgc .idea b { font-family: var(--display); font-size: 17px; font-weight: 700; }
+.bgc .min { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* ---- Barra de progreso del test ---- */
+.bgc .bar { display: grid; gap: 9px; }
+.bgc .bar-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+.bgc .bar-row b { color: var(--ink); }
+.bgc .ticks { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
+.bgc .ticks i { height: 8px; background: var(--line); }
+.bgc .ticks i.now { background: var(--accent); }
+.bgc .ticks i.good { background: var(--good); }
+.bgc .ticks i.mid { background: var(--mid); }
+.bgc .ticks i.bad { background: var(--bad); }
+
+/* ---- Preguntas ---- */
+.bgc .stack { display: grid; gap: 10px; }
+.bgc .opt {
+  display: block; width: 100%; text-align: left; background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: 3px; padding: 13px 15px;
+}
+.bgc .opt:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .opt:disabled, .bgc .row.locked { opacity: 1; cursor: default; }
+.bgc .opt.sel { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.bgc .ok { background: var(--good-tint); border-color: var(--good) !important; }
+.bgc .no { background: var(--bad-tint); border-color: var(--bad) !important; }
+.bgc .mark { font-weight: 700; margin-right: 6px; }
+.bgc .ok .mark { color: var(--good); }
+.bgc .no .mark { color: var(--bad); }
+.bgc .why { display: block; font-size: 15px; color: var(--muted); margin-top: 5px; }
+.bgc .row {
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 12px 14px; display: grid; gap: 9px;
+}
+.bgc .segs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.bgc .seg {
+  background: transparent; border: 1.5px solid var(--line); border-radius: 3px;
+  padding: 8px 4px; font-size: 15px; font-weight: 600;
+}
+.bgc .seg:hover:not(:disabled) { border-color: var(--accent); }
+.bgc .seg.on { background: var(--accent); color: var(--black); border-color: var(--accent); opacity: 1; }
+.bgc .ord { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; }
+.bgc .ord b { font-family: var(--cond); font-size: 24px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bgc .arrows { display: flex; gap: 6px; }
+.bgc .arrow {
+  width: 42px; height: 42px; background: transparent;
+  border: 1.5px solid var(--line); border-radius: 3px; font-weight: 700;
+}
+.bgc .arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.bgc .numline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bgc .numline input {
+  width: 130px; padding: 12px; font: 700 21px var(--body); font-variant-numeric: tabular-nums;
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+.bgc .numline input:focus { border-color: var(--accent); }
+.bgc .hint { color: var(--bad); font-size: 15px; }
+.bgc .fb { padding: 16px; border-left: 5px solid; display: grid; gap: 8px; }
+.bgc .fb:focus { outline: none; }
+.bgc .fb.good { background: var(--good-tint); border-color: var(--good); }
+.bgc .fb.mid { background: var(--mid-tint); border-color: var(--mid); }
+.bgc .fb.bad { background: var(--bad-tint); border-color: var(--bad); }
+.bgc .fb strong { font-size: 18px; }
+.bgc .when { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- Resultado ---- */
+.bgc .score { font-size: clamp(88px, 27vw, 176px); line-height: .82; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.bgc .score small { font-size: .42em; }
+.bgc .t-row { display: grid; gap: 5px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.bgc .t-head { display: flex; justify-content: space-between; gap: 12px; }
+.bgc .t-head b:last-child { font-variant-numeric: tabular-nums; }
+.bgc .meter { height: 8px; background: var(--line); }
+.bgc .meter i { display: block; height: 100%; }
+.bgc .rev { display: grid; gap: 10px; }
+.bgc .rev li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.bgc .topics { border-top: 1px solid var(--line); }
+.bgc .topics li { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.bgc .topics span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bgc textarea {
+  width: 100%; min-height: 150px; padding: 10px; font: 14px/1.4 var(--body);
+  background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 3px;
+}
+
+/* ---- Pie ---- */
+.bgc .pie { border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; font-size: 14px; color: var(--muted); }
+
+.bgc .enter { animation: bgc-rise .22s ease-out; }
+@keyframes bgc-rise { from { transform: translateY(8px); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .bgc .enter { animation: none; } }
+
+@media (max-width: 560px) {
+  .bgc { --aire: 16px; padding: 0 0 44px; }
+  .bgc .block { padding-top: 28px; padding-bottom: 26px; }
+  .bgc .dia-links { padding-left: 0; }
+}
+
+/* ---- Contenedor del test dentro de una pagina con leccion ---- */
+.bgc .test { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.bgc .salto { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 6px; }
+
+/* ============================================================
+   Capa de academia: portada con cuatro areas, carpetas y vistas
+   ============================================================ */
+
+.bgc .cab { display: grid; gap: 10px; }
+.bgc .volver {
+  font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; justify-self: start;
+}
+.bgc .volver:hover { color: var(--accent); text-decoration: none; }
+
+/* ---- Carpetas (una por dia) ---- */
+.bgc .carpetas { display: grid; gap: 10px; }
+.bgc .carpeta {
+  display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 4px;
+  padding: 15px 16px; text-decoration: none; color: var(--ink); text-align: left; width: 100%;
+}
+.bgc .carpeta:hover:not(.off) { border-color: var(--accent); text-decoration: none; }
+.bgc .carpeta.off { opacity: .5; cursor: not-allowed; }
+.bgc .carpeta-ico {
+  width: 46px; height: 36px; border: 2px solid var(--accent); border-radius: 3px;
+  position: relative; display: grid; place-items: center;
+  font-family: var(--cond); font-size: 17px; font-weight: 800; color: var(--accent); line-height: 1;
+}
+.bgc .carpeta-ico::before {
+  content: ""; position: absolute; top: -6px; left: -2px; width: 20px; height: 6px;
+  background: var(--accent); border-radius: 2px 2px 0 0;
+}
+.bgc .carpeta.off .carpeta-ico { border-color: var(--muted); color: var(--muted); }
+.bgc .carpeta.off .carpeta-ico::before { background: var(--muted); }
+.bgc .carpeta-tit { font-family: var(--display); font-size: 17px; font-weight: 700; line-height: 1.25; }
+.bgc .carpeta-sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.bgc .carpeta-fin { font-size: 20px; color: var(--accent); font-weight: 700; }
+.bgc .carpeta.off .carpeta-fin { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+
+/* ---- Broma / ley del PPC ---- */
+.bgc .ley {
+  background: var(--black); color: var(--cream); border-radius: 4px;
+  padding: 20px 22px; display: grid; gap: 7px;
+}
+.bgc .ley-num { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.bgc .ley-txt { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1.35; }
+.bgc .ley-pie { font-size: 14px; color: #B7B5B0; }
+
+/* ---- Estado vacio ---- */
+.bgc .vacio {
+  border: 1.5px dashed var(--line); border-radius: 4px; padding: 26px 22px;
+  display: grid; gap: 6px; text-align: center; justify-items: center;
+}
+.bgc .vacio b { font-family: var(--display); font-size: 18px; font-weight: 700; }
+.bgc .vacio span { color: var(--muted); font-size: 15px; max-width: 46ch; }
+
+/* ---- Tablas de teoria ---- */
+.bgc .tabla { width: 100%; border-collapse: collapse; font-size: 15px; display: table; }
+.bgc .tabla th, .bgc .tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.bgc .tabla th { font-family: var(--display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border-bottom-width: 1.5px; }
+.bgc .tabla tr:last-child td { border-bottom: 0; }
+.bgc .tabla td b { color: var(--ink); }
+.bgc .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ---- Teoria: bloque ampliado ---- */
+.bgc .teoria { border-left: 3px solid var(--line); padding-left: 18px; display: grid; gap: 14px; }
+.bgc .teoria h3 { font-size: 19px; }
+.bgc .formula {
+  background: var(--black); color: var(--cream); border-radius: 3px; padding: 14px 16px;
+  font-family: var(--cond); font-size: 22px; font-weight: 700; letter-spacing: .01em;
+}
+.bgc .formula em { color: var(--accent); font-style: normal; }
+.bgc .chiste { font-size: 15px; color: var(--muted); font-style: italic; }
+
+.bgc .oculto { display: none !important; }
+
+@media (max-width: 560px) {
+  .bgc .carpeta { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 11px; }
+}
+
+/* ---- Modulos apilados en una sola pagina ---- */
+.bgc .modulo { display: grid; gap: 14px; scroll-margin-top: 20px; padding-top: 12px; }
+.bgc .modulo > .eyebrow { color: var(--accent); }
+.bgc .modulo-h { display: grid; gap: 6px; border-bottom: 2px solid var(--ink); padding-bottom: 12px; }
+.bgc .modulo-h h2 { margin: 0; }
+.bgc .navmod { display: flex; flex-wrap: wrap; gap: 8px; }
+.bgc .navmod a {
+  border: 2px solid var(--black); border-radius: 4px; padding: 9px 15px;
+  font-size: 14px; font-weight: 800; color: var(--black); text-decoration: none;
+}
+.bgc .navmod a:hover { background: var(--black); color: var(--accent); text-decoration: none; }
+
+/* ---- Saludo personalizado ---- */
+.bgc .dani {
+  background: var(--black); color: var(--cream);
+  padding: 26px 22px; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; align-items: center;
+}
+.bgc .dani-foto {
+  width: 132px; height: 132px; border-radius: 50%;
+  background: var(--accent); overflow: hidden; display: grid; place-items: center;
+}
+.bgc .dani-foto::before {
+  content: "D"; grid-area: 1 / 1;
+  font-family: var(--cond); font-size: 62px; font-weight: 800; color: var(--black);
+}
+.bgc .dani-foto img { grid-area: 1 / 1; }
+.bgc .dani-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; display: block; }
+.bgc .dani-txt { display: grid; gap: 8px; }
+.bgc .dani-tit { font-family: var(--cond); font-size: 34px; font-weight: 800; line-height: .95; text-transform: uppercase; }
+.bgc .dani-tit em { color: var(--accent); font-style: normal; }
+.bgc .dani-txt p { font-size: 16px; line-height: 1.5; }
+.bgc .dani-pie { color: #B7B5B0; font-size: 14px; font-style: italic; }
+@media (max-width: 560px) {
+  .bgc .dani { grid-template-columns: minmax(0, 1fr); justify-items: start; gap: 14px; padding: 20px 18px; }
+}
+
+/* ---- Acordeon de los resumenes ---- */
+.bgc .acor-lista { display: grid; gap: 8px; }
+.bgc .acor {
+  border: 1.5px solid var(--line); border-radius: 4px;
+  background: var(--surface); overflow: hidden;
+}
+.bgc .acor > summary {
+  list-style: none; cursor: pointer; padding: 15px 18px;
+  font-family: var(--display); font-size: 18px; font-weight: 700; line-height: 1.3;
+  display: grid; grid-template-columns: minmax(0, 1fr) 22px; gap: 12px; align-items: center;
+}
+.bgc .acor > summary::-webkit-details-marker { display: none; }
+.bgc .acor > summary::marker { content: ""; }
+.bgc .acor > summary::after {
+  content: "+"; font-family: var(--cond); font-size: 28px; font-weight: 700;
+  color: var(--accent); line-height: 1; text-align: center;
+}
+.bgc .acor[open] > summary::after { content: "\2013"; }
+.bgc .acor > summary:hover { color: var(--accent); }
+.bgc .acor[open] > summary { border-bottom: 1.5px solid var(--line); }
+.bgc .acor-cuerpo { padding: 18px; display: grid; gap: 14px; }
+.bgc .acor-cuerpo > *:first-child { margin-top: 0; }
+.bgc .acor-barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.bgc .acor-barra .muted { margin: 0; }
+
+/* ---- Marca: LibertAds, de Bryan Gibe ---- */
+.bgc .wordmark-sub { font-size: 13px; font-weight: 600; opacity: .72; letter-spacing: .02em; margin-left: 10px; white-space: nowrap; }
+
+/* ---- Aviso de la cuenta con la que hay que entrar ---- */
+.bgc .aviso {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start;
+  background: var(--surface); border: 1.5px solid var(--accent); border-radius: 4px;
+  padding: 13px 15px; font-size: 15px; line-height: 1.5;
+}
+.bgc .aviso::before {
+  content: "!"; width: 30px; height: 30px; display: grid; place-items: center;
+  background: var(--accent); color: var(--black); border-radius: 50%;
+  font-family: var(--cond); font-size: 21px; font-weight: 800; line-height: 1;
+}
+.bgc .aviso b { font-weight: 800; word-break: break-all; }
+.bgc .aviso span { display: block; color: var(--muted); margin-top: 3px; }
+
+
+/* ============================================================
+   Programa del curso y resumenes agrupados por dia
+   ============================================================ */
+.bgc .prog .dias { border-top: 0; }
+.bgc .prog .dias li:first-child { padding-top: 4px; }
+.bgc .prog .dias li:last-child { border-bottom: 0; padding-bottom: 4px; }
+.bgc .prog .dia-tit { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 20px; }
+.bgc .dia-ok { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 8px; padding-left: 14px; border-left: 3px solid var(--accent); }
+.bgc .tag-ok { color: var(--good); border-color: var(--good); background: var(--good-tint); }
+.bgc .tag-on { color: var(--black); border-color: var(--accent); background: var(--accent); }
+
+.bgc .dias-res { display: grid; gap: 12px; }
+.bgc .dia-acor { border: 1.5px solid var(--line); border-radius: 4px; background: var(--surface); }
+.bgc .dia-acor > summary {
+  list-style: none; cursor: pointer; padding: 16px 18px;
+  display: grid; grid-template-columns: 52px minmax(0, 1fr) 46px; gap: 14px; align-items: center;
+}
+.bgc .dia-acor > summary::-webkit-details-marker { display: none; }
+.bgc .dia-acor > summary::marker { content: ""; }
+.bgc .dia-acor-num { font-family: var(--cond); font-size: 40px; font-weight: 800; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.bgc .dia-acor-txt { display: grid; gap: 4px; min-width: 0; }
+.bgc .dia-acor-tit { font-family: var(--display); font-size: clamp(20px, 3.6vw, 26px); font-weight: 700; line-height: 1.15; letter-spacing: -.01em; text-wrap: balance; }
+.bgc .dia-acor-sub { font-size: 14px; font-weight: 700; color: var(--muted); }
+.bgc .dia-acor-mas {
+  width: 46px; height: 46px; border: 2px solid var(--ink); border-radius: 4px;
+  display: grid; place-items: center; justify-self: end;
+}
+.bgc .dia-acor-mas::before { content: "+"; font-family: var(--cond); font-size: 32px; font-weight: 800; line-height: 1; color: var(--ink); }
+.bgc .dia-acor > summary:hover .dia-acor-mas { border-color: var(--accent); }
+.bgc .dia-acor > summary:hover .dia-acor-mas::before { color: var(--accent); }
+.bgc .dia-acor[open] .dia-acor-mas { background: var(--ink); }
+.bgc .dia-acor[open] .dia-acor-mas::before { content: "\2013"; color: var(--accent); }
+.bgc .dia-acor[open] > summary { border-bottom: 1.5px solid var(--line); }
+.bgc .dia-acor-cuerpo { background: var(--bg); padding: 18px; border-radius: 0 0 4px 4px; }
+@media (max-width: 560px) {
+  .bgc .dia-acor > summary { grid-template-columns: 38px minmax(0, 1fr) 40px; gap: 10px; padding: 14px; }
+  .bgc .dia-acor-num { font-size: 32px; }
+  .bgc .dia-acor-mas { width: 40px; height: 40px; }
+  .bgc .dia-acor-cuerpo { padding: 14px; }
+}
+
+/* ============================================================
+   Bandas a sangre. Va al final a proposito: con la misma especificidad
+   gana la ultima regla, y antes la pisaba el padding de .block y .dani.
+   El ancho es el total, y el padding lateral calculado deja el contenido
+   alineado con la misma columna de lectura que el resto.
+   ============================================================ */
+.bgc > .block,
+.bgc > .dani {
+  width: 100%;
+  margin-inline: 0;
+  padding-inline: max(var(--aire), calc((100% - var(--col)) / 2));
+}
+
+/* Dos bandas seguidas van pegadas, sin franja de fondo entre medias, como
+   en bryangibe.com. El hueco lo pone el gap del grid, asi que se anula. */
+.bgc > .block + .dani,
+.bgc > .dani + .block { margin-top: -20px; }
+</style>
+
+<div class="bgc">
+
+  <!-- ====================== PORTADA ====================== -->
+  <section class="block">
+    <p class="wordmark">Libert<b>Ads</b> <span class="wordmark-sub">por Bryan Gibe</span></p>
+    <p class="eyebrow">Academia &middot; Curso de PPC</p>
+    <h1>Academia PPC</h1>
+    <p class="lede">Todo el curso en una p&aacute;gina: lo que vamos a ver, las grabaciones, las transcripciones, el resumen te&oacute;rico de cada clase y el test para comprobar que se te ha quedado.</p>
+    <nav class="navmod">
+      <a href="#programa">Programa</a>
+      <a href="#grabaciones">Grabaciones</a>
+      <a href="#transcripciones">Transcripciones</a>
+      <a href="#resumenes">Res&uacute;menes</a>
+      <a href="#tests">Tests</a>
+    </nav>
+  </section>
+
+  <!-- ====================== SALUDO A DANI ======================
+       La foto va incrustada en el propio bloque (JPEG en base64, 23 KB), asi
+       que no hay que subir nada a la biblioteca de medios de GHL. Para
+       cambiarla: pon una foto nueva en img/, regenera el base64 y sustituye
+       el src. El original recortado con transparencia esta en img/.
+       ============================================================ -->
+  <section class="dani">
+    <span class="dani-foto"><img src="data:image/jpeg;base64,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" alt="Dani Ruiz" onerror="this.remove()"></span>
+    <div class="dani-txt">
+      <p class="dani-tit">Hola, <em>Dani</em></p>
+      <p>Siete meses por tu cuenta antes de esto, todas las campa&ntilde;as montadas a mano, cientos de conductores de cami&oacute;n metidos en Zoho y un v&iacute;deo sobre la regla con 240.000 visitas en TikTok. Con esa base, cuando te acabes esto no va a existir campa&ntilde;a que se te resista ni empresa que te diga que no.</p>
+      <p class="dani-pie">El s&iacute;ndrome del impostor ya puede ir busc&aacute;ndose otro inquilino. Y el v&eacute;rtigo al abrir Shopify se pasa; a casi todos.</p>
+    </div>
+  </section>
+
+  <!-- ====================== EL PROGRAMA ======================
+       Los bloques del curso. Cuando terminemos una leccion, se marca con
+       <span class="tag tag-ok">Hecha &middot; Dia N</span> junto a su titulo.
+       ============================================================ -->
+  <section class="modulo" id="programa">
+    <div class="modulo-h">
+      <p class="eyebrow">El curso</p>
+      <h2>Qu&eacute; vamos a ver</h2>
+    </div>
+    <p class="muted">37 lecciones en diez bloques, siempre sobre un proyecto real. No van una por clase: en un mismo d&iacute;a podemos ver varias, y se pasa a la siguiente cuando la dominas. Abre el bloque que quieras.</p>
+
+    <div class="acor-lista prog">
+
+      <details class="acor">
+        <summary>Bloque 0 &#183; Arranque</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">01</span><div><p class="dia-tit">Intro al PPC <span class="tag tag-ok">Hecha &middot; D&iacute;a 1</span></p><p class="dia-sub">Tipos de publicidad y c&#243;mo elegir entre Google Ads, Meta Ads y ChatGPT Ads.</p><p class="dia-ok">La das por superada cuando eliges plataforma seg&#250;n intenci&#243;n y demanda.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">02</span><div><p class="dia-tit">Diagn&#243;stico</p><p class="dia-sub">Auditas una cuenta en voz alta, sin que nadie te corrija, para ver qu&#233; dominas y qu&#233; no. Elegimos el proyecto real.</p><p class="dia-ok">La das por superada cuando tenemos tu mapa de fortalezas y huecos.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 1 &#183; Negocio y estrategia</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">03</span><div><p class="dia-tit">Brief y econom&#237;a de la cuenta</p><p class="dia-sub">Ticket medio, margen, LTV, tasa de cierre, CPA m&#225;ximo, ROAS de equilibrio y presupuesto m&#237;nimo para tener datos.</p><p class="dia-ok">La das por superada cuando calculas los n&#250;meros del proyecto sin mirar.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">04</span><div><p class="dia-tit">Competencia y plan de medios</p><p class="dia-sub">Biblioteca de anuncios de Meta, Centro de transparencia de Google y Semrush. Reparto del presupuesto y objetivos a 30, 60 y 90 d&#237;as.</p><p class="dia-ok">La das por superada cuando defiendes tu plan ante un cliente esc&#233;ptico.</p></div></div></li>
+          </ol>
+          <div class="formula">CPA m&#225;x = <em>ticket medio &#215; margen</em> &#183; ROAS equilibrio = <em>1 &#247; margen</em></div>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 2 &#183; Medici&#243;n</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">05</span><div><p class="dia-tit">GA4 y Google Tag Manager</p><p class="dia-sub">Mapa de medici&#243;n, etiquetas, activadores, dataLayer y eventos clave.</p><p class="dia-ok">La das por superada cuando lo montas t&#250; solo y lo verificas con Tag Assistant.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">06</span><div><p class="dia-tit">Conversiones en Google Ads y Meta</p><p class="dia-sub">Conversiones primarias y secundarias, conversiones mejoradas, p&#237;xel, API de Conversiones y deduplicaci&#243;n.</p><p class="dia-ok">La das por superada cuando una conversi&#243;n de prueba aparece en las dos plataformas.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">07</span><div><p class="dia-tit">Consent Mode, CRM y verificaci&#243;n</p><p class="dia-sub">Consent Mode v2, conversiones modeladas, importaci&#243;n desde el CRM y nociones de server-side.</p><p class="dia-ok">La das por superada cuando explicas qu&#233; parte de tu medici&#243;n es fiable y cu&#225;l aproximada.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 3 &#183; Claude y MCP</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">08</span><div><p class="dia-tit">Claude como tocateclas</p><p class="dia-sub">Qu&#233; es un MCP, qu&#233; se delega y qu&#233; no, y tus reglas de trabajo escritas en un proyecto de Claude.</p><p class="dia-ok">La das por superada cuando pillas a Claude invent&#225;ndose un dato.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">09</span><div><p class="dia-tit">MCP de Google: crear y conectar</p><p class="dia-sub">Proyecto en Google Cloud, developer token, credenciales y MCP oficiales de Google Ads y GA4.</p><p class="dia-ok">La das por superada cuando consultas Google Ads y GA4 desde Claude.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">10</span><div><p class="dia-tit">MCP de Meta: conectar y usar</p><p class="dia-sub">Conector oficial de Meta Ads, permisos de lectura y escritura y aprobaci&#243;n de cada cambio.</p><p class="dia-ok">La das por superada cuando Claude prepara un cambio en pausa y t&#250; lo apruebas.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 4 &#183; Google Ads, todos los tipos de campa&#241;a</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">11</span><div><p class="dia-tit">Search I: estructura y keywords</p><p class="dia-sub">Intenci&#243;n de b&#250;squeda, concordancias, negativas y estructura de cuenta.</p><p class="dia-ok">La das por superada cuando cada grupo de anuncios tiene un motivo.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">12</span><div><p class="dia-tit">Search II: anuncios, pujas y lanzamiento <span class="tag tag-on">Lanzamiento</span></p><p class="dia-sub">Anuncios RSA, recursos, Quality Score, estrategias de puja y checklist de lanzamiento.</p><p class="dia-ok">La das por superada cuando tu campa&#241;a de Search est&#225; activa y bien revisada.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">13</span><div><p class="dia-tit">Landing y CRO</p><p class="dia-sub">Coherencia entre anuncio y landing, fricci&#243;n, velocidad en m&#243;vil, Microsoft Clarity y tests A/B.</p><p class="dia-ok">La das por superada cuando distingues un problema de anuncio de uno de landing.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">14</span><div><p class="dia-tit">Performance Max</p><p class="dia-sub">Grupos de recursos, se&#241;ales de audiencia, temas de b&#250;squeda, exclusiones de marca e informes de canales.</p><p class="dia-ok">La das por superada cuando montas una PMax con exclusiones y lees sus informes.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">15</span><div><p class="dia-tit">Shopping y Merchant Center</p><p class="dia-sub">Alta y verificaci&#243;n, feed, diagn&#243;sticos, listados gratuitos y Shopping est&#225;ndar frente a PMax.</p><p class="dia-ok">La das por superada cuando tienes un feed sin errores cr&#237;ticos y una campa&#241;a de Shopping.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">16</span><div><p class="dia-tit">Display</p><p class="dia-sub">Remarketing, anuncios adaptables, segmentaci&#243;n por audiencias, temas y ubicaciones, y exclusiones.</p><p class="dia-ok">La das por superada cuando montas remarketing con exclusiones de ubicaciones.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">17</span><div><p class="dia-tit">YouTube (v&#237;deo)</p><p class="dia-sub">Formatos in-stream, bumper, in-feed y Shorts, segmentaci&#243;n y m&#233;tricas de v&#237;deo.</p><p class="dia-ok">La das por superada cuando eliges el formato seg&#250;n el objetivo.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">18</span><div><p class="dia-tit">Demand Gen</p><p class="dia-sub">YouTube, Discover y Gmail con creatividad: imagen, v&#237;deo, carrusel y producto.</p><p class="dia-ok">La das por superada cuando explicas en qu&#233; se diferencia de PMax y de Meta.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">19</span><div><p class="dia-tit">Aplicaciones</p><p class="dia-sub">Instalaciones, interacci&#243;n y prerregistro, Firebase y medici&#243;n en iOS.</p><p class="dia-ok">La das por superada cuando completas la tabla de qu&#233; campa&#241;a usar para cada objetivo.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 5 &#183; Meta Ads, todos los objetivos</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">20</span><div><p class="dia-tit">Estructura, audiencias y Advantage+</p><p class="dia-sub">Portfolio comercial, los seis objetivos, consolidaci&#243;n, segmentaci&#243;n amplia, p&#250;blicos y exclusiones.</p><p class="dia-ok">La das por superada cuando tu estructura cabe en tu presupuesto.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">21</span><div><p class="dia-tit">Creatividad y &#225;ngulos</p><p class="dia-sub">&#193;ngulos, hooks de 3 segundos, formatos y UGC. En Meta, la creatividad es la segmentaci&#243;n.</p><p class="dia-ok">La das por superada cuando tienes cinco creatividades con &#225;ngulos distintos.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">22</span><div><p class="dia-tit">Reconocimiento</p><p class="dia-sub">Alcance, recuerdo del anuncio, l&#237;mite de frecuencia y p&#250;blicos de v&#237;deo para remarketing.</p><p class="dia-ok">La das por superada cuando sabes cu&#225;ndo pagar por alcance y c&#243;mo controlar la frecuencia.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">23</span><div><p class="dia-tit">Tr&#225;fico e Interacci&#243;n</p><p class="dia-sub">Por qu&#233; el tr&#225;fico barato enga&#241;a y campa&#241;as de mensajes a WhatsApp, Messenger e Instagram.</p><p class="dia-ok">La das por superada cuando montas una campa&#241;a de mensajes con respuestas preparadas.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">24</span><div><p class="dia-tit">Clientes potenciales <span class="tag tag-on">Lanzamiento (leads)</span></p><p class="dia-sub">Formularios instant&#225;neos frente a web, preguntas de filtro, CRM y optimizaci&#243;n por calidad del lead.</p><p class="dia-ok">La das por superada cuando los leads llegan al CRM y sabes cu&#225;les son buenos.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">25</span><div><p class="dia-tit">Ventas y cat&#225;logo <span class="tag tag-on">Lanzamiento (ventas)</span></p><p class="dia-sub">Evento de compra con valor, Advantage+ de ventas, cat&#225;logo, anuncios din&#225;micos y ROAS m&#237;nimo.</p><p class="dia-ok">La das por superada cuando tienes una campa&#241;a de ventas con el cat&#225;logo conectado.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">26</span><div><p class="dia-tit">Promoci&#243;n de la app</p><p class="dia-sub">Instalaciones frente a eventos dentro de la app, SDK, MMP y medici&#243;n en iOS.</p><p class="dia-ok">La das por superada cuando completas la tabla de qu&#233; objetivo usar para cada caso.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">27</span><div><p class="dia-tit">Testing y escalado en Meta</p><p class="dia-sub">Fase de aprendizaje, cu&#225;ndo juzgar un anuncio, hook rate, fatiga y ciclo de testing.</p><p class="dia-ok">La das por superada cuando tienes reglas de testing escritas y funcionando.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 6 &#183; ChatGPT Ads</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">28</span><div><p class="dia-tit">ChatGPT Ads I: c&#243;mo funciona y cu&#225;ndo usarlo</p><p class="dia-sub">Qui&#233;n ve los anuncios, d&#243;nde salen, c&#243;mo los elige el contexto de la conversaci&#243;n y en qu&#233; se diferencia de aparecer citado en la respuesta.</p><p class="dia-ok">La das por superada cuando decides con n&#250;meros si tu proyecto prueba ChatGPT Ads.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">29</span><div><p class="dia-tit">ChatGPT Ads II: Ads Manager, medici&#243;n y lanzamiento</p><p class="dia-sub">Ads Manager de OpenAI, CPM, CPC y CPC optimizado, p&#237;xel y API de Conversiones, y textos pensados para conversaciones.</p><p class="dia-ok">La das por superada cuando tu campa&#241;a est&#225; montada y mide conversiones.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 7 &#183; Nivel pro</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">30</span><div><p class="dia-tit">Optimizaci&#243;n y diagn&#243;stico</p><p class="dia-sub">El orden para diagnosticar una ca&#237;da: medici&#243;n, subasta, cambios en la cuenta, creatividad o landing, y estacionalidad.</p><p class="dia-ok">La das por superada cuando diagnosticas una ca&#237;da con datos y en orden.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">31</span><div><p class="dia-tit">Escalado, automatizaci&#243;n y reporting</p><p class="dia-sub">Escalado vertical y horizontal, reglas, scripts y un informe en Looker Studio que entienda un cliente.</p><p class="dia-ok">La das por superada cuando tienes informe y plan de escalado.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 8 &#183; Ecommerce</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">32</span><div><p class="dia-tit">Econom&#237;a y medici&#243;n de una tienda</p><p class="dia-sub">Margen por producto, ticket medio, devoluciones, LTV, MER, POAS y cuadrar las plataformas con los pedidos reales.</p><p class="dia-ok">La das por superada cuando sabes si la tienda gana dinero con la publicidad.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">33</span><div><p class="dia-tit">Feed avanzado y Merchant Center</p><p class="dia-sub">T&#237;tulos, atributos, etiquetas personalizadas por margen y rendimiento, reglas de feed y el mismo feed para Meta.</p><p class="dia-ok">La das por superada cuando tu feed separa productos h&#233;roe, medios y zombi.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">34</span><div><p class="dia-tit">Google Ads para ecommerce</p><p class="dia-sub">Estructura por margen con PMax y Shopping, marca protegida, ROAS objetivo por grupo y clientes nuevos.</p><p class="dia-ok">La das por superada cuando tu estructura de Google reparte el dinero por margen.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">35</span><div><p class="dia-tit">Meta Ads para ecommerce</p><p class="dia-sub">Advantage+ de ventas, cat&#225;logo para prospecci&#243;n y retargeting, creatividades de producto y ofertas.</p><p class="dia-ok">La das por superada cuando Meta trabaja con el cat&#225;logo y excluye a compradores recientes.</p></div></div></li>
+            <li><div class="dia-head"><span class="dia-num">36</span><div><p class="dia-tit">Rentabilidad, temporadas y escalado</p><p class="dia-sub">Calendario comercial, Black Friday, promociones sin destruir margen, cohortes, recompra y escalado por MER.</p><p class="dia-ok">La das por superada cuando tienes un plan de temporada alta con presupuesto y fechas.</p></div></div></li>
+          </ol>
+          <div class="formula">MER = <em>ingresos totales</em> &#247; <em>inversi&#243;n publicitaria total</em></div>
+        </div>
+      </details>
+
+      <details class="acor">
+        <summary>Bloque 9 &#183; Cierre</summary>
+        <div class="acor-cuerpo">
+          <ol class="dias">
+            <li><div class="dia-head"><span class="dia-num">37</span><div><p class="dia-tit">Proyecto final</p><p class="dia-sub">Presentas el caso completo como lo har&#237;as en una reuni&#243;n con un cliente.</p><p class="dia-ok">La das por superada cuando sobrevives a las preguntas del cliente dif&#237;cil.</p></div></div></li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ====================== 1. GRABACIONES ====================== -->
+  <section class="modulo" id="grabaciones">
+    <div class="modulo-h">
+      <p class="eyebrow">M&oacute;dulo 1</p>
+      <h2>Grabaciones de clases</h2>
+    </div>
+    <p class="muted">El v&iacute;deo completo de cada clase. Se abre en Drive, en una pesta&ntilde;a nueva.</p>
+
+    <div class="aviso">
+      <p>Entra con la cuenta <b>tumadremkt@gmail.com</b>, que es la que tiene acceso.
+        <span>Si Google te dice que no tienes permiso, casi seguro que est&aacute;s dentro con otra cuenta: c&aacute;mbiala arriba a la derecha y vuelve a abrir el enlace.</span></p>
+    </div>
+
+    <div class="carpetas">
+      <a class="carpeta" href="https://drive.google.com/drive/folders/1amERnkFmsp1w8jIB-66caCcJdznjDGxy" target="_blank" rel="noopener">
+        <span class="carpeta-ico">01</span>
+        <span>
+          <span class="carpeta-tit">D&iacute;a 1 &middot; Intro al PPC</span>
+          <span class="carpeta-sub">Clase del 3 de noviembre &middot; 1 h 45 min</span>
+        </span>
+        <span class="carpeta-fin">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ====================== 2. TRANSCRIPCIONES ====================== -->
+  <section class="modulo" id="transcripciones">
+    <div class="modulo-h">
+      <p class="eyebrow">M&oacute;dulo 2</p>
+      <h2>Transcripciones de clases</h2>
+    </div>
+    <p class="muted">La clase entera por escrito, con los minutos. Para buscar algo concreto sin tener que ver el v&iacute;deo otra vez.</p>
+
+    <div class="aviso">
+      <p>Entra con la cuenta <b>tumadremkt@gmail.com</b>, que es la que tiene acceso.
+        <span>Si Google te dice que no tienes permiso, casi seguro que est&aacute;s dentro con otra cuenta: c&aacute;mbiala arriba a la derecha y vuelve a abrir el enlace.</span></p>
+    </div>
+
+    <div class="carpetas">
+      <a class="carpeta" href="https://docs.google.com/document/d/1W9yB70kiUTYD3hrAn0EfNoy8E9Si3pp4LLG-ecCPpyY/edit?tab=t.2xif1lkltpgh" target="_blank" rel="noopener">
+        <span class="carpeta-ico">01</span>
+        <span>
+          <span class="carpeta-tit">D&iacute;a 1 &middot; Intro al PPC</span>
+          <span class="carpeta-sub">Clase del 3 de noviembre &middot; con minutos</span>
+        </span>
+        <span class="carpeta-fin">&rarr;</span>
+      </a>
+    </div>
+
+    <div class="ley">
+      <p class="ley-num">Ley no escrita del PPC n&ordm; 1</p>
+      <p class="ley-txt">El cliente que menos invierte es siempre el que m&aacute;s veces pregunta por qu&eacute; no sale el primero.</p>
+      <p class="ley-pie">Corolario: tambi&eacute;n es el que se busca a s&iacute; mismo en Google quince veces al d&iacute;a y luego se queja de que le gastas el presupuesto.</p>
+    </div>
+  </section>
+
+  <!-- ====================== 3. RESUMENES ====================== -->
+  <section class="modulo" id="resumenes">
+    <div class="modulo-h">
+      <p class="eyebrow">M&oacute;dulo 3</p>
+      <h2>Res&uacute;menes de clases</h2>
+    </div>
+    <p class="muted">Lo que se dio en clase, m&aacute;s la teor&iacute;a de fondo que en directo no da tiempo a desarrollar. Los bloques con la barra a la izquierda son ampliaci&oacute;n: no se dijeron tal cual, pero explican el porqu&eacute;.</p>
+
+    <!-- PARA ANADIR UN DIA NUEVO: copia entero el bloque <details class="dia-acor">
+         de abajo, pegalo debajo del ultimo, y cambia el id, el numero, el
+         titulo, la fecha y los bloques de dentro. El boton "Abrir todo"
+         funciona solo en cada dia, no hay que tocar el script. -->
+    <div class="dias-res">
+
+      <details class="dia-acor" id="resumen-dia-1">
+        <summary>
+          <span class="dia-acor-num">01</span>
+          <span class="dia-acor-txt">
+            <span class="dia-acor-tit">D&iacute;a 1 &middot; Intro al PPC: &iquest;d&oacute;nde lo anuncias?</span>
+            <span class="dia-acor-sub">Clase del 3 de noviembre &middot; 1 h 45 min &middot; 7 bloques y resumen final</span>
+          </span>
+          <span class="dia-acor-mas" aria-hidden="true"></span>
+        </summary>
+        <div class="dia-acor-cuerpo leccion">
+
+      <div class="acor-barra">
+        <p class="muted">Abre el bloque que quieras; no hace falta leerlo del tir&oacute;n.</p>
+        <button class="ghost js-abrir-todo" type="button">Abrir todo</button>
+      </div>
+
+      <div class="acor-lista js-acordeon">
+        <details class="acor">
+          <summary>1. La primera decisi&oacute;n no es la herramienta, es la persona</summary>
+          <div class="acor-cuerpo">
+      <p>La frase que resume la clase entera, dicha tal cual: <b>&laquo;se te va a hacer superf&aacute;cil si te olvidas de las pu&ntilde;eteras herramientas y piensas en la persona a la que le quieres vender&raquo;</b>. Saber c&oacute;mo funciona Meta, Google o TikTok importa mucho menos que saber describir el avatar. <span class="min">Minuto 00:08:30</span></p>
+      <p>Y de ah&iacute; sale la met&aacute;fora: <b>Google es el cazado y Meta es el cazador</b>. En Google la persona ya est&aacute; buscando, sabe lo que quiere y t&uacute; te pones delante. En Meta interrumpes a alguien que no buscaba nada, y el anuncio tiene que crear el deseo desde cero. <span class="min">Minuto 00:19:39</span></p>
+      <p>De ah&iacute; salen todos los casos que clasificamos. Una empresa de <b>desatascos</b> es Google puro: nadie descubre que tiene un atasco viendo un reel. El <b>&aacute;cido hialur&oacute;nico</b> es Meta: barato, impulsivo, y no sabes que lo quieres hasta que lo ves. La <b>reducci&oacute;n de pecho</b> nace de un problema f&iacute;sico, as&iacute; que se busca. La <b>abdominoplastia</b> va en los dos: unos lo tienen decidido y a otros los convence un buen antes y despu&eacute;s. Y buscar <b>conductores de cami&oacute;n</b> es Meta, porque en Google tirar&iacute;as el dinero en un nicho que casi nadie teclea.</p>
+
+      <div class="idea">
+        <b>No le dejes la creatividad a la IA de Meta</b>
+        <p>Dicho sin rodeos en clase: las funciones de IA que Meta activa sola son un desastre. Te cambian el bot&oacute;n de <b>&laquo;solicitar presupuesto&raquo; por &laquo;comprar ahora&raquo;</b> porque ha visto una pala de p&aacute;del, o te retocan la creatividad por su cuenta. La medici&oacute;n, igual: Tag Manager, etiquetas y c&oacute;digo HTML propio, no lo que la plataforma decida por ti.</p>
+        <p class="min">Minuto 00:05:23</p>
+      </div>
+
+      <div class="teoria">
+        <h3>Ampliaci&oacute;n: los cinco niveles de conciencia</h3>
+        <p>&laquo;Cazador y cazado&raquo; es la versi&oacute;n corta de algo que en publicidad se lleva estudiando desde los a&ntilde;os sesenta: <b>el nivel de conciencia del comprador</b>. No es que un canal sea mejor que otro, es que cada canal pilla a la gente en un momento distinto del recorrido, y el anuncio tiene que hacer un trabajo diferente en cada uno.</p>
+        <div class="scroll-x">
+          <table class="tabla">
+            <tr><th>Nivel</th><th>En qu&eacute; punto est&aacute;</th><th>D&oacute;nde la pillas</th><th>Qu&eacute; tiene que hacer el anuncio</th></tr>
+            <tr><td><b>Inconsciente</b></td><td>Ni sabe que tiene un problema</td><td>TikTok, Meta</td><td>Se&ntilde;alarle el problema. Entretener primero, vender despu&eacute;s</td></tr>
+            <tr><td><b>Consciente del problema</b></td><td>Le molesta algo, no sabe que hay soluci&oacute;n</td><td>Meta, YouTube, Discover</td><td>Ponerle nombre a lo que le pasa y ense&ntilde;arle que tiene arreglo</td></tr>
+            <tr><td><b>Consciente de la soluci&oacute;n</b></td><td>Sabe que existe el tratamiento o el servicio</td><td>Meta + Google gen&eacute;rico</td><td>Demostrar que tu forma de resolverlo es la buena</td></tr>
+            <tr><td><b>Consciente del producto</b></td><td>Compara opciones y precios</td><td>Google, Shopping</td><td>Diferenciarte: garant&iacute;a, plazo, prueba social</td></tr>
+            <tr><td><b>Totalmente consciente</b></td><td>Te busca a ti por el nombre</td><td>Google marca</td><td>No estorbar y ponerle f&aacute;cil el bot&oacute;n</td></tr>
+          </table>
+        </div>
+        <p>Esto explica por qu&eacute; la pregunta de clase funciona tan bien: <b>&iquest;esta persona lo tiene claro y lo va a buscar, o tengo que provocarlo?</b> Cuanto m&aacute;s abajo de la tabla, m&aacute;s Google y menos creatividad hace falta. Cuanto m&aacute;s arriba, m&aacute;s Meta o TikTok y m&aacute;s peso tiene el anuncio en s&iacute; mismo.</p>
+        <p>Tambi&eacute;n explica la <b>escala de precios</b> que vimos: precio alto a Google, intermedio a Meta, mercadillo a TikTok. <span class="min">Minuto 00:25:59</span> Una compra cara casi nunca es impulsiva, as&iacute; que la persona llega al final del recorrido y busca. Una compra de 30 euros s&iacute; se decide en tres segundos viendo un v&iacute;deo, y ah&iacute; no hay b&uacute;squeda que valga.</p>
+      </div>
+
+          </div>
+        </details>
+        <details class="acor">
+          <summary>2. El ecosistema de Google: Google no es solo el buscador</summary>
+          <div class="acor-cuerpo">
+      <p>La lista completa &mdash;<b>Search, Display, Discover, YouTube, Gmail, Maps y Shopping</b>&mdash; sali&oacute; a ra&iacute;z de un caso real: una columna de ducha inteligente que se vend&iacute;a sola por <b>Discover y remarketing</b> de imagen y v&iacute;deo, apareciendo en sitios como Marca o As. <span class="min">Minuto 00:31:27</span></p>
+      <p>Y de ah&iacute; la pregunta: &laquo;pero &iquest;qu&eacute; es Discover?&raquo;. La respuesta de clase: esos anuncios que te aparecen cuando est&aacute;s en Google en el m&oacute;vil, en Google News o en una web de noticias grande. Y no hace falta ser nadie para salir en Marca: <b>es de los sitios m&aacute;s f&aacute;ciles donde meter publicidad</b>. <span class="min">Minuto 00:32:39</span></p>
+      <p>En la misma lista entraron dos clientes como ejemplo: <b>Assister</b>, que vende pinzas urinarias para la incontinencia por Google Shopping, y la tienda de duchas inteligentes y cepillos limpiadores. <span class="min">Minuto 00:34:52</span></p>
+
+      <div class="teoria">
+        <h3>Ampliaci&oacute;n: los emplazamientos uno a uno</h3>
+        <p>Merece la pena verlos por separado, porque cada uno tiene una intenci&oacute;n detr&aacute;s distinta, y mezclarlos sin saberlo es la forma m&aacute;s r&aacute;pida de quemar un presupuesto.</p>
+
+        <div class="scroll-x">
+          <table class="tabla">
+            <tr><th>Emplazamiento</th><th>D&oacute;nde sale</th><th>Intenci&oacute;n</th><th>Para qu&eacute; sirve</th></tr>
+            <tr><td><b>Search</b></td><td>Resultados de b&uacute;squeda de Google</td><td>Activa, alt&iacute;sima</td><td>Capturar demanda que ya existe. Es el m&aacute;s caro por clic y el que mejor convierte</td></tr>
+            <tr><td><b>Socios de b&uacute;squeda</b></td><td>Otros buscadores y sitios que usan resultados de Google</td><td>Activa, m&aacute;s floja</td><td>Ampliar volumen. Conviene mirarlo por separado porque rinde distinto</td></tr>
+            <tr><td><b>Display</b></td><td>Webs y apps ajenas a Google</td><td>Ninguna: ah&iacute; nadie busca</td><td>Notoriedad y, sobre todo, remarketing</td></tr>
+            <tr><td><b>Discover</b></td><td>Feed de la app de Google y pesta&ntilde;a nueva en Chrome m&oacute;vil</td><td>Curioseo</td><td>Descubrimiento con formato de contenido, no de banner</td></tr>
+            <tr><td><b>YouTube</b></td><td>Antes, durante y alrededor de los v&iacute;deos, m&aacute;s Shorts</td><td>De nula a media</td><td>Explicar algo que no cabe en un titular. Muy bueno para servicios que hay que entender</td></tr>
+            <tr><td><b>Gmail</b></td><td>Pesta&ntilde;as Promociones y Social</td><td>Baja</td><td>Nicho. Funciona en recurrencia y en ofertas claras</td></tr>
+            <tr><td><b>Maps</b></td><td>Resultados y mapa de Google Maps</td><td>Activa y local</td><td>Negocio f&iacute;sico. Necesita el perfil de empresa vinculado</td></tr>
+            <tr><td><b>Shopping</b></td><td>Fichas con foto y precio, en la pesta&ntilde;a y arriba en Search</td><td>Compra directa</td><td>Ecommerce. Necesita Merchant Center y un feed de productos</td></tr>
+          </table>
+        </div>
+
+        <p><b>Y dos cosas que la gente mete en esta lista y no son emplazamientos</b>, sino tipos de campa&ntilde;a que los cruzan todos:</p>
+        <ul class="bullets">
+          <li><b>Performance Max</b> reparte el presupuesto por todos los inventarios a la vez y decide ella. Es c&oacute;moda y a la vez opaca: si no la controlas, se va donde le conviene al algoritmo, que no siempre es donde te conviene a ti.</li>
+          <li><b>Demand Gen</b> juega solo en los sitios de descubrimiento: Discover, YouTube (Shorts incluidos) y Gmail. Es la respuesta de Google a Meta, y pide creatividades de verdad, no banners reciclados.</li>
+        </ul>
+
+        <p><b>D&oacute;nde est&aacute; exactamente la raya entre Display y Discover</b>, que es lo que cost&oacute; pillar en clase. Las dos te ponen un anuncio delante mientras lees el Marca, y por eso se confunden, pero son inventarios distintos y se compran distinto. Si el anuncio est&aacute; <b>en la web de Marca</b>, dentro de su maqueta, eso es <b>Display</b>, y se compra con una campa&ntilde;a de Display o de remarketing. Si est&aacute; <b>en el feed de Google</b> &mdash;la app de Google o la pesta&ntilde;a nueva de Chrome en el m&oacute;vil&mdash;, mezclado entre las noticias que Google te sugiere, eso es <b>Discover</b>, y hoy se compra con Demand Gen. El caso de la ducha tocaba los dos a la vez, y por eso funcion&oacute;.</p>
+
+        <p><b>El error cl&aacute;sico, y es literalmente una casilla.</b> Al crear una campa&ntilde;a de b&uacute;squeda, Google deja marcada por defecto la opci&oacute;n de ampliar a la Red de Display. Si no la desmarcas, tu campa&ntilde;a de Search se convierte en una campa&ntilde;a mitad Search mitad Display, y como los clics de Display son mucho m&aacute;s baratos, <b>se lleva casi todo el presupuesto</b>. Luego miras el informe, ves un CPC bajo y muchas visitas, y ni una conversi&oacute;n.</p>
+        <p class="chiste">Cuando alguien dice que &laquo;Display no funciona&raquo;, nueve de cada diez veces lo que no funcion&oacute; fue esa casilla.</p>
+
+        <p><b>C&oacute;mo encaja con lo de antes.</b> Los emplazamientos se ordenan igual que los niveles de conciencia: Search y Shopping recogen a quien ya sabe lo que quiere; Display, Discover y YouTube se lo tienen que despertar; y Maps es Search con una pierna en el mundo f&iacute;sico. Por eso la secuencia que mejor funciona casi siempre es la misma: <b>primero captura lo que ya existe, y cuando eso est&eacute; rentable, empieza a crear demanda</b>. Al rev&eacute;s se puede, pero cuesta mucho m&aacute;s dinero y mucha m&aacute;s paciencia.</p>
+      </div>
+
+          </div>
+        </details>
+        <details class="acor">
+          <summary>3. El margen manda sobre la creatividad</summary>
+          <div class="acor-cuerpo">
+      <p>Todo se puede publicitar. El problema nunca es si el producto se puede anunciar, es si <b>queda dinero suficiente despu&eacute;s de pagar el anuncio</b>. Los dos casos de clase:</p>
+      <ul class="bullets">
+        <li>La <b>pala de p&aacute;del de 120 euros con un 15 % de margen</b> deja 18 euros por venta. Con competencia alta y una inversi&oacute;n m&iacute;nima de 5.000 a 6.000 euros al mes, Google se descarta solo. La misma pala a 500 euros con un 30-40 % de margen s&iacute; se puede permitir las tres plataformas: mismo producto, otra cuenta. <span class="min">Minuto 00:12:37</span></li>
+        <li>La <b>caja de fruta de 25 euros con env&iacute;o incluido</b>: 5 de env&iacute;o y 14 de fruta dejan 6 euros. Conseguir una venta por 5 euros o menos en Google, compitiendo con fruter&iacute;as online, es muy dif&iacute;cil. Por eso iba a Meta y a TikTok Shop con mucho UGC: la fruta entra por los ojos. <span class="min">Minuto 01:33:27</span></li>
+      </ul>
+
+      <div class="teoria">
+        <h3>Ampliaci&oacute;n: el n&uacute;mero que te dice si un cliente es viable</h3>
+        <p>Lo que hicimos a ojo en clase tiene una f&oacute;rmula, y se calcula antes de abrir la cuenta. Si el margen es la parte de cada venta que te queda antes de pagar publicidad:</p>
+        <div class="formula">ROAS de equilibrio = <em>1 &divide; margen</em></div>
+        <p>Por debajo de ese n&uacute;mero pierdes dinero por cada venta, por muy bonito que sea el anuncio. Y su hermano gemelo, el techo que no puedes pasar al captar un cliente:</p>
+        <div class="formula">CPA m&aacute;ximo = <em>margen en euros por venta</em></div>
+        <div class="scroll-x">
+          <table class="tabla">
+            <tr><th>Margen</th><th>ROAS que hay que batir</th><th>Ejemplo</th></tr>
+            <tr><td>10 %</td><td>&times;10</td><td>Casi imposible en Google con competencia</td></tr>
+            <tr><td><b>15 %</b></td><td><b>&times;6,7</b></td><td><b>La pala de p&aacute;del. Por eso se descart&oacute;</b></td></tr>
+            <tr><td>24 %</td><td>&times;4,2</td><td>La caja de fruta: 6 euros sobre 25</td></tr>
+            <tr><td>30 %</td><td>&times;3,3</td><td>Empieza a ser manejable</td></tr>
+            <tr><td>50 %</td><td>&times;2</td><td>La tienda del ejemplo del retorno</td></tr>
+            <tr><td>80 %</td><td>&times;1,25</td><td>Servicios, software, infoproducto</td></tr>
+          </table>
+        </div>
+        <p>Mira la tabla y vuelve al caso del retorno de clase: <b>7.000 euros de inversi&oacute;n y 27.000 de ventas son un &times;3,86</b>, y el cliente dec&iacute;a ganar a partir de &times;2. <span class="min">Minuto 00:29:16</span> Ese &times;2 no sale de la nada: significa que su margen ronda el 50 %. Cuando un cliente te diga su punto de equilibrio, ya sabes leer cu&aacute;nto gana por venta aunque no te lo quiera decir.</p>
+        <p>Y por eso un &times;4 no significa absolutamente nada por s&iacute; solo. En una farmacia online con un 12 % de margen, un &times;4 son p&eacute;rdidas. En una consultora, un &times;2 es una fiesta.</p>
+        <p><b>Un matiz que en clase no toc&oacute; y conviene tener en la cabeza:</b> esto calcula la rentabilidad de la <i>primera</i> venta. Si el cliente repite &mdash;una cl&iacute;nica, una academia, un ecommerce de consumibles&mdash; puedes permitirte pagar m&aacute;s por el primer pedido porque luego vienen m&aacute;s. Pero eso solo vale si tienes el dato de cu&aacute;ntas veces repite de media. Si no lo tienes, no te lo inventes: optimiza a la primera venta y duerme tranquilo.</p>
+      </div>
+
+          </div>
+        </details>
+        <details class="acor">
+          <summary>4. El planificador miente, y miente siempre hacia abajo</summary>
+          <div class="acor-cuerpo">
+      <p>La regla de clase: <b>multiplica por tres el CPC que te d&eacute; el planificador de palabras clave</b>. Si marca de 0,08 a 0,54 euros, cuenta con pagar de 0,24 a 1,62. <span class="min">Minuto 00:13:47</span></p>
+      <p>El motivo es que la herramienta te ense&ntilde;a una media de un periodo largo, y mete en el mismo saco las tres de la madrugada de un martes de agosto y las ocho de la tarde de un lunes de enero. T&uacute; no vas a pujar a las tres de la madrugada. Vas a pujar en el momento en el que est&aacute;n todos tus competidores, que es exactamente cuando la subasta se pone cara.</p>
+      <p>Y cuando ponga <b>&laquo;competencia alta&raquo;</b>, l&eacute;elo como lo que es: un aviso de que vas a necesitar cartera, no un indicador de que la palabra es buena.</p>
+
+          </div>
+        </details>
+        <details class="acor">
+          <summary>5. El orden de las preguntas a un cliente nuevo</summary>
+          <div class="acor-cuerpo">
+      <p>Primero, <b>cu&aacute;nto est&aacute; dispuesto a invertir</b>. Con esa respuesta y el sector ya descartas cosas de entrada y te ahorras una propuesta entera. Despu&eacute;s vienen el servicio estrella, la rentabilidad y la estacionalidad. Las creatividades llegan mucho m&aacute;s tarde, y la plataforma la decides t&uacute; despu&eacute;s de analizar: no la elige el cliente. <span class="min">Minuto 01:03:46</span></p>
+      <p>El caso de la cl&iacute;nica lo resume: es mayo, hay 1.000 euros y tres servicios estrella. Rinoplastia y abdominoplastia a Meta con buenos creativos, y el <b>aumento de pecho para septiembre u octubre</b>, porque con los escotes encima y un postoperatorio por delante la demanda se cae. Cuando cierre una o dos operaciones, le pides m&aacute;s inversi&oacute;n para entrar en Google. <span class="min">Minuto 01:05:54</span></p>
+      <div class="idea">
+        <b>Hay sectores que Google te cierra, y conviene saberlo antes de vender el servicio</b>
+        <p>Un <b>desatascos</b> es Google Ads puro, porque es urgencia. Un <b>mudancero</b> funciona en los dos canales. Pero a un <b>cerrajero</b> no lo puedes meter en Google Ads sin m&aacute;s: hace tiempo que Google le cort&oacute; la publicidad al sector por una multa. Si no lo sabes, vendes una campa&ntilde;a que no vas a poder lanzar.</p>
+        <p class="min">Minuto 01:29:23</p>
+      </div>
+
+      <p>Tambi&eacute;n hubo una lecci&oacute;n sobre a qui&eacute;n <b>no</b> coger. La ferreter&iacute;a de pueblo sin web que ofrece 100 euros al mes: t&eacute;cnicamente se podr&iacute;a, con su ficha de Google y una campa&ntilde;a de llamadas o WhatsApp. Pero no es el cliente al que aspiras. <span class="min">Minuto 00:28:16</span></p>
+      <p class="chiste">Elegir a qui&eacute;n le dices que no tambi&eacute;n es parte del oficio. Y normalmente se aprende cogiendo primero a los tres a los que deber&iacute;as haber dicho que no.</p>
+
+          </div>
+        </details>
+        <details class="acor">
+          <summary>6. Los tres tipos de negocio, y por cu&aacute;l se empieza</summary>
+          <div class="acor-cuerpo">
+      <p>La clase los separ&oacute; en tres: <b>generaci&oacute;n de leads</b>, <b>ecommerce</b> e <b>infoproducto</b>. El tercero es el m&aacute;s exigente, porque vive de mantener visibilidad y viralidad constantes; no basta con encender campa&ntilde;as. <span class="min">Minuto 00:42:48</span></p>
+      <p>Y el orden de aprendizaje qued&oacute; dicho al cerrar: <b>primero los embudos de lead gen, y despu&eacute;s el ecommerce</b>. No porque el ecommerce sea m&aacute;s dif&iacute;cil de montar, sino porque en lead gen se ve mucho m&aacute;s claro el efecto de cada decisi&oacute;n: un lead entra, alguien llama, se cierra o no. En ecommerce hay feed, stock, medici&oacute;n y atribuci&oacute;n de por medio, y se tarda m&aacute;s en entender qu&eacute; ha pasado. <span class="min">Minuto 01:40:37</span></p>
+      <p class="chiste">Y s&iacute;, abrir Shopify por primera vez y ver veinte men&uacute;s da v&eacute;rtigo. Es buena se&ntilde;al: el que no siente nada es el que luego le promete a un cliente cosas que no puede cumplir. <span class="min">Minuto 00:41:49</span></p>
+          </div>
+        </details>
+        <details class="acor">
+          <summary>7. Embudos y leads: el trabajo no acaba en el anuncio</summary>
+          <div class="acor-cuerpo">
+      <p>Para un producto que nunca se vende a la primera, el embudo de Meta que vimos va en cuatro pasos: <b>campa&ntilde;a de tr&aacute;fico</b>, <b>audiencia personalizada con quien interact&uacute;a</b>, <b>segundo impacto con escasez</b> y <b>oferta irrechazable a quien a&uacute;n no ha comprado</b>. El coste por resultado sube en cada paso, y lo asumes porque la estrategia estaba dise&ntilde;ada entera desde el principio. <span class="min">Minuto 00:20:37</span></p>
+
+      <div class="teoria">
+        <h3>Ampliaci&oacute;n: por qu&eacute; el coste sube y aun as&iacute; sale a cuenta</h3>
+        <p>Ese embudo es la versi&oacute;n pr&aacute;ctica de algo que se llama <b>temperatura de la audiencia</b>. Cada fase le habla a gente distinta y por eso se paga distinto:</p>
+        <div class="scroll-x">
+          <table class="tabla">
+            <tr><th>Fase</th><th>A qui&eacute;n</th><th>Qu&eacute; le pides</th><th>Coste</th></tr>
+            <tr><td><b>Fr&iacute;a</b></td><td>No te conoce de nada</td><td>Que se pare y entre</td><td>Barato por clic, car&iacute;simo por venta</td></tr>
+            <tr><td><b>Templada</b></td><td>Interactu&oacute;, vio el v&iacute;deo, visit&oacute; la web</td><td>Que se interese en serio</td><td>Sube el clic, baja el coste por venta</td></tr>
+            <tr><td><b>Caliente</b></td><td>A&ntilde;adi&oacute; al carrito, dej&oacute; el dato, no compr&oacute;</td><td>Que cierre</td><td>El clic m&aacute;s caro y la venta m&aacute;s barata</td></tr>
+          </table>
+        </div>
+        <p>La trampa en la que cae casi todo el mundo es mirar cada campa&ntilde;a por separado. La de tr&aacute;fico tiene un coste por venta horroroso, as&iacute; que la apagan. Y al apagarla se quedan sin gente que meter en las dos siguientes, que eran las que estaban rentables. <b>El embudo se juzga entero o no se juzga.</b></p>
+      </div>
+
+      <p><b>Los leads de Meta se enfr&iacute;an en horas, no en semanas.</b> El formulario necesita <b>killer questions</b> &mdash;&iquest;lo tienes claro?, &iquest;cu&aacute;ndo te querr&iacute;as operar?&mdash; porque en Meta llegan cotillas incluso con filtros. La cita, como mucho a dos d&iacute;as. Tres toques por lead, registrados en un panel, y si no contesta al tercero se deja de insistir. Llamar a los 40 d&iacute;as ya no arregla nada. <span class="min">Minuto 00:48:38</span></p>
+      <p>Y vigila que el cliente llame a sus leads. Si descuidas la parte comercial, ese cliente te deja para siempre por buenos que sean tus anuncios. Un lead que nadie llama es, a efectos pr&aacute;cticos, dinero que has tirado t&uacute;.</p>
+
+      <div class="idea">
+        <b>El list&oacute;n de la velocidad: dos minutos</b>
+        <p>En el caso de la empresa de alarmas, todo el tr&aacute;fico y las conversiones vienen de Google Ads y el equipo comercial responde <b>en menos de dos minutos</b>. Ese es el list&oacute;n real, no las 48 horas. Y en la cl&iacute;nica est&eacute;tica, un panel registra toque 1, toque 2 y cita agendada lead a lead: 468 leads totales, 146 cerrados y 320 en seguimiento. Sin ese registro no sabes si el problema es tu anuncio o su tel&eacute;fono.</p>
+        <p class="min">Minutos 00:52:29 y 01:20:50</p>
+      </div>
+
+      <div class="idea">
+        <b>80 euros por contacto pueden ser una ganga, pero no se promete</b>
+        <p>Cl&iacute;nica dental en Madrid: 480 euros en 10 d&iacute;as, solo Google Ads, 6 contactos, 80 euros cada uno. Uno de los seis cerr&oacute; un tratamiento de 23.000 euros y la cl&iacute;nica subi&oacute; a 5.000 al mes, 3.000 en Google y 2.000 en Meta. Hubo un componente de suerte, y eso no se le promete a nadie.</p>
+        <p class="min">Minuto 01:07:03</p>
+      </div>
+          </div>
+        </details>
+        <details class="acor">
+          <summary>En una frase</summary>
+          <div class="acor-cuerpo">
+      <p>Antes de abrir ninguna plataforma: <b>a qui&eacute;n le hablas</b> (nivel de conciencia), <b>cu&aacute;nto te deja cada venta</b> (ROAS de equilibrio) y <b>qu&eacute; pasa despu&eacute;s del clic</b> (que alguien llame, y r&aacute;pido). Lo dem&aacute;s son botones.</p>
+      <p>El objetivo del curso, tal cual se dijo al cerrar: conocimiento <b>transversal</b> de Google, Meta, TikTok, ChatGPT Ads y program&aacute;tica, y entender estructuras de embudo. No montar anuncios de forma mec&aacute;nica. <span class="min">Minuto 01:40:37</span></p>
+          </div>
+        </details>
+      </div>
+
+        </div>
+      </details>
+
+    </div>
+
+    <div class="ley">
+      <p class="ley-num">Ley no escrita del PPC n&ordm; 2</p>
+      <p class="ley-txt">Toda campa&ntilde;a que nadie mira sigue gastando el presupuesto exactamente igual de r&aacute;pido.</p>
+      <p class="ley-pie">Y suele hacerlo un viernes por la tarde.</p>
+    </div>
+  </section>
+
+<script>
+/* Ajuste fino del ancho. El CSS ya saca el bloque del contenedor de GHL con
+   100vw, pero 100vw incluye la barra de scroll y en Windows eso deja un
+   scroll horizontal de unos pixeles. Aqui se mide el ancho real de la
+   ventana y la distancia a la que ha quedado el bloque, y se corrige. */
+(function () {
+  var el = document.querySelector(".bgc");
+  if (!el) return;
+  function ajusta() {
+    el.style.marginLeft = "0px";
+    el.style.width = "auto";
+    var izq = el.getBoundingClientRect().left;
+    el.style.marginLeft = -izq + "px";
+    el.style.width = document.documentElement.clientWidth + "px";
+  }
+  ajusta();
+  window.addEventListener("resize", ajusta);
+  window.addEventListener("orientationchange", ajusta);
+  window.addEventListener("load", ajusta);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajusta); }
+})();
+</script>
+
+<script>
+/* "Abrir todo" / "Cerrar todo" dentro de cada dia de resumenes. */
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll(".bgc .dia-acor-cuerpo"), function (dia) {
+    var btn = dia.querySelector(".js-abrir-todo");
+    var caja = dia.querySelector(".js-acordeon");
+    if (!btn || !caja) return;
+    function pinta() {
+      var abiertos = caja.querySelectorAll("details[open]").length;
+      var total = caja.querySelectorAll("details").length;
+      btn.textContent = abiertos === total ? "Cerrar todo" : "Abrir todo";
+    }
+    btn.addEventListener("click", function () {
+      var abrir = btn.textContent === "Abrir todo";
+      Array.prototype.forEach.call(caja.querySelectorAll("details"), function (d) { d.open = abrir; });
+      pinta();
+    });
+    caja.addEventListener("toggle", pinta, true);
+  });
+})();
+</script>
+
+  <!-- ====================== 4. TESTS ====================== -->
+  <section class="modulo" id="tests">
+    <div class="modulo-h">
+      <p class="eyebrow">M&oacute;dulo 4</p>
+      <h2>Tests de clases</h2>
+    </div>
+    <p class="muted">Veintiuna preguntas sacadas de la clase, con el orden de las preguntas y de las respuestas barajado en cada intento. Se corrigen al momento, te dicen el porqu&eacute; y en qu&eacute; minuto est&aacute; cada cosa. Unos 15 minutos, sin l&iacute;mite de tiempo, y repetible las veces que quieras.</p>
+
+    <h3>D&iacute;a 1 &middot; Intro al PPC</h3>
+    <main class="test" id="bgc-test" aria-live="polite"></main>
+  </section>
+
+  <section class="plain">
+    <div class="pie">
+      <span>Libert<b>Ads</b> &middot; de Bryan Gibe</span>
+      <span><a href="https://bryangibe.com">bryangibe.com</a></span>
+    </div>
+  </section>
+
+</div>
+<script>
+(function () {
+  "use strict";
+
+  var TOPICS = { plat: "Elegir plataforma", marg: "Margen y presupuesto", canal: "Canales", lead: "Embudos y leads", herr: "Herramientas y medici\u00f3n" };
+
+  var QUESTIONS = [
+    { id: "cazador", topic: "plat", type: "mc", min: "00:19:39", short: "Cazador y cazado: el nivel de conciencia",
+      q: "En clase resumimos Meta y Google como \u00abel cazador y el cazado\u00bb. \u00bfQu\u00e9 significa?",
+      opts: [
+        { t: "En Google la persona ya est\u00e1 buscando y sabe lo que quiere. En Meta le llamas la atenci\u00f3n a alguien que no buscaba nada.", ok: true, why: "Esa es la idea: conciencia alta en Google, conciencia m\u00e1s baja en Meta." },
+        { t: "En Google pagas por impresiones y en Meta pagas por cada b\u00fasqueda que hace la persona.", why: "Al rev\u00e9s: Google va por b\u00fasquedas y CPC, Meta por impresiones." },
+        { t: "Google persigue con remarketing a toda la gente que antes ha visto tu anuncio en Meta.", why: "El remarketing existe, pero la met\u00e1fora habla de qui\u00e9n busca a qui\u00e9n." },
+        { t: "Meta funciona mejor con los precios m\u00e1s altos y Google con los productos de mercadillo.", why: "Esa escala va al rev\u00e9s: el precio alto iba a Google y el mercadillo a TikTok." }
+      ],
+      ex: "Antes de pensar en la herramienta, piensa en la persona: \u00bfya sabe lo que quiere o se lo tienes que despertar?" },
+
+    { id: "clasifica", topic: "plat", type: "classify", min: "01:02:05", short: "Qu\u00e9 va a Google, qu\u00e9 a Meta y qu\u00e9 a los dos",
+      q: "Clasifica cada caso en la plataforma por la que empezar\u00edas.",
+      cols: ["Google", "Meta", "Los dos"],
+      rows: [
+        { t: "Empresa de desatascos", a: 0, why: "Servicio de urgencia: nadie descubre un atasco viendo un reel." },
+        { t: "\u00c1cido hialur\u00f3nico", a: 1, why: "Impulsivo, barato y con mucha competencia. No saben que lo quieren hasta que lo ven." },
+        { t: "Reducci\u00f3n de pecho", a: 0, why: "Suele venir de un problema f\u00edsico: conciencia muy alta, y lo buscan." },
+        { t: "Abdominoplastia", a: 2, why: "Unos lo tienen claro y lo buscan; a otros los convence un buen antes y despu\u00e9s." },
+        { t: "Empresa de mudanzas", a: 2, why: "Puede operar bien en ambos canales." },
+        { t: "Buscar conductores de cami\u00f3n", a: 1, why: "Nicho espec\u00edfico en el que Google tirar\u00eda el dinero. En Meta, \u00abbuscamos conductores\u00bb engancha solo." },
+        { t: "Alquiler de esqu\u00eds en pista, con poco presupuesto", a: 0, why: "Quien ya sube sabe qu\u00e9 necesita y lo busca. Geolocalizado en la zona y sin liarse con Meta." }
+      ],
+      ex: "La pregunta es siempre la misma: \u00bfesta persona lo tiene claro y lo va a buscar, o tengo que provocarlo?" },
+
+    { id: "pala", topic: "plat", type: "mc", min: "00:12:37", short: "Pala de p\u00e1del: competencia y margen en Google",
+      q: "Pala de p\u00e1del a 120 \u20ac, margen del 15 % y marca poco conocida. El planificador marca competencia alta. \u00bfQu\u00e9 concluyes?",
+      opts: [
+        { t: "Descartas Google: con 18 \u20ac de margen por pala no compensa competir ah\u00ed.", ok: true, why: "Costes altos y mucha competencia contra un margen bajo. Habl\u00e1bamos de 5.000-6.000 \u20ac al mes de inversi\u00f3n m\u00ednima." },
+        { t: "Descartas Meta: una pala es una compra racional que siempre se busca antes.", why: "En clase sali\u00f3 al rev\u00e9s: unas ocho de cada diez compras de pala son por impulso." },
+        { t: "No descartas nada: con un anuncio suficientemente bueno, el margen deja de importar.", why: "Es justo el error t\u00edpico. Todo se puede publicitar; el problema es el margen." }
+      ],
+      ex: "La pala de 500 \u20ac con un 30-40 % de margen s\u00ed se puede permitir las tres plataformas. Mismo producto, otra cuenta." },
+
+    { id: "escala", topic: "plat", type: "mc", min: "00:25:59", short: "La escala de precios por plataforma",
+      q: "Si solo pudieras dar un tramo de precio a cada plataforma, \u00bfc\u00f3mo los repartes?",
+      opts: [
+        { t: "Alto: Google. Intermedio tirando a alto: Meta. Mercadillo: TikTok.", ok: true, why: "Esa es la escala de clase. Google va casi siempre acompa\u00f1ado de Meta." },
+        { t: "Alto: Meta. Intermedio tirando a alto: TikTok. Mercadillo: Google.", why: "En Google no compensa competir por un producto de 50 \u20ac contra las grandes superficies." },
+        { t: "Alto: TikTok. Intermedio tirando a alto: Google. Mercadillo: Meta.", why: "En TikTok, en cuanto sube el precio deja de venderse." },
+        { t: "Alto: Google. Intermedio tirando a alto: TikTok. Mercadillo: Meta.", why: "Aciertas Google, pero TikTok es el mercadillo: precio psicol\u00f3gico por debajo de 90 \u20ac y descuentos." }
+      ],
+      ex: "En TikTok hace falta precio bajo y, a la vez, margen alto. Sin las dos cosas no sale." },
+
+    { id: "cpc", topic: "marg", type: "mc", min: "00:13:47", short: "Planificador de palabras clave: multiplica el CPC por tres",
+      q: "El planificador da para \u00abpalas de p\u00e1del\u00bb 14.800 b\u00fasquedas al mes y un CPC de 0,08 a 0,54 \u20ac. Con la regla de clase, \u00bfqu\u00e9 CPC esperas pagar?",
+      opts: [
+        { t: "De 0,24 a 1,62 \u20ac", ok: true, why: "Por tres: la herramienta hace una media de mucho tiempo y no refleja el prime time." },
+        { t: "De 0,08 a 0,54 \u20ac", why: "Es el dato en bruto, y se queda corto: es una media de mucho tiempo." },
+        { t: "De 0,16 a 1,08 \u20ac", why: "Esto es multiplicar por dos. La regla era por tres." },
+        { t: "De 0,03 a 0,18 \u20ac", why: "Has dividido. El coste real sale m\u00e1s alto que la estimaci\u00f3n, no m\u00e1s bajo." }
+      ],
+      ex: "Y adem\u00e1s, \u00abcompetencia alta\u00bb en el planificador ya es una se\u00f1al de que vas a necesitar cartera." },
+
+    { id: "fruta", topic: "marg", type: "num", min: "01:33:27", short: "Cajas de fruta: cu\u00e1nto margen queda de verdad", unit: "\u20ac", answer: 6,
+      q: "Caja de fruta de temporada a 25 \u20ac, con env\u00edo incluido. El env\u00edo cuesta 5 \u20ac y la fruta 14 \u20ac. \u00bfCu\u00e1ntos euros quedan antes de pagar publicidad?",
+      ex: "25 \u2212 5 \u2212 14 = 6 \u20ac. Conseguir una venta por 5 \u20ac o menos en Google, compitiendo con fruter\u00edas online, es muy dif\u00edcil. Por eso iba a Meta y a TikTok Shop con mucho UGC: la fruta entra por los ojos." },
+
+    { id: "roas", topic: "marg", type: "mc", min: "00:29:16", short: "Calcular el retorno y compararlo con el punto en que el cliente gana",
+      q: "Tienda online: 7.000 \u20ac de inversi\u00f3n este mes y 27.000 \u20ac de ventas. El cliente empieza a ganar dinero a partir de \u00d72. \u00bfC\u00f3mo est\u00e1?",
+      opts: [
+        { t: "Casi \u00d74, y por encima de su \u00d72: va ganando.", ok: true, why: "27.000 \u00f7 7.000 = 3,86. Est\u00e1 en verde." },
+        { t: "Casi \u00d74, pero sigue perdiendo porque necesita \u00d75.", why: "El punto que da el enunciado es \u00d72. Cada negocio tiene el suyo: hay que preguntarlo." },
+        { t: "\u00d70,26, y por debajo de su \u00d72: va perdiendo.", why: "Has dividido al rev\u00e9s: es ventas entre inversi\u00f3n." },
+        { t: "\u00d720, porque se resta la inversi\u00f3n a las ventas.", why: "27.000 \u2212 7.000 = 20.000 es la diferencia en euros, no el multiplicador." }
+      ],
+      ex: "Un \u00d74 no significa nada por s\u00ed solo: lo que importa es a partir de qu\u00e9 multiplicador gana ese negocio." },
+
+    { id: "primera", topic: "marg", type: "mc", min: "01:03:46", short: "La primera pregunta a un cliente nuevo",
+      q: "Te escribe una cl\u00ednica de cirug\u00eda est\u00e9tica que quiere anunciarse. \u00bfCu\u00e1l es la primera pregunta que le haces?",
+      opts: [
+        { t: "\u00bfCu\u00e1nto est\u00e1s dispuesto a invertir?", ok: true, why: "Seg\u00fan la respuesta y el sector, ya descartas cosas de entrada." },
+        { t: "\u00bfCu\u00e1l es tu servicio estrella?", why: "Es buena pregunta, pero es la segunda." },
+        { t: "\u00bfTienes creatividades de antes y despu\u00e9s?", why: "Las creatividades llegan mucho m\u00e1s tarde." },
+        { t: "\u00bfQuieres que empecemos por Google o por Meta?", why: "Eso lo decides t\u00fa despu\u00e9s de analizar, no lo elige el cliente." }
+      ],
+      ex: "Despu\u00e9s llegan los servicios estrella, la rentabilidad y la estacionalidad." },
+
+    { id: "clinica", topic: "marg", type: "mc", min: "01:05:54", short: "Estacionalidad: el aumento de pecho antes del verano",
+      q: "Es mayo. La cl\u00ednica tiene 1.000 \u20ac y tres servicios estrella: aumento de pecho, rinoplastia y abdominoplastia. \u00bfQu\u00e9 plan encaja?",
+      opts: [
+        { t: "Rinoplastia y abdominoplastia en Meta, con buenos creativos. El aumento de pecho, para despu\u00e9s del verano.", ok: true, why: "En mayo y junio nadie quiere un postoperatorio de pecho. Se retoma en septiembre u octubre." },
+        { t: "Aumento de pecho en Meta, porque antes del verano es cuando m\u00e1s gente quiere operarse de eso.", why: "Es la trampa: con los escotes encima y el postoperatorio, la demanda cae." },
+        { t: "Los tres en Google a partes iguales, para probar cu\u00e1l de ellos responde mejor.", why: "Con 1.000 \u20ac repartidos en cirug\u00edas muy caras no llegas a nada en Google." },
+        { t: "Abdominoplastia y aumento de pecho en TikTok, con un descuento especial.", why: "TikTok es mercadillo: una cirug\u00eda de varios miles de euros no se vende con un descuento." }
+      ],
+      ex: "Y cuando cierre una o dos operaciones, le pides que invierta m\u00e1s para entrar en Google. No olvides vigilar que llamen a los leads." },
+
+    { id: "display", topic: "canal", type: "mc", min: "00:32:39", short: "D\u00f3nde est\u00e1 la raya entre Display y Discover",
+      q: "Tu anuncio aparece dentro de la web del Marca, en mitad de la noticia. \u00bfQu\u00e9 inventario es?",
+      opts: [
+        { t: "Display: est\u00e1 dentro de la maqueta del medio, no en el feed de Google.", ok: true, why: "Se compra con campa\u00f1a de Display o de remarketing." },
+        { t: "Discover: es una web de noticias, y Discover son noticias.", why: "Discover es el feed de Google: la app de Google o la pesta\u00f1a nueva de Chrome en el m\u00f3vil. Los dos te pillan leyendo el Marca, pero son inventarios distintos." },
+        { t: "Search, porque el Marca sale al buscar.", why: "Search es el buscador, y aqu\u00ed nadie ha buscado nada." },
+        { t: "Shopping, si el anuncio lleva foto y precio.", why: "Shopping son fichas de producto en Google, no banners dentro de un medio." }
+      ],
+      ex: "En clase los dos salieron juntos, porque el caso de la ducha inteligente funcion\u00f3 tocando ambos a la vez. La raya pr\u00e1ctica: dentro de la web del medio es Display; dentro del feed de Google es Discover, y hoy se compra con Demand Gen." },
+
+    { id: "sinweb", topic: "canal", type: "mc", min: "00:28:16", short: "Google Ads sin web y el tipo de cliente que quieres",
+      q: "Una ferreter\u00eda de pueblo, sin web, te ofrece 100 \u20ac al mes por llevarle Google Ads. \u00bfQu\u00e9 haces?",
+      opts: [
+        { t: "No lo coges. Se podr\u00eda con su ficha de Google y una campa\u00f1a de llamadas o WhatsApp, pero no es el cliente al que aspiras.", ok: true, why: "T\u00e9cnicamente hay opci\u00f3n, pero t\u00fa tienes que optar a negocios de cierto nivel." },
+        { t: "Le dices que sin una p\u00e1gina web es t\u00e9cnicamente imposible anunciarse en Google Ads.", why: "No es cierto: un negocio local con ficha puede hacer campa\u00f1as de llamada o WhatsApp." },
+        { t: "Lo coges y le montas las llamadas, porque al empezar cualquier cliente te da experiencia.", why: "Es justo lo que se te prohibi\u00f3 en clase, y sin matices." },
+        { t: "Le montas una campa\u00f1a de Shopping, que funciona sin web y sin tener ninguna ficha.", why: "Shopping es compra pura de producto y necesita una tienda detr\u00e1s." }
+      ],
+      ex: "Elegir a qui\u00e9n le dices que s\u00ed tambi\u00e9n es parte del oficio." },
+
+    { id: "programatica", topic: "canal", type: "mc", min: "01:39:34", short: "Publicidad program\u00e1tica",
+      q: "Un compro oro de Madrid compra desde una plataforma los 10 domos publicitarios de calle m\u00e1s cercanos a su tienda, y lo solapa con Meta y Google. \u00bfC\u00f3mo se llama ese canal de los domos?",
+      opts: [
+        { t: "Publicidad program\u00e1tica", ok: true, why: "Soportes f\u00edsicos o digitales que contratas desde una plataforma, segmentados por zona." },
+        { t: "Google Discover", why: "Discover vive en el m\u00f3vil, dentro de Google." },
+        { t: "Remarketing", why: "El remarketing vuelve a impactar a quien ya te vio; esto es elegir soportes por zona." },
+        { t: "Display", why: "Display son anuncios en webs, no pantallas en la calle." }
+      ],
+      ex: "La gracia es el solape: quien quiere vender oro lo ve en la calle, en Meta y cuando lo busca en Google." },
+
+    { id: "embudo", topic: "lead", type: "order", min: "00:20:37", short: "El embudo de tres fases en Meta",
+      q: "Ordena el embudo de Meta que vimos para un producto que nunca se vende a la primera.",
+      items: ["Campa\u00f1a de tr\u00e1fico", "Meter en una audiencia personalizada a quien interact\u00faa", "Segundo impacto con escasez", "Oferta irrechazable a quien a\u00fan no ha comprado"],
+      ex: "El coste sube con cada paso, pero lo asumes porque ya has dise\u00f1ado la estrategia completa." },
+
+    { id: "errores", topic: "lead", type: "multi", min: "00:48:38", short: "Killer questions, velocidad de contacto y toques",
+      q: "Cl\u00ednica est\u00e9tica con leads de Meta. Marca solo lo que est\u00e9 mal.",
+      items: [
+        { t: "El formulario instant\u00e1neo pide solo nombre y tel\u00e9fono.", bad: true, why: "Faltan las killer questions: \u00bflo tienes claro?, \u00bfcu\u00e1ndo te querr\u00edas operar?" },
+        { t: "A los leads de Meta se les da cita para dentro de dos semanas.", bad: true, why: "Se enfr\u00edan. Como mucho, dos d\u00edas: no son nada conscientes de lo que quieren." },
+        { t: "Un lead de hace 40 d\u00edas con dos llamadas: hoy le toca el tercer toque.", bad: true, why: "Con ese retraso ya no tiene sentido llamarle. El problema es no haberlo hecho a tiempo." },
+        { t: "Llevas los anuncios y no miras si la cl\u00ednica llama a sus leads.", bad: true, why: "Si descuidas la parte comercial, ese cliente te deja para siempre." },
+        { t: "Un panel registra el toque 1, 2 y 3 de cada lead.", why: "Esto est\u00e1 bien: es c\u00f3mo controlas que hagan su trabajo." },
+        { t: "Si no contesta a la tercera llamada, se deja de insistir.", why: "Est\u00e1 bien: tres toques y no te vuelves loco." }
+      ],
+      ex: "En Meta llegan cotillas incluso con filtros, y hay que llamarles en caliente. La publicidad va m\u00e1s all\u00e1 de hacer el anuncio." },
+
+    { id: "metaia", topic: "herr", type: "mc", min: "00:05:23", short: "Las funciones de IA de Meta y lo que te tocan sin avisar",
+      q: "Dejas activadas las funciones de IA que Meta trae encendidas por defecto en una campa\u00f1a de captaci\u00f3n de presupuestos. \u00bfQu\u00e9 te puede pasar?",
+      opts: [
+        { t: "Que te cambie el bot\u00f3n de \u00absolicitar presupuesto\u00bb por \u00abcomprar ahora\u00bb y te retoque las creatividades por su cuenta.", ok: true, why: "Es el ejemplo literal de la clase, con una pala de p\u00e1del de por medio." },
+        { t: "Nada: la IA de Meta solo reparte el presupuesto, no toca el anuncio.", why: "S\u00ed lo toca. Cambia textos, botones y creatividades." },
+        { t: "Que pare la campa\u00f1a hasta que apruebes los cambios.", why: "Ojal\u00e1. Act\u00faa sola y te enteras despu\u00e9s." },
+        { t: "Que te baje el CPM a cambio de quitarte la segmentaci\u00f3n.", why: "No va de precio: el problema es que te modifica el anuncio." }
+      ],
+      ex: "Un bot\u00f3n equivocado no solo baja la conversi\u00f3n: te mete leads que esperaban otra cosa, y el cliente acaba pensando que su p\u00fablico no sirve." },
+
+    { id: "medicion", topic: "herr", type: "mc", min: "00:05:23", short: "C\u00f3mo se mide: Tag Manager y c\u00f3digo propio",
+      q: "\u00bfC\u00f3mo se plantea la medici\u00f3n en la clase?",
+      opts: [
+        { t: "Todo por Tag Manager, etiquetas y c\u00f3digo HTML personalizado, en vez de fiarse de lo que monte sola la plataforma.", ok: true, why: "As\u00ed controlas qu\u00e9 se mide y no dependes de lo que cada plataforma quiera contarte." },
+        { t: "Con el p\u00edxel que instala Meta y poco m\u00e1s, que ya lo trae todo hecho.", why: "Te deja a merced de lo que la plataforma decida contar como conversi\u00f3n." },
+        { t: "Mirando solo los n\u00fameros del panel de cada plataforma.", why: "Cada una se atribuye lo que puede. En clase salieron justo los problemas de medici\u00f3n de Meta y Google." },
+        { t: "No hace falta medir si el cliente te dice cu\u00e1ntas llamadas recibe.", why: "Eso llega tarde, sin detalle y sin poder optimizar nada." }
+      ],
+      ex: "Los problemas de medici\u00f3n en Meta y Google son recurrentes. Montarte tu propia capa es lo que te deja decidir con datos tuyos." },
+
+    { id: "cerrajero", topic: "canal", type: "mc", min: "01:29:23", short: "Sectores que Google tiene restringidos",
+      q: "Un cerrajero te pide Google Ads, igual que se lo montaste a un desatascos. \u00bfQu\u00e9 le dices?",
+      opts: [
+        { t: "Que ah\u00ed hay un problema: Google le cort\u00f3 la publicidad al sector por una multa, as\u00ed que no es un s\u00ed autom\u00e1tico.", ok: true, why: "La intenci\u00f3n de b\u00fasqueda es ideal, pero el canal est\u00e1 restringido." },
+        { t: "Que perfecto: urgencia pura, es id\u00e9ntico al desatascos.", why: "La intenci\u00f3n s\u00ed es la misma. Lo que cambia es que Google tiene cerrada la puerta a ese sector." },
+        { t: "Que mejor Meta, porque un cerrajero se contrata por impulso.", why: "Nadie contrata un cerrajero por impulso: o te has quedado fuera de casa o no." },
+        { t: "Que no se puede anunciar en ning\u00fan sitio.", why: "Demasiado: lo restringido es Google, no toda la publicidad." }
+      ],
+      ex: "La lecci\u00f3n es m\u00e1s amplia que los cerrajeros: antes de vender una campa\u00f1a, comprueba que el sector se pueda anunciar. Desatascos s\u00ed, mudanzas en ambos canales, cerrajeros con pega." },
+
+    { id: "coches", topic: "canal", type: "mc", min: "01:37:31", short: "Compraventa de veh\u00edculos: los dos canales a la vez",
+      q: "Una compraventa de coches con presupuesto alto. \u00bfC\u00f3mo repartes Google y Meta?",
+      opts: [
+        { t: "Google para las b\u00fasquedas de marca y modelo concretos, y Meta para pasear el inventario en din\u00e1mico.", ok: true, why: "Cada canal hace lo que sabe: Google recoge a quien ya busca un modelo, Meta ense\u00f1a el stock a quien no lo ten\u00eda decidido." },
+        { t: "Solo Google: comprar un coche es racional y siempre se busca.", why: "Te dejas fuera a quien no tiene modelo decidido y se enamora viendo el inventario." },
+        { t: "Solo Meta, con v\u00eddeos de los coches.", why: "Desperdicias a quien ya est\u00e1 tecleando el modelo exacto en Google." },
+        { t: "TikTok, que es donde est\u00e1 el p\u00fablico joven.", why: "TikTok es mercadillo: precio psicol\u00f3gico bajo. Un coche no entra ah\u00ed." }
+      ],
+      ex: "Mismo patr\u00f3n que la program\u00e1tica del compro oro: solapar canales para que la misma persona te encuentre por varios sitios." },
+
+    { id: "negocios", topic: "lead", type: "mc", min: "01:40:37", short: "Por qu\u00e9 tipo de embudo se empieza",
+      q: "Los tres tipos de negocio fueron lead gen, ecommerce e infoproducto. \u00bfPor cu\u00e1l se empieza a aprender?",
+      opts: [
+        { t: "Por lead gen: entra un lead, alguien llama y se cierra o no. Se ve el efecto de cada decisi\u00f3n.", ok: true, why: "Es lo que se dijo al cerrar la clase." },
+        { t: "Por ecommerce, porque las ventas son un n\u00famero objetivo que no depende de nadie.", why: "Depende de feed, stock, medici\u00f3n y atribuci\u00f3n. Cuesta mucho m\u00e1s entender qu\u00e9 ha pasado." },
+        { t: "Por infoproducto, que es el m\u00e1s barato de arrancar.", why: "Es el m\u00e1s exigente: vive de mantener visibilidad y viralidad constantes." },
+        { t: "Da igual, los tres se montan igual.", why: "No se montan igual, y el orden estaba elegido a prop\u00f3sito." }
+      ],
+      ex: "El objetivo del curso es conocimiento transversal \u2014Google, Meta, TikTok, ChatGPT Ads y program\u00e1tica\u2014 y entender embudos, no montar anuncios de forma mec\u00e1nica." },
+
+    { id: "velocidad", topic: "lead", type: "mc", min: "00:52:29", short: "El list\u00f3n real de velocidad de respuesta",
+      q: "En el caso de la empresa de alarmas, \u00bfen cu\u00e1nto contesta el equipo comercial a un lead?",
+      opts: [
+        { t: "En menos de dos minutos.", ok: true, why: "Ese es el list\u00f3n del caso, y es parte de por qu\u00e9 convierte." },
+        { t: "En menos de dos d\u00edas.", why: "Dos d\u00edas es el m\u00e1ximo para una cita de cl\u00ednica est\u00e9tica, no el list\u00f3n de las alarmas." },
+        { t: "En menos de dos semanas.", why: "A dos semanas el lead ya ha comprado en otro sitio." },
+        { t: "No se mide: eso es cosa del cliente.", why: "S\u00ed se mide, y vigilarlo es parte de tu trabajo." }
+      ],
+      ex: "En la cl\u00ednica est\u00e9tica, un panel registra toque 1, toque 2 y cita agendada lead a lead: 468 leads, 146 cerrados y 320 en seguimiento. Sin ese registro no sabes si el problema es tu anuncio o su tel\u00e9fono." },
+
+    { id: "dental", topic: "lead", type: "num", min: "01:07:03", short: "Coste por contacto, y por qu\u00e9 no se promete un resultado", unit: "\u20ac", answer: 80,
+      q: "Cl\u00ednica dental en Madrid: 480 \u20ac de inversi\u00f3n en 10 d\u00edas, solo Google Ads, y 6 contactos. \u00bfCu\u00e1nto cost\u00f3 cada contacto?",
+      ex: "480 \u00f7 6 = 80 \u20ac. Uno de esos seis cerr\u00f3 un tratamiento de 23.000 \u20ac, y la cl\u00ednica subi\u00f3 a 5.000 \u20ac al mes: 3.000 en Google y 2.000 en Meta. Pero tambi\u00e9n hubo un componente de suerte, y eso no se le promete a nadie." }
+  ];
+
+  var BY_ID = {};
+  QUESTIONS.forEach(function (q) { BY_ID[q.id] = q; });
+
+  var app = document.getElementById("bgc-test");
+  if (!app) return;
+  var state;
+
+  function shuffle(list) {
+    var a = list.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function range(n) { var a = [], i; for (i = 0; i < n; i++) a.push(i); return a; }
+  function shuffledOrder(n) {
+    var a = shuffle(range(n));
+    while (a.every(function (v, i) { return v === i; })) a = shuffle(range(n));
+    return a;
+  }
+
+  function newGame() {
+    var shuf = {}, drafts = {};
+    QUESTIONS.forEach(function (q) {
+      if (q.type === "mc") shuf[q.id] = shuffle(range(q.opts.length));
+      if (q.type === "classify") { shuf[q.id] = shuffle(range(q.rows.length)); drafts[q.id] = {}; }
+      if (q.type === "multi") { shuf[q.id] = shuffle(range(q.items.length)); drafts[q.id] = []; }
+      if (q.type === "order") drafts[q.id] = shuffledOrder(q.items.length);
+      if (q.type === "num") drafts[q.id] = "";
+    });
+    return { screen: "q", order: shuffle(QUESTIONS.map(function (q) { return q.id; })), i: 0, shuf: shuf, drafts: drafts, pts: {}, streak: 0, hint: false, copy: "" };
+  }
+
+  /* Corrige una respuesta y devuelve de 0 a 1. */
+  function grade(q, d) {
+    if (q.type === "mc") return q.opts[d].ok ? 1 : 0;
+    if (q.type === "num") return Math.abs(parseFloat(String(d).replace(",", ".")) - q.answer) < 0.01 ? 1 : 0;
+    if (q.type === "classify") return q.rows.filter(function (r, i) { return d[i] === r.a; }).length / q.rows.length;
+    if (q.type === "order") return d.filter(function (v, i) { return v === i; }).length / d.length;
+    if (q.type === "multi") return q.items.filter(function (it, i) { return !!it.bad === (d.indexOf(i) !== -1); }).length / q.items.length;
+    return 0;
+  }
+  function level(p) { return p >= 0.999 ? "good" : p > 0 ? "mid" : "bad"; }
+
+  function themeScores() {
+    return Object.keys(TOPICS).map(function (k) {
+      var qs = QUESTIONS.filter(function (q) { return q.topic === k; });
+      var sum = qs.reduce(function (s, q) { return s + (state.pts[q.id] || 0); }, 0);
+      return { k: k, name: TOPICS[k], pct: Math.round(sum / qs.length * 100) };
+    });
+  }
+  function totalPct() {
+    var sum = QUESTIONS.reduce(function (s, q) { return s + (state.pts[q.id] || 0); }, 0);
+    return Math.round(sum / QUESTIONS.length * 100);
+  }
+  function misses() {
+    return state.order.map(function (id) { return BY_ID[id]; })
+      .filter(function (q) { return (state.pts[q.id] || 0) < 0.999; });
+  }
+
+  function readBest() { try { return Number(localStorage.getItem("ppc-d1-best")) || null; } catch (e) { return null; } }
+  function saveBest(v) { try { if (v > (readBest() || 0)) localStorage.setItem("ppc-d1-best", String(v)); } catch (e) {} }
+
+  function arriba() {
+    var y = app.getBoundingClientRect().top + window.pageYOffset - 24;
+    window.scrollTo({ top: y, behavior: "auto" });
+  }
+
+  function viewStart() {
+    var best = readBest();
+    var rows = Object.keys(TOPICS).map(function (k) {
+      return "<li><span>" + TOPICS[k] + "</span><span>" +
+        QUESTIONS.filter(function (q) { return q.topic === k; }).length + " preguntas</span></li>";
+    }).join("");
+    return '<section class="plain">' +
+      '<ul class="topics">' + rows + '</ul>' +
+      (best ? '<p class="muted">Tu mejor nota hasta ahora: ' + best + ' %.</p>' : "") +
+      '<button class="cta" data-act="begin" id="bgc-begin">Empezar el test</button>' +
+      '</section>';
+  }
+
+  function viewTicks() {
+    return state.order.map(function (id, i) {
+      var p = state.pts[id];
+      var cls = p !== undefined ? level(p) : i === state.i ? "now" : "";
+      return '<i class="' + cls + '"></i>';
+    }).join("");
+  }
+
+  function viewBody(q, done) {
+    var d = state.drafts[q.id];
+    if (q.type === "mc") {
+      return '<div class="stack">' + state.shuf[q.id].map(function (i) {
+        var o = q.opts[i], cls = "", mark = "";
+        if (done) {
+          if (o.ok) { cls = "ok"; mark = "\u2713"; }
+          else if (d === i) { cls = "no"; mark = "\u2717"; }
+        }
+        return '<button class="opt ' + cls + '" data-act="pick" data-i="' + i + '" ' + (done ? "disabled" : "") + '>' +
+          (mark ? '<span class="mark">' + mark + '</span>' : "") + o.t +
+          (done ? '<span class="why">' + o.why + '</span>' : "") + '</button>';
+      }).join("") + '</div>';
+    }
+    if (q.type === "num") {
+      return '<form class="numline" data-form="num">' +
+        '<label for="bgc-num-' + q.id + '" class="muted">Tu respuesta</label>' +
+        '<input id="bgc-num-' + q.id + '" inputmode="decimal" autocomplete="off" value="' + String(d).replace(/"/g, "") + '" ' + (done ? "disabled" : "") + '>' +
+        '<span>' + q.unit + '</span>' +
+        (done ? "" : '<button class="cta" type="submit">Comprobar</button>') +
+        '</form>' + (state.hint && !done ? '<p class="hint">Escribe un n\u00famero para poder comprobarlo.</p>' : "");
+    }
+    if (q.type === "classify") {
+      var rowsC = state.shuf[q.id].map(function (i) {
+        var r = q.rows[i];
+        var cls = done ? (d[i] === r.a ? "ok" : "no") : "";
+        var segs = q.cols.map(function (c, ci) {
+          return '<button class="seg ' + (d[i] === ci ? "on" : "") + '" data-act="cls" data-i="' + i + '" data-c="' + ci + '" aria-pressed="' + (d[i] === ci) + '" ' + (done ? "disabled" : "") + '>' + c + '</button>';
+        }).join("");
+        var fb = done ? '<span class="why"><span class="mark">' + (d[i] === r.a ? "\u2713" : "\u2717") + '</span>' + q.cols[r.a] + '. ' + r.why + '</span>' : "";
+        return '<div class="row ' + cls + '"><span>' + r.t + '</span><div class="segs" role="group" aria-label="' + r.t + '">' + segs + '</div>' + fb + '</div>';
+      }).join("");
+      var ready = Object.keys(d).length === q.rows.length;
+      return '<div class="stack">' + rowsC + '</div>' +
+        (done ? "" : '<button class="cta" data-act="check" ' + (ready ? "" : "disabled") + '>' + (ready ? "Comprobar" : "Clasifica todos para comprobar") + '</button>');
+    }
+    if (q.type === "order") {
+      var rowsO = d.map(function (v, pos) {
+        var cls = done ? (v === pos ? "ok" : "no") : "";
+        var ctrl = done ? "" : '<span class="arrows">' +
+          '<button class="arrow" data-act="up" data-i="' + pos + '" aria-label="Subir: ' + q.items[v] + '" ' + (pos === 0 ? "disabled" : "") + '>\u2191</button>' +
+          '<button class="arrow" data-act="down" data-i="' + pos + '" aria-label="Bajar: ' + q.items[v] + '" ' + (pos === d.length - 1 ? "disabled" : "") + '>\u2193</button></span>';
+        return '<div class="row ord ' + cls + '"><b>' + (pos + 1) + '</b><span>' + q.items[v] + '</span>' + ctrl + '</div>';
+      }).join("");
+      var right = done && grade(q, d) < 0.999
+        ? '<p class="muted"><b>Orden correcto:</b> ' + q.items.map(function (t, i) { return (i + 1) + ". " + t; }).join(" \u00b7 ") + '</p>' : "";
+      return '<div class="stack">' + rowsO + '</div>' + right + (done ? "" : '<button class="cta" data-act="check">Comprobar</button>');
+    }
+    if (q.type === "multi") {
+      var rowsM = state.shuf[q.id].map(function (i) {
+        var it = q.items[i], sel = d.indexOf(i) !== -1, right2 = !!it.bad === sel;
+        var cls = done ? (right2 ? "ok" : "no") : sel ? "sel" : "";
+        var mark = done ? '<span class="mark">' + (right2 ? "\u2713" : "\u2717") + '</span>' : '<span class="mark">' + (sel ? "\u2612" : "\u2610") + '</span>';
+        return '<button class="opt ' + cls + '" data-act="tog" data-i="' + i + '" aria-pressed="' + sel + '" ' + (done ? "disabled" : "") + '>' + mark + it.t + (done ? '<span class="why">' + it.why + '</span>' : "") + '</button>';
+      }).join("");
+      return '<div class="stack">' + rowsM + '</div>' + (done ? "" : '<button class="cta" data-act="check">Comprobar</button>');
+    }
+    return "";
+  }
+
+  function viewQuestion() {
+    var q = BY_ID[state.order[state.i]];
+    var p = state.pts[q.id];
+    var done = p !== undefined;
+    var fb = "";
+    if (done) {
+      var lv = level(p);
+      var head = lv === "good" ? "Bien." : lv === "mid" ? "Casi: " + Math.round(p * 100) + " % de esta." : "Esta no.";
+      var answer = q.type === "num" ? " La respuesta es " + q.answer + " " + q.unit + "." : "";
+      var last = state.i === state.order.length - 1;
+      fb = '<div class="fb ' + lv + '" tabindex="-1" id="bgc-fb">' +
+        '<strong>' + head + (lv === "good" ? "" : answer) + '</strong>' +
+        '<p>' + q.ex + '</p>' +
+        '<p class="when">Est\u00e1 en la clase, minuto ' + q.min + '</p>' +
+        '</div>' +
+        '<button class="cta" data-act="next" id="bgc-next">' + (last ? "Ver mi resultado" : "Siguiente") + '</button>';
+    }
+    return '<header class="bar">' +
+      '<div class="bar-row"><span><b>Pregunta ' + (state.i + 1) + ' de ' + state.order.length + '</b> \u00b7 ' + TOPICS[q.topic] + '</span>' +
+      '<span>' + (state.streak > 1 ? "Racha: " + state.streak : "") + '</span></div>' +
+      '<div class="ticks" aria-hidden="true">' + viewTicks() + '</div>' +
+      '</header>' +
+      '<h2 tabindex="-1" id="bgc-qh" class="enter">' + q.q + '</h2>' +
+      viewBody(q, done) + fb;
+  }
+
+  function resultText() {
+    var lines = ["Test PPC D\u00eda 1: " + totalPct() + " %"];
+    themeScores().forEach(function (t) { lines.push(t.name + ": " + t.pct + " %"); });
+    var m = misses();
+    if (m.length) {
+      lines.push("", "A repasar:");
+      m.forEach(function (q) { lines.push("- " + q.short + " (" + Math.round((state.pts[q.id] || 0) * 100) + " %) [" + q.id + "]"); });
+    }
+    return lines.join("\n");
+  }
+
+  function viewEnd() {
+    var pct = totalPct();
+    var line = pct >= 85 ? "Lo tienes. Ya piensas en la persona antes que en la herramienta."
+      : pct >= 60 ? "Vas bien. Repasa lo de abajo y lo tendr\u00e1s."
+      : "Esta primera parte es la m\u00e1s dura. Repasa lo de abajo y vuelve a intentarlo.";
+    var themes = themeScores().map(function (t) {
+      return '<div class="t-row"><div class="t-head"><b>' + t.name + '</b><b>' + t.pct + ' %</b></div>' +
+        '<div class="meter"><i style="width:' + t.pct + '%;background:var(--' + (t.pct >= 85 ? "good" : t.pct >= 60 ? "mid" : "bad") + ')"></i></div></div>';
+    }).join("");
+    var m = misses();
+    var rev = m.length
+      ? '<h3>Para repasar en la clase</h3><ul class="rev">' + m.map(function (q) {
+          return '<li>' + q.short + '<br><span class="when">Minuto ' + q.min + '</span></li>';
+        }).join("") + '</ul>'
+      : '<h3>Nada que repasar</h3><p class="muted">Las ' + QUESTIONS.length + ' perfectas.</p>';
+    var copied = state.copy === "ok"
+      ? '<p class="muted">Copiado. P\u00e9gaselo a Bryan por WhatsApp.</p>'
+      : state.copy === "fail"
+        ? '<p class="muted">No se ha podido copiar solo. Selecciona este texto y env\u00edaselo a Bryan:</p><textarea id="bgc-result-text" readonly>' + resultText() + '</textarea>'
+        : "";
+    return '<section class="block enter">' +
+      '<p class="wordmark">Libert<b>Ads</b></p>' +
+      '<p class="eyebrow">Tu resultado \u00b7 D\u00eda 1</p>' +
+      '<p class="score">' + pct + '<small> %</small></p>' +
+      '<p class="lede">' + line + '</p>' +
+      '</section>' +
+      '<section class="plain"><div>' + themes + '</div></section>' +
+      '<section class="plain">' + rev + '</section>' +
+      '<section class="plain">' +
+      '<p class="muted">Envi\u00e1ndole el resultado a Bryan, el siguiente test volver\u00e1 sobre lo que m\u00e1s te haya costado.</p>' +
+      '<div class="actions">' +
+      '<button class="cta" data-act="copy" id="bgc-copy">Copiar resultado para Bryan</button>' +
+      '<button class="ghost" data-act="again" id="bgc-again">Repetir el test</button>' +
+      '</div>' + copied + '</section>';
+  }
+
+  function render(focusId) {
+    app.innerHTML = state.screen === "start" ? viewStart() : state.screen === "end" ? viewEnd() : viewQuestion();
+    if (focusId) {
+      var el = document.getElementById(focusId);
+      if (el) el.focus({ preventScroll: true });
+    }
+  }
+
+  function submit(q) {
+    var p = grade(q, state.drafts[q.id]);
+    state.pts[q.id] = p;
+    state.streak = p >= 0.999 ? state.streak + 1 : 0;
+    state.hint = false;
+    render("bgc-fb");
+  }
+
+  app.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]");
+    if (!b || b.disabled) return;
+    var act = b.getAttribute("data-act"), i = Number(b.getAttribute("data-i"));
+    var q = state.screen === "q" ? BY_ID[state.order[state.i]] : null;
+    if (act === "begin" || act === "again") { state = newGame(); render("bgc-qh"); arriba(); return; }
+    if (act === "pick") { state.drafts[q.id] = i; submit(q); return; }
+    if (act === "cls") { state.drafts[q.id][i] = Number(b.getAttribute("data-c")); render(); return; }
+    if (act === "tog") {
+      var d = state.drafts[q.id];
+      state.drafts[q.id] = d.indexOf(i) !== -1 ? d.filter(function (x) { return x !== i; }) : d.concat(i);
+      render(); return;
+    }
+    if (act === "up" || act === "down") {
+      var dd = state.drafts[q.id], j = act === "up" ? i - 1 : i + 1, t = dd[i];
+      dd[i] = dd[j]; dd[j] = t;
+      render(); return;
+    }
+    if (act === "check") { submit(q); return; }
+    if (act === "next") {
+      if (state.i === state.order.length - 1) { state.screen = "end"; saveBest(totalPct()); }
+      else state.i += 1;
+      render(state.screen === "end" ? "bgc-copy" : "bgc-qh");
+      arriba();
+      return;
+    }
+    if (act === "copy") {
+      var fin = function (v) { state.copy = v; render(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(resultText()).then(function () { fin("ok"); }, function () { fin("fail"); });
+      } else fin("fail");
+    }
+  });
+
+  app.addEventListener("input", function (e) {
+    if (state.screen === "q" && e.target.tagName === "INPUT") state.drafts[state.order[state.i]] = e.target.value;
+  });
+
+  app.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var q = BY_ID[state.order[state.i]];
+    if (isNaN(parseFloat(String(state.drafts[q.id]).replace(",", ".")))) { state.hint = true; render(); return; }
+    submit(q);
+  });
+
+  state = { screen: "start" };
+  render();
+})();
+</script>
