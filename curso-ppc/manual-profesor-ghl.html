@@ -471,6 +471,18 @@
 .bgc .tarea .lab { color: var(--mid); }
 .bgc .lec .formula { font-size: 19px; }
 .bgc .leyenda { display: grid; gap: 10px; }
+.bgc h3.lec-tit { font-size: 19px; font-weight: 700; line-height: 1.3; margin: 0; }
+.bgc .ind { columns: 2 300px; column-gap: 28px; }
+.bgc .ind-bloque { break-inside: avoid; margin-bottom: 18px; display: grid; gap: 6px; }
+.bgc .ind-h { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+.bgc .ind-h a { color: var(--ink); }
+.bgc .ind-lista { display: grid; }
+.bgc .ind-lec { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--ink); font-weight: 600; font-size: 15px; line-height: 1.35; }
+.bgc .ind-lec:hover { color: var(--accent); text-decoration: none; }
+.bgc .ind-num { font-family: var(--cond); font-size: 18px; font-weight: 800; color: var(--accent); }
+.bgc .volver-indice { position: fixed; z-index: 50; width: auto; margin: 0; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--black); color: var(--accent); border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 800; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.bgc .volver-indice:hover { color: var(--cream); text-decoration: none; }
+.bgc .lec { scroll-margin-top: 12px; }
 .bgc .prompt-txt { background: var(--black); color: var(--cream); border-radius: 4px; padding: 14px 16px; font: 500 14px/1.6 ui-monospace, Menlo, Consolas, monospace; }
 
 @media (max-width: 560px) {
@@ -491,14 +503,15 @@
   .bgc { --bg: #F7F4EE; --col: 640px; --aire: 52px; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding-bottom: 0; font-size: 14.5px; display: block !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .bgc > * { margin-top: 18px !important; }
   .bgc > .block, .bgc > .dani { margin-top: 0 !important; }
-  .bgc .navmod { display: none; }
+  .bgc .navmod, .bgc .volver-indice { display: none !important; }
+  .bgc #indice { break-before: page; }
+  .bgc #como { break-before: page; }
   .bgc .acor > summary::after, .bgc .acor[open] > summary::after { content: none; }
   .bgc .scroll-x, .bgc .acor { overflow: visible !important; }
   .bgc .modulo, .bgc .acor-lista, .bgc .acor-cuerpo { display: block !important; }
   .bgc .modulo > * + *, .bgc .acor-cuerpo > * + *, .bgc .paso > * + * { margin-top: 12px; }
   .bgc .paso { display: block !important; }
   .bgc .modulo { break-before: page; padding-top: 0; }
-  .bgc #como { break-before: auto; }
   .bgc .lec { margin-top: 12px; }
   .bgc .lec + .lec { break-before: page; }
   .bgc .modulo-h, .bgc .lec > summary, .bgc .lab, .bgc .paso-h, .bgc .qa .q { break-after: avoid; }
@@ -515,6 +528,7 @@
     <h1>Qu&#233; decir en clase</h1>
     <p class="lede">Las 37 lecciones del curso, paso a paso: qu&#233; haces, qu&#233; dices, qu&#233; tiene que responder el alumno y c&#243;mo corriges la tarea.</p>
     <nav class="navmod">
+      <a href="#indice">&#205;ndice</a>
       <a href="#como">C&#243;mo usarlo</a>
       <a href="#negocio">Negocio</a>
       <a href="#medicion">Medici&#243;n</a>
@@ -535,6 +549,12 @@
     </div>
   </section>
 
+  <section class="modulo" id="indice">
+    <div class="modulo-h"><p class="eyebrow">&#205;ndice</p><h2>Ir a una lecci&#243;n</h2></div>
+    <p class="ctx">Pincha en una lecci&#243;n: salta all&#237; y se abre sola. El bot&#243;n &#171;&#205;ndice&#187; de abajo a la derecha te devuelve aqu&#237;.</p>
+    <div class="ind"><div class="ind-bloque"><p class="ind-h"><a href="#negocio">Bloques 0 y 1 &#183; Arranque y negocio</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-1"><span class="ind-num">01</span><span>Intro al PPC: tipos de publicidad y c&#243;mo elegir plataforma</span></a></li><li><a class="ind-lec" href="#leccion-2"><span class="ind-num">02</span><span>Diagn&#243;stico de nivel</span></a></li><li><a class="ind-lec" href="#leccion-3"><span class="ind-num">03</span><span>Brief y econom&#237;a de la cuenta</span></a></li><li><a class="ind-lec" href="#leccion-4"><span class="ind-num">04</span><span>Competencia y plan de medios</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#medicion">Bloque 2 &#183; Medici&#243;n</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-5"><span class="ind-num">05</span><span>GA4 y Google Tag Manager</span></a></li><li><a class="ind-lec" href="#leccion-6"><span class="ind-num">06</span><span>Conversiones en Google Ads y Meta</span></a></li><li><a class="ind-lec" href="#leccion-7"><span class="ind-num">07</span><span>Consent Mode, CRM y verificaci&#243;n</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#claude">Bloque 3 &#183; Claude y MCP de Google y Meta</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-8"><span class="ind-num">08</span><span>Claude como tocateclas, con correa</span></a></li><li><a class="ind-lec" href="#leccion-9"><span class="ind-num">09</span><span>MCP de Google: crear y conectar</span></a></li><li><a class="ind-lec" href="#leccion-10"><span class="ind-num">10</span><span>MCP de Meta: conectar y usar</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#google">Bloque 4 &#183; Google Ads, todos los tipos de campa&#241;a</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-11"><span class="ind-num">11</span><span>Search I: estructura y keywords</span></a></li><li><a class="ind-lec" href="#leccion-12"><span class="ind-num">12</span><span>Search II: anuncios, recursos, pujas y lanzamiento</span></a></li><li><a class="ind-lec" href="#leccion-13"><span class="ind-num">13</span><span>Landing y CRO</span></a></li><li><a class="ind-lec" href="#leccion-14"><span class="ind-num">14</span><span>Performance Max</span></a></li><li><a class="ind-lec" href="#leccion-15"><span class="ind-num">15</span><span>Shopping y Merchant Center</span></a></li><li><a class="ind-lec" href="#leccion-16"><span class="ind-num">16</span><span>Display</span></a></li><li><a class="ind-lec" href="#leccion-17"><span class="ind-num">17</span><span>YouTube (campa&#241;as de v&#237;deo)</span></a></li><li><a class="ind-lec" href="#leccion-18"><span class="ind-num">18</span><span>Demand Gen</span></a></li><li><a class="ind-lec" href="#leccion-19"><span class="ind-num">19</span><span>Campa&#241;as de aplicaciones</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#meta">Bloque 5 &#183; Meta Ads, todos los objetivos</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-20"><span class="ind-num">20</span><span>Meta Ads: estructura, audiencias y Advantage+</span></a></li><li><a class="ind-lec" href="#leccion-21"><span class="ind-num">21</span><span>Creatividad y &#225;ngulos</span></a></li><li><a class="ind-lec" href="#leccion-22"><span class="ind-num">22</span><span>Reconocimiento</span></a></li><li><a class="ind-lec" href="#leccion-23"><span class="ind-num">23</span><span>Tr&#225;fico e Interacci&#243;n</span></a></li><li><a class="ind-lec" href="#leccion-24"><span class="ind-num">24</span><span>Clientes potenciales</span></a></li><li><a class="ind-lec" href="#leccion-25"><span class="ind-num">25</span><span>Ventas y cat&#225;logo</span></a></li><li><a class="ind-lec" href="#leccion-26"><span class="ind-num">26</span><span>Promoci&#243;n de la app</span></a></li><li><a class="ind-lec" href="#leccion-27"><span class="ind-num">27</span><span>Testing y escalado en Meta</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#chatgpt">Bloque 6 &#183; ChatGPT Ads</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-28"><span class="ind-num">28</span><span>ChatGPT Ads I: c&#243;mo funciona y cu&#225;ndo usarlo</span></a></li><li><a class="ind-lec" href="#leccion-29"><span class="ind-num">29</span><span>ChatGPT Ads II: Ads Manager, medici&#243;n y lanzamiento</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#pro">Bloque 7 &#183; Nivel pro</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-30"><span class="ind-num">30</span><span>Optimizaci&#243;n y diagn&#243;stico</span></a></li><li><a class="ind-lec" href="#leccion-31"><span class="ind-num">31</span><span>Escalado, automatizaci&#243;n y reporting</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#ecommerce">Bloque 8 &#183; Ecommerce</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-32"><span class="ind-num">32</span><span>Econom&#237;a y medici&#243;n de una tienda</span></a></li><li><a class="ind-lec" href="#leccion-33"><span class="ind-num">33</span><span>Feed avanzado y Merchant Center</span></a></li><li><a class="ind-lec" href="#leccion-34"><span class="ind-num">34</span><span>Google Ads para ecommerce</span></a></li><li><a class="ind-lec" href="#leccion-35"><span class="ind-num">35</span><span>Meta Ads para ecommerce</span></a></li><li><a class="ind-lec" href="#leccion-36"><span class="ind-num">36</span><span>Rentabilidad, temporadas y escalado</span></a></li></ol></div><div class="ind-bloque"><p class="ind-h"><a href="#cierre">Bloque 9 &#183; Cierre</a></p><ol class="ind-lista"><li><a class="ind-lec" href="#leccion-37"><span class="ind-num">37</span><span>Proyecto final</span></a></li></ol></div></div>
+  </section>
+
   <section class="modulo" id="como">
     <div class="modulo-h"><p class="eyebrow">Antes de empezar</p><h2>C&#243;mo usar este manual</h2></div>
     <p class="ctx">La Gu&#237;a del profesor dice qu&#233; se hace en cada lecci&#243;n. Este manual dice c&#243;mo hacerlo y qu&#233; decir: cada actividad concretada, las preguntas con su respuesta buena y frases listas para usar. Est&#225; pensado para que cualquier profesor pueda dar la lecci&#243;n leyendo solo esto.</p>
@@ -550,7 +570,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloques 0 y 1</p><h2>Arranque y negocio</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-1">
-<summary><span class="lec-num">01</span><span class="lec-tit">Intro al PPC: tipos de publicidad y c&#243;mo elegir plataforma</span></summary>
+<summary><span class="lec-num">01</span><h3 class="lec-tit">Intro al PPC: tipos de publicidad y c&#243;mo elegir plataforma</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno decide qu&#233; plataforma encaja con un negocio mirando a la persona, el margen y lo que pasa despu&#233;s del clic. Sabe por qu&#233; Google, Meta y ChatGPT Ads hacen trabajos distintos.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -703,7 +723,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-2">
-<summary><span class="lec-num">02</span><span class="lec-tit">Diagn&#243;stico de nivel</span></summary>
+<summary><span class="lec-num">02</span><h3 class="lec-tit">Diagn&#243;stico de nivel</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>Sabes qu&#233; domina el alumno de verdad y qu&#233; hace por costumbre. Sales con su lista de huecos por escrito y con el proyecto real elegido.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -838,7 +858,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-3">
-<summary><span class="lec-num">03</span><span class="lec-tit">Brief y econom&#237;a de la cuenta</span></summary>
+<summary><span class="lec-num">03</span><h3 class="lec-tit">Brief y econom&#237;a de la cuenta</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno piensa como el due&#241;o del negocio. Sale con el brief del proyecto y sus n&#250;meros objetivo: CPA m&#225;ximo, ROAS de equilibrio, CPC m&#225;ximo y presupuesto m&#237;nimo.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -933,7 +953,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-4">
-<summary><span class="lec-num">04</span><span class="lec-tit">Competencia y plan de medios</span></summary>
+<summary><span class="lec-num">04</span><h3 class="lec-tit">Competencia y plan de medios</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno cierra la estrategia antes de tocar una plataforma. Sale con un plan de medios defendible: canales, orden, dinero y objetivos a 30, 60 y 90 d&#237;as.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1032,7 +1052,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 2</p><h2>Medici&#243;n</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-5">
-<summary><span class="lec-num">05</span><span class="lec-tit">GA4 y Google Tag Manager</span></summary>
+<summary><span class="lec-num">05</span><h3 class="lec-tit">GA4 y Google Tag Manager</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno monta y verifica GA4 con GTM sin ayuda. Sabe qu&#233; medir, c&#243;mo y por qu&#233; no se mide con clics en botones.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1121,7 +1141,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-6">
-<summary><span class="lec-num">06</span><span class="lec-tit">Conversiones en Google Ads y Meta</span></summary>
+<summary><span class="lec-num">06</span><h3 class="lec-tit">Conversiones en Google Ads y Meta</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno conecta Google Ads y Meta a la medici&#243;n. Decide qu&#233; conversi&#243;n es primaria, activa conversiones mejoradas y deja p&#237;xel y CAPI deduplicados.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1211,7 +1231,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-7">
-<summary><span class="lec-num">07</span><span class="lec-tit">Consent Mode, CRM y verificaci&#243;n</span></summary>
+<summary><span class="lec-num">07</span><h3 class="lec-tit">Consent Mode, CRM y verificaci&#243;n</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno cierra la medici&#243;n: consentimiento bien montado, leads del CRM devueltos a las plataformas y una checklist de medici&#243;n en verde. Sin eso no se lanza nada.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1321,7 +1341,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 3</p><h2>Claude y MCP de Google y Meta</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-8">
-<summary><span class="lec-num">08</span><span class="lec-tit">Claude como tocateclas, con correa</span></summary>
+<summary><span class="lec-num">08</span><h3 class="lec-tit">Claude como tocateclas, con correa</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sale con un proyecto de Claude configurado, con sus reglas de trabajo escritas, y con la costumbre de comprobar cada cifra que Claude le da antes de cre&#233;rsela.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1442,7 +1462,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-9">
-<summary><span class="lec-num">09</span><span class="lec-tit">MCP de Google: crear y conectar</span></summary>
+<summary><span class="lec-num">09</span><h3 class="lec-tit">MCP de Google: crear y conectar</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno instala el MCP oficial de Google Ads (solo lectura) y el de Google Analytics en su ordenador, saca sus primeros informes con Claude y comprueba cada cifra contra la interfaz.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1535,7 +1555,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-10">
-<summary><span class="lec-num">10</span><span class="lec-tit">MCP de Meta: conectar y usar</span></summary>
+<summary><span class="lec-num">10</span><h3 class="lec-tit">MCP de Meta: conectar y usar</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno conecta el conector oficial de Meta Ads en solo lectura, lo usa para analizar anuncios y competencia, y practica una escritura controlada con plan previo, aprobaci&#243;n uno a uno y borrado manual.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1632,7 +1652,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 4</p><h2>Google Ads, todos los tipos de campa&#241;a</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-11">
-<summary><span class="lec-num">11</span><span class="lec-tit">Search I: estructura y keywords</span></summary>
+<summary><span class="lec-num">11</span><h3 class="lec-tit">Search I: estructura y keywords</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sale con el keyword research del proyecto agrupado por intenci&#243;n y filtrado por CPC m&#225;ximo, la estructura de campa&#241;as y grupos defendida, y la lista inicial de negativas.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1757,7 +1777,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-12">
-<summary><span class="lec-num">12</span><span class="lec-tit">Search II: anuncios, recursos, pujas y lanzamiento</span></summary>
+<summary><span class="lec-num">12</span><h3 class="lec-tit">Search II: anuncios, recursos, pujas y lanzamiento</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno lanza la campa&#241;a de Search del proyecto con anuncios RSA bien construidos, todos los recursos que apliquen, una configuraci&#243;n limpia y la puja inicial justificada. Sale sabiendo qu&#233; mirar ma&#241;ana y qu&#233; no tocar en 7 d&#237;as.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -1899,7 +1919,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-13">
-<summary><span class="lec-num">13</span><span class="lec-tit">Landing y CRO</span></summary>
+<summary><span class="lec-num">13</span><h3 class="lec-tit">Landing y CRO</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sabe diagnosticar si el problema es del anuncio o de la landing, audita la landing del proyecto desde el m&#243;vil, instala Microsoft Clarity y sale con tres mejoras priorizadas.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2006,7 +2026,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-14">
-<summary><span class="lec-num">14</span><span class="lec-tit">Performance Max</span></summary>
+<summary><span class="lec-num">14</span><h3 class="lec-tit">Performance Max</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno monta una PMax con grupos de recursos, se&#241;ales, exclusiones de marca y negativas. Sobre todo, sabe leer sus informes y detectar si se est&#225; llevando la marca y el remarketing para parecer rentable.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2107,7 +2127,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-15">
-<summary><span class="lec-num">15</span><span class="lec-tit">Shopping y Merchant Center</span></summary>
+<summary><span class="lec-num">15</span><h3 class="lec-tit">Shopping y Merchant Center</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno da de alta Merchant Center, lo conecta con Google Ads y deja un feed sin errores cr&#237;ticos. Monta una campa&#241;a de Shopping est&#225;ndar y sabe cu&#225;ndo usarla y cu&#225;ndo usar PMax con feed.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2204,7 +2224,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-16">
-<summary><span class="lec-num">16</span><span class="lec-tit">Display</span></summary>
+<summary><span class="lec-num">16</span><h3 class="lec-tit">Display</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sabe cu&#225;ndo Display sirve y cu&#225;ndo es tirar el dinero. Monta un remarketing con frecuencia limitada y deja guardada una lista de exclusiones de ubicaciones.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2290,7 +2310,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-17">
-<summary><span class="lec-num">17</span><span class="lec-tit">YouTube (campa&#241;as de v&#237;deo)</span></summary>
+<summary><span class="lec-num">17</span><h3 class="lec-tit">YouTube (campa&#241;as de v&#237;deo)</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno elige el formato de v&#237;deo seg&#250;n el objetivo, sabe c&#243;mo debe arrancar un anuncio que funciona y monta una campa&#241;a de v&#237;deo con su medici&#243;n planificada.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2384,7 +2404,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-18">
-<summary><span class="lec-num">18</span><span class="lec-tit">Demand Gen</span></summary>
+<summary><span class="lec-num">18</span><h3 class="lec-tit">Demand Gen</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno entiende que Demand Gen es lo m&#225;s parecido a Meta dentro de Google, con la creatividad como palanca principal. Monta una campa&#241;a con varios &#225;ngulos, audiencias similares y un presupuesto que le permita salir del aprendizaje.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2469,7 +2489,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-19">
-<summary><span class="lec-num">19</span><span class="lec-tit">Campa&#241;as de aplicaciones</span></summary>
+<summary><span class="lec-num">19</span><h3 class="lec-tit">Campa&#241;as de aplicaciones</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sabe cu&#225;ndo tiene sentido una campa&#241;a de apps, c&#243;mo se mide con Firebase o un MMP y qu&#233; cambia en iOS. Cierra el bloque de Google con una tabla resumen de todos los tipos de campa&#241;a hecha por &#233;l.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2573,7 +2593,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 5</p><h2>Meta Ads, todos los objetivos</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-20">
-<summary><span class="lec-num">20</span><span class="lec-tit">Meta Ads: estructura, audiencias y Advantage+</span></summary>
+<summary><span class="lec-num">20</span><h3 class="lec-tit">Meta Ads: estructura, audiencias y Advantage+</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sale con los activos de Meta del proyecto revisados y en verde, y con una estructura de campa&#241;as decidida a partir del presupuesto real. Sabe explicar por qu&#233; en Meta se consolida y se segmenta en amplio.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2685,7 +2705,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-21">
-<summary><span class="lec-num">21</span><span class="lec-tit">Creatividad y &#225;ngulos</span></summary>
+<summary><span class="lec-num">21</span><h3 class="lec-tit">Creatividad y &#225;ngulos</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sale con cinco creatividades listas, cada una con un &#225;ngulo distinto, su hook, su cuerpo, su llamada a la acci&#243;n y su copy. Sabe distinguir un test de &#225;ngulos de un test de detalles.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2810,7 +2830,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-22">
-<summary><span class="lec-num">22</span><span class="lec-tit">Reconocimiento</span></summary>
+<summary><span class="lec-num">22</span><h3 class="lec-tit">Reconocimiento</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sabe cu&#225;ndo tiene sentido pagar por alcance y cu&#225;ndo es tirar el dinero. Sale con una campa&#241;a de alcance con l&#237;mite de frecuencia montada y un p&#250;blico de v&#237;deo creado a partir de ella.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -2915,7 +2935,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-23">
-<summary><span class="lec-num">23</span><span class="lec-tit">Tr&#225;fico e Interacci&#243;n</span></summary>
+<summary><span class="lec-num">23</span><h3 class="lec-tit">Tr&#225;fico e Interacci&#243;n</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno entiende por qu&#233; el tr&#225;fico barato enga&#241;a y sale con una campa&#241;a de mensajes a WhatsApp montada, con bienvenida, preguntas frecuentes y un sistema para saber qu&#233; conversaciones acaban en venta.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3023,7 +3043,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-24">
-<summary><span class="lec-num">24</span><span class="lec-tit">Clientes potenciales</span></summary>
+<summary><span class="lec-num">24</span><h3 class="lec-tit">Clientes potenciales</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>Si el proyecto es de leads, hoy se lanza la campa&#241;a principal de Meta. El alumno elige entre formulario instant&#225;neo y web con criterio de coste por cliente real, monta el formulario con filtro conectado al CRM y sabe c&#243;mo devolver a Meta qu&#233; leads fueron buenos.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3140,7 +3160,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-25">
-<summary><span class="lec-num">25</span><span class="lec-tit">Ventas y cat&#225;logo</span></summary>
+<summary><span class="lec-num">25</span><h3 class="lec-tit">Ventas y cat&#225;logo</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>Si el proyecto vende online, hoy se lanza la campa&#241;a principal de Meta. El alumno sale con el cat&#225;logo conectado al p&#237;xel, una campa&#241;a de ventas montada y criterio para decidir entre Advantage+ de ventas y campa&#241;a manual, y para poner o no un ROAS m&#237;nimo.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3240,7 +3260,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-26">
-<summary><span class="lec-num">26</span><span class="lec-tit">Promoci&#243;n de la app</span></summary>
+<summary><span class="lec-num">26</span><h3 class="lec-tit">Promoci&#243;n de la app</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno entiende c&#243;mo se mide una app en Meta y monta una campa&#241;a de promoci&#243;n de app en pausa. Cierra el bloque con la tabla de los seis objetivos hecha por &#233;l y comparada con la de Google.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3338,7 +3358,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-27">
-<summary><span class="lec-num">27</span><span class="lec-tit">Testing y escalado en Meta</span></summary>
+<summary><span class="lec-num">27</span><h3 class="lec-tit">Testing y escalado en Meta</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sale con un sistema escrito para probar creatividades de forma continua: cu&#225;ndo se juzga un anuncio, cu&#225;ndo se apaga, d&#243;nde entran los nuevos, c&#243;mo pasan a la campa&#241;a principal y cu&#225;ndo se escala. Y con una variante creada por Claude con el MCP de Meta, revisada y activada a mano.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3454,7 +3474,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 6</p><h2>ChatGPT Ads</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-28">
-<summary><span class="lec-num">28</span><span class="lec-tit">ChatGPT Ads I: c&#243;mo funciona y cu&#225;ndo usarlo</span></summary>
+<summary><span class="lec-num">28</span><h3 class="lec-tit">ChatGPT Ads I: c&#243;mo funciona y cu&#225;ndo usarlo</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sabe explicar c&#243;mo funciona ChatGPT Ads y decide, con los n&#250;meros de su proyecto, si merece una prueba. Sale con una lista de conversaciones objetivo y la decisi&#243;n apuntada en el log.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3558,7 +3578,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-29">
-<summary><span class="lec-num">29</span><span class="lec-tit">ChatGPT Ads II: Ads Manager, medici&#243;n y lanzamiento</span></summary>
+<summary><span class="lec-num">29</span><h3 class="lec-tit">ChatGPT Ads II: Ads Manager, medici&#243;n y lanzamiento</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno da de alta la cuenta, instala la medici&#243;n, registra una conversi&#243;n de prueba y deja montada una campa&#241;a de ChatGPT Ads. La activa solo si en la lecci&#243;n 28 decidi&#243; que encaja.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3656,7 +3676,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 7</p><h2>Nivel pro</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-30">
-<summary><span class="lec-num">30</span><span class="lec-tit">Optimizaci&#243;n y diagn&#243;stico</span></summary>
+<summary><span class="lec-num">30</span><h3 class="lec-tit">Optimizaci&#243;n y diagn&#243;stico</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno diagnostica una ca&#237;da siguiendo un orden fijo y sin tocar nada hasta saber la causa. Sale con su propia checklist de optimizaci&#243;n semanal.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3766,7 +3786,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-31">
-<summary><span class="lec-num">31</span><span class="lec-tit">Escalado, automatizaci&#243;n y reporting</span></summary>
+<summary><span class="lec-num">31</span><h3 class="lec-tit">Escalado, automatizaci&#243;n y reporting</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno sabe cu&#225;ndo y c&#243;mo escalar sin romper el aprendizaje. Sale con un plan de escalado por plataforma, una regla y un script de alerta funcionando, y un informe de Looker Studio enviado al &#171;cliente&#187;.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3871,7 +3891,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 8</p><h2>Ecommerce</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-32">
-<summary><span class="lec-num">32</span><span class="lec-tit">Econom&#237;a y medici&#243;n de una tienda</span></summary>
+<summary><span class="lec-num">32</span><h3 class="lec-tit">Econom&#237;a y medici&#243;n de una tienda</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno calcula el margen y el ROAS de equilibrio de cada producto, sabe leer MER y POAS, y cuadra las compras que dicen las plataformas con los pedidos reales.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -3985,7 +4005,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-33">
-<summary><span class="lec-num">33</span><span class="lec-tit">Feed avanzado y Merchant Center</span></summary>
+<summary><span class="lec-num">33</span><h3 class="lec-tit">Feed avanzado y Merchant Center</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno audita un feed, lo mejora sin tocar la tienda y aplica etiquetas personalizadas por margen y por rendimiento que luego usar&#225; para repartir presupuesto en Google y Meta.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -4081,7 +4101,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-34">
-<summary><span class="lec-num">34</span><span class="lec-tit">Google Ads para ecommerce</span></summary>
+<summary><span class="lec-num">34</span><h3 class="lec-tit">Google Ads para ecommerce</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno dise&#241;a y monta una estructura de Google para una tienda basada en margen y rendimiento, con la marca protegida, cada producto en una sola campa&#241;a y un ROAS objetivo por grupo.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -4176,7 +4196,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-35">
-<summary><span class="lec-num">35</span><span class="lec-tit">Meta Ads para ecommerce</span></summary>
+<summary><span class="lec-num">35</span><h3 class="lec-tit">Meta Ads para ecommerce</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno monta Meta para una tienda: una campa&#241;a de ventas conectada al cat&#225;logo, creatividades por producto h&#233;roe, exclusiones de compradores y un reparto de presupuesto entre prospecci&#243;n y retargeting.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -4272,7 +4292,7 @@
 </div>
 </details>
 <details class="acor lec" id="leccion-36">
-<summary><span class="lec-num">36</span><span class="lec-tit">Rentabilidad, temporadas y escalado</span></summary>
+<summary><span class="lec-num">36</span><h3 class="lec-tit">Rentabilidad, temporadas y escalado</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno prepara un plan de temporada alta con presupuesto, fechas, ofertas y creatividades, calcula cu&#225;nto vale un cliente nuevo con cohortes y presenta el informe de la tienda como a un cliente.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -4390,7 +4410,7 @@
     <div class="modulo-h"><p class="eyebrow">Bloque 9</p><h2>Cierre</h2></div>
     <div class="acor-lista">
 <details class="acor lec" id="leccion-37">
-<summary><span class="lec-num">37</span><span class="lec-tit">Proyecto final</span></summary>
+<summary><span class="lec-num">37</span><h3 class="lec-tit">Proyecto final</h3></summary>
 <div class="acor-cuerpo">
 <div class="objetivo"><p class="lab">Objetivo</p><p>El alumno presenta su caso completo como en una reuni&#243;n con un cliente, responde preguntas dif&#237;ciles y sale con un plan de 90 d&#237;as y su log convertido en caso de estudio para el portfolio.</p></div>
 <div class="prep"><p class="lab">Antes de la clase</p>
@@ -4506,6 +4526,8 @@
     </div>
   </section>
 
+  <a class="volver-indice" href="#indice">&#205;ndice</a>
+
   <section class="plain">
     <div class="pie">
       <span>Libert<b>Ads</b> &#183; de Bryan Gibe &#183; Manual pr&#225;ctico del profesor</span>
@@ -4531,5 +4553,24 @@
   window.addEventListener("orientationchange", ajusta);
   window.addEventListener("load", ajusta);
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(ajusta); }
+})();
+</script>
+<script>
+/* Al saltar a una leccion desde el indice, se abre sola. */
+(function () {
+  function abre() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (el && el.tagName === "DETAILS") { el.open = true; el.scrollIntoView({ block: "start" }); }
+  }
+  window.addEventListener("hashchange", abre);
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest(".bgc a[href^='#leccion-']");
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (el) { el.open = true; }
+  });
+  abre();
 })();
 </script>
