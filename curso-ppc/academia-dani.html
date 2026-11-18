@@ -26,15 +26,13 @@
      ACADEMIA PPC  ->  una sola URL en bryangibe.com
      Pegar entero en un elemento "Custom JS/HTML" a ancho completo.
 
-     EL PROGRAMA (bloques del curso) Y CUATRO MODULOS APILADOS:
-       1. Grabaciones    -> enlaces a Drive
-       2. Transcripciones-> enlaces a Drive
-       3. Resumenes      -> abiertos en la propia pagina
-       4. Tests          -> el test corre aqui mismo
+     EL PROGRAMA (bloques del curso) Y TRES MODULOS APILADOS:
+       1. Grabaciones y transcripciones -> una carpeta de Drive
+       2. Resumenes      -> abiertos en la propia pagina, uno por dia
+       3. Tests          -> un test por dia, corre aqui mismo
 
-     PARA PONER UN ENLACE DE DRIVE: busca "PEGA-AQUI" y sustituye
-     el href. Quita tambien la clase "off" de ese <a> y cambia el
-     "Pendiente" del final por la flecha. Esta explicado en el README.
+     GRABACIONES Y TRANSCRIPCIONES: un solo enlace a la carpeta del curso
+     en Drive. Lo que se suba a esa carpeta aparece solo.
      ============================================================ -->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&family=Manrope:wght@400;500;700;800&display=swap');
@@ -512,11 +510,10 @@
     <p class="wordmark">Libert<b>Ads</b> <span class="wordmark-sub">por Bryan Gibe</span></p>
     <p class="eyebrow">Academia &middot; Curso de PPC</p>
     <h1>Academia PPC</h1>
-    <p class="lede">Todo el curso en una p&aacute;gina: lo que vamos a ver, las grabaciones, las transcripciones, el resumen te&oacute;rico de cada clase y el test para comprobar que se te ha quedado.</p>
+    <p class="lede">Todo el curso en una p&aacute;gina: lo que vamos a ver, las grabaciones y transcripciones, el resumen te&oacute;rico de cada clase y el test para comprobar que se te ha quedado.</p>
     <nav class="navmod">
       <a href="#programa">Programa</a>
-      <a href="#grabaciones">Grabaciones</a>
-      <a href="#transcripciones">Transcripciones</a>
+      <a href="#grabaciones">Grabaciones y transcripciones</a>
       <a href="#resumenes">Res&uacute;menes</a>
       <a href="#tests">Tests</a>
     </nav>
@@ -672,13 +669,16 @@
     </div>
   </section>
 
-  <!-- ====================== 1. GRABACIONES ====================== -->
+  <!-- ====================== 1. GRABACIONES Y TRANSCRIPCIONES ======================
+       Un solo enlace: la carpeta del curso en Drive, con las subcarpetas VIDEOS
+       y TRANSCRIPCCIONES. Lo que se suba ahi aparece solo, sin tocar la pagina.
+       ============================================================ -->
   <section class="modulo" id="grabaciones">
     <div class="modulo-h">
       <p class="eyebrow">M&oacute;dulo 1</p>
-      <h2>Grabaciones de clases</h2>
+      <h2>Grabaciones y transcripciones</h2>
     </div>
-    <p class="muted">El v&iacute;deo completo de cada clase. Se abre la carpeta del curso en Drive, en una pesta&ntilde;a nueva: los v&iacute;deos est&aacute;n en la carpeta <b>VIDEOS</b>.</p>
+    <p class="muted">Todas las clases en una carpeta de Drive: el v&iacute;deo completo de cada d&iacute;a en <b>VIDEOS</b> y la clase por escrito en <b>TRANSCRIPCCIONES</b>, para buscar algo concreto sin ver el v&iacute;deo otra vez. Se abre en una pesta&ntilde;a nueva.</p>
 
     <div class="aviso">
       <p>Entra con la cuenta <b>tumadremkt@gmail.com</b>, que es la que tiene acceso.
@@ -687,51 +687,10 @@
 
     <div class="carpetas">
       <a class="carpeta" href="https://drive.google.com/drive/folders/1oMqcVuB-mkFe2O6hiDHr2WbCm7pvsmIY" target="_blank" rel="noopener">
-        <span class="carpeta-ico">01</span>
+        <span class="carpeta-ico">PPC</span>
         <span>
-          <span class="carpeta-tit">D&iacute;a 1 &middot; Intro al PPC</span>
-          <span class="carpeta-sub">Clase del 3 de noviembre &middot; 1 h 45 min</span>
-        </span>
-        <span class="carpeta-fin">&rarr;</span>
-      </a>
-      <a class="carpeta" href="https://drive.google.com/drive/folders/1oMqcVuB-mkFe2O6hiDHr2WbCm7pvsmIY" target="_blank" rel="noopener">
-        <span class="carpeta-ico">02</span>
-        <span>
-          <span class="carpeta-tit">D&iacute;a 2 &middot; Auditor&iacute;a de cuentas</span>
-          <span class="carpeta-sub">Clase del 17 de noviembre</span>
-        </span>
-        <span class="carpeta-fin">&rarr;</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ====================== 2. TRANSCRIPCIONES ====================== -->
-  <section class="modulo" id="transcripciones">
-    <div class="modulo-h">
-      <p class="eyebrow">M&oacute;dulo 2</p>
-      <h2>Transcripciones de clases</h2>
-    </div>
-    <p class="muted">La clase por escrito, para buscar algo concreto sin tener que ver el v&iacute;deo otra vez. Se abre la carpeta del curso en Drive: los documentos est&aacute;n en la carpeta <b>TRANSCRIPCCIONES</b>.</p>
-
-    <div class="aviso">
-      <p>Entra con la cuenta <b>tumadremkt@gmail.com</b>, que es la que tiene acceso.
-        <span>Si Google te dice que no tienes permiso, casi seguro que est&aacute;s dentro con otra cuenta: c&aacute;mbiala arriba a la derecha y vuelve a abrir el enlace.</span></p>
-    </div>
-
-    <div class="carpetas">
-      <a class="carpeta" href="https://drive.google.com/drive/folders/1oMqcVuB-mkFe2O6hiDHr2WbCm7pvsmIY" target="_blank" rel="noopener">
-        <span class="carpeta-ico">01</span>
-        <span>
-          <span class="carpeta-tit">D&iacute;a 1 &middot; Intro al PPC</span>
-          <span class="carpeta-sub">Clase del 3 de noviembre &middot; con minutos</span>
-        </span>
-        <span class="carpeta-fin">&rarr;</span>
-      </a>
-      <a class="carpeta" href="https://drive.google.com/drive/folders/1oMqcVuB-mkFe2O6hiDHr2WbCm7pvsmIY" target="_blank" rel="noopener">
-        <span class="carpeta-ico">02</span>
-        <span>
-          <span class="carpeta-tit">D&iacute;a 2 &middot; Auditor&iacute;a de cuentas</span>
-          <span class="carpeta-sub">Clase del 17 de noviembre &middot; notas de la clase</span>
+          <span class="carpeta-tit">Grabaciones y transcripciones de las clases</span>
+          <span class="carpeta-sub">Carpeta del curso en Drive &middot; VIDEOS y TRANSCRIPCCIONES</span>
         </span>
         <span class="carpeta-fin">&rarr;</span>
       </a>
@@ -744,10 +703,10 @@
     </div>
   </section>
 
-  <!-- ====================== 3. RESUMENES ====================== -->
+  <!-- ====================== 2. RESUMENES ====================== -->
   <section class="modulo" id="resumenes">
     <div class="modulo-h">
-      <p class="eyebrow">M&oacute;dulo 3</p>
+      <p class="eyebrow">M&oacute;dulo 2</p>
       <h2>Res&uacute;menes de clases</h2>
     </div>
     <p class="muted">Lo que se dio en clase, m&aacute;s la teor&iacute;a de fondo que en directo no da tiempo a desarrollar. Los bloques con la barra a la izquierda son ampliaci&oacute;n: no se dijeron tal cual, pero explican el porqu&eacute;.</p>
@@ -1251,7 +1210,7 @@
 })();
 </script>
 
-  <!-- ====================== 4. TESTS ======================
+  <!-- ====================== 3. TESTS ======================
        Un desplegable por dia. PARA ANADIR EL TEST DE UN DIA NUEVO:
        1) copia el bloque <details class="dia-acor"> de abajo, pegalo debajo
           y cambia el id del details, el numero, el titulo y el id del
@@ -1261,7 +1220,7 @@
        ============================================================ -->
   <section class="modulo" id="tests">
     <div class="modulo-h">
-      <p class="eyebrow">M&oacute;dulo 4</p>
+      <p class="eyebrow">M&oacute;dulo 3</p>
       <h2>Tests de clases</h2>
     </div>
     <p class="muted">Un test por clase, con el orden de las preguntas y de las respuestas barajado en cada intento. Se corrigen al momento, te dicen el porqu&eacute; y en qu&eacute; minuto de la clase est&aacute; cada cosa. Sin l&iacute;mite de tiempo y repetible las veces que quieras.</p>
